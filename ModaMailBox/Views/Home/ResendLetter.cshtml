@@ -1,0 +1,103 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+<link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+
+}
+@Html.AntiForgeryToken()
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("querycase", "Home")">案件進度查詢</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+
+        <div class="">
+            <p style="text-indent: -1.9em;padding-left: 2em;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>請輸入申請時登記的電子信箱，我們將為您重寄最近一筆「案件受理通知信」</p>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_email" class="form-label">
+                        電子信箱<span class="text-danger fs16">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="input_email" placeholder="XXX@OOO.com.tw">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_name" class="form-label">驗證</label>
+                    <div class="row g-3 flex-nowrap">
+                        <div class="col">
+                            <div id="myWidget"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <input type="button" value="送出" name="btnSearch" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button" />
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_turnstileCb" async defer></script>
+<script>
+    var timeoutID = setInterval(_reSetTurnstileCb, 90000);
+    $("[name=btnSearch]").click(function(){
+        var chkemai = IsEmail($("#input_email").val());
+        if(chkemai== false)
+        {
+            FECommon.basicLoadingOff();
+            $("#input_email").focus();
+            SetMsgShowAlert(2,"","請輸入正確的Email格式");
+        } else {
+            var obj = {
+            "email":$("#input_email").val(),
+            "cftoken": cftoken
+            };
+            FECommon.basicLoadingOn();
+            var href = '@Url.Action("resendletter", "Home")';
+                $.ajax({
+                url: href,
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val()
+                },
+                dataType: "json",
+                success: function(data) {
+                    if(data.statusCode==200){
+                        FECommon.basicLoadingOff();
+                            SetMsgShowAlertRedirect(0, "", "已重寄最近一筆「案件受理通知信」，請至電子信箱查看", "/");
+                    }else{
+                        FECommon.basicLoadingOff();
+                        $("#input_email").val("");
+                        SetMsgShowAlert(2,"",data.content);
+                        turnstile.reset("#myWidget");
+                    }
+                }
+            });
+            FECommon.basicLoadingOff();
+            }
+
+        });
+        var cftoken;
+        sitekey = "@(AppSettingHelper.GetAppsetting("CloudFlareTurnstileSitekey"))";
+       _turnstileCb();
+</script>
+
+}

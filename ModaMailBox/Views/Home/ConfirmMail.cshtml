@@ -1,0 +1,134 @@
+﻿@model ConfirmMailModel
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var cacWebsites = md.casesModels.GroupBy(x => new { x.WebSiteID, x.WebSiteName }).ToList();
+    var cac = md.casesModels.FirstOrDefault(x => x.CaseApplyClassSN == md.CaseApply?.CaseApplyClassSN);
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+    {
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("mailtous", "Home")">寫信給我們</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+        <div class="step_main d-flex wrap5 flex-wrap">
+            <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                <div class="Step1 ">步驟一</div>
+                <div class="step fs-5 ps-3">認證電子信箱</div>
+            </div>
+            <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                <div class="Step2 ">步驟二</div>
+                <div class="step fs-5 ps-3">填寫意見內容</div>
+            </div>
+            <div class="step_list d-flex align-items-center col-4 pb-md-5 not_yet">
+                <div class="Step3 ">步驟三</div>
+                <div class="step fs-5 ps-3">案件成立</div>
+            </div>
+
+        </div>
+        <div>
+            <dl class="row form_style1">
+                <dt class="col-3 text-end text-nowrap">真實姓名：</dt>
+                <dd class="col-9">@md.CaseApply?.ApplyUser</dd>
+                <dt class="col-3 text-end text-nowrap">電子信箱：</dt>
+                <dd class="col-9">
+                    <a href="#" class="text-decoration-underline ">@md.CaseApply?.ContactEmail</a>
+                </dd>
+                    @if (!string.IsNullOrWhiteSpace(md.CaseApply?.TelAreacode))
+                    {
+                    <dt class="col-3 text-end text-nowrap">聯絡電話： </dt>
+                    <dd class="col-9">@($"{md.CaseApply?.TelAreacode}-{md.CaseApply?.Tel}" + (!string.IsNullOrEmpty(md.CaseApply?.TelExtension) ? $" 分機 {md.CaseApply?.TelExtension}" : ""))</dd>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(md.CaseApply?.Mobile))
+                    {
+                    <dt class="col-3 text-end text-nowrap">行動電話： </dt>
+                    <dd class="col-9">@md.CaseApply?.Mobile</dd>
+                    }
+                <dt class="col-3 text-end text-nowrap">機關信箱： </dt>
+                <dd class="col-9">@(cacWebsites.FirstOrDefault(x => x.Key.WebSiteID == cac?.WebSiteID)?.Key.WebSiteName ?? "")  民意信箱</dd>
+                    @if ((md.ParentClass.FirstOrDefault(x => x.WebSiteID == cac.WebSiteID)?.Value ?? "") == "1")
+                    {
+                    <dt class="col-3 text-end text-nowrap">意見分類：</dt>
+                    <dd class="col-9">@(Model.SysCategory?.FirstOrDefault(x => x.SysCategoryKey == cac?.SysCategoryKey)?.Value ?? "")</dd>
+                    <dt class="col-3 text-end text-nowrap">子項目：</dt>
+                    <dd class="col-9">@(cac?.CaseName ?? "")</dd>
+                    }
+                    else
+                    {
+                    <dt class="col-3 text-end text-nowrap">意見分類：</dt>
+                    <dd class="col-9">@(cac?.CaseName ?? "")</dd>
+                    }
+                <dt class="col-3 text-end text-nowrap">主旨：</dt>
+                <dd class="col-9">@md.CaseApply?.Subject </dd>
+                <dt class="col-3 text-end text-nowrap">內容：</dt>
+                <dd class="col-9">
+                    @Html.Raw(md.CaseApply?.CaseContent.Replace("\n","<br/>"))
+                </dd>
+                    @if (md.CaseFiles?.Count() != 0)
+                    {
+                    <dt class="col-3 text-end text-nowrap">附件：</dt>
+                    <dd class="col-9">
+                        已上傳 @(md.CaseFiles?.Count() ?? 0) 個檔案，總容量   <span class="text-danger"> @((md.CaseFiles?.Sum(x => x.bytes.Length) / 1024) ?? 0) KB</span>
+                        <br>
+                            @if (md.CaseFiles?.Count() > 0)
+                            {
+                            <table class="table mb-4">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="pageBar"><span class="fw-normal" style="white-space: nowrap;">NO.</span></th>
+                                        <th scope="col" class="pageBar" style=" width: 80%;"><span class="fw-normal">檔案</span></th>
+                                        <th scope="col" class="pageBar">
+                                            <span class="fw-normal text-nowrap">容量大小 </span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in md.CaseFiles.Select((value, i) => new { i, value }))
+                                    {
+                                        <tr>
+                                            <th class="text-nowrap pageBar" scope="row">@((item.i + 1).ToString())</th>
+                                            <td>@item.value.FileName</td>
+                                            <td class="text-nowrap pageBar">@(item.value.bytes.Length / 1024) KB</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            }
+                    </dd>
+                    }
+            </dl>
+            <ul class="list-unstyled list-inline mb-0 justify-content-center">
+                <li class="list-inline-item ">
+                    <a href="javascript:;" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 me-sm-5 me-3 rounded-3 file_btn_color" role="button" onclick="Back()">修改內容</a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="javascript:;" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button" onclick="submit()">確認送出</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+                    @section Scripts
+                        {
+    <script>
+        if ('@(md.CaseApply == null)' == true) {
+            SetMsgShowAlertRedirect(2, "", "請再次輸入資料", "/");
+        } else {
+
+        }
+    </script>
+}

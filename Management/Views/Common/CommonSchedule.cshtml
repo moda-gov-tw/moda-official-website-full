@@ -1,0 +1,83 @@
+﻿@model Management.Models.CommonScheduleModel
+@{
+    Layout = Url.Content("~/Views/Shared/_UploadLayout.cshtml");
+}
+
+<div class="uTable3" style="text-align:center;">
+    <div class="col-sm-6">
+        <h2 class="font-weight-bold my-0"></h2>
+    </div>
+    <div class="bootstrap-table">
+        <div id="tableBox">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+
+        var chk = new Array();
+        var backperPageShow = 0;
+        var sd = "";
+        var ed = "";
+        var objstr = getCookie("NewsObj");
+        $(document).ready(function() {
+            searchFunction(1);
+            $(document).on("click", ".page_a", function() {
+                var p = getObjAtr($(this), "data-page");
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $('#perPageShow').val(obj.displayCount);
+                    sd = obj.str;
+                    ed = obj.end;
+                }
+                searchFunction(p);
+            });
+        });
+        function searchFunction(p) {
+
+            var href = "@Url.Action("CommonNews", "Common",new  {area =""})";
+
+            var websiteid = '@(Model.wEBNews != null ? Model.wEBNews.WebSiteID : "MODA")';
+
+            var str = MODAhtmlEncode($("#str"), "val") == "undefined" ? sd : MODAhtmlEncode($("#str"), "val");
+
+            var end = MODAhtmlEncode($("#end"), "val") == "undefined" ? ed : MODAhtmlEncode($("#end"), "val");
+
+            var lan = '@(Model.wEBNews != null ? Model.wEBNews.Lang : "en")';
+
+            var obj = getCookie("sysChk");
+
+            var data = JSON.parse(obj);//選擇的新聞
+
+            if (data != "" && data != undefined) {
+                $.each(data, function(index, item) {
+                    if (chk.filter(x => x == item).length == 0) {
+                        chk.push(item);
+                    }
+                });
+            }
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "str": str,
+                "end": end,
+            };
+            SetCookie("NewsObj", selectobj);
+
+            var getUrl = "?websiteid=" + websiteid + "&lan=" + lan + "&str=" + str + "&end=" + end + "&p=" + p;
+
+            var pageUrl = href + getUrl;
+
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+
+            $("#tableBox").html("");
+
+            $("#tableBox").load(href, function() { });
+        }     
+    </script>
+}
+

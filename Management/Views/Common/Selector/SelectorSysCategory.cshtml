@@ -1,0 +1,107 @@
+﻿@model SelectorSysCategoryModal
+@{
+    var parentData = Services.SystemManageMent.CodeManagementService.GetCategoryByCategoryKey(Model.parentKey, Model.Lang);
+    var sysCategories = Services.SystemManageMent.CodeManagementService.GetCategory(Model.parentKey, Model.WebSiteId, Model.Lang);
+}
+<label class="col-sm-2 col-form-label text-sm-right">
+    @if(Model.required){ <span style="color:red">*</span> }
+    @($"{parentData?.Value}" ) @(Model.multiple ==true ?"(多選)":"") </label>
+<div class="col-sm-10">
+    <select class="form-control" id="@($"select_{Model.IdName}")">
+        <option value="">請選擇</option>
+        @foreach (var option in sysCategories)
+        {
+            <option value=@option.SysCategoryKey selected="@(Model.sysCategoryKeys.Any(x=>x==option.SysCategoryKey))" disabled="@(Model.sysCategoryKeys.Any(x=>x==option.SysCategoryKey))">@option.Value</option>
+        }
+    </select>
+    @if (Model.multiple)
+    {
+        var tagListFr = Model.sysCategoryKeys.Count() > 0 ? " tagListFr border mt-4" : "";
+        <div class="tagList1" id="@($"sysCategoryItems_{Model.IdName}")">
+            <div class="@($"tagFFF{tagListFr}")">
+                @{
+                    if (Model.sysCategoryKeys.Count() > 0)
+                    {
+                        foreach (var item in sysCategories.Where(x => Model.sysCategoryKeys.Contains(x.SysCategoryKey)))
+                        {
+                            <div class="tagListI SysCategoryItem" data-id="@item.SysCategoryKey" data-txt="@item.Value"><span class="tagListITxt">@item.Value</span><input value="✖" type="button" class="ubtn-delete  @($"delSysCategoryItem_{Model.IdName}")"></div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    }
+    <input type="hidden" value="@(JsonConvert.SerializeObject( Model.sysCategoryKeys.ToArray()))" name="@Model.IdName" id="@Model.IdName" />
+    <input type="hidden" value="@(JsonConvert.SerializeObject( sysCategories.Where(x => Model.sysCategoryKeys.Contains(x.SysCategoryKey)).Select(x=>x.Value).ToArray()))" name="@($"txt{Model.IdName}")" id="@($"txt{Model.IdName}")" />
+</div>
+
+<script>
+
+    $(document).off("click",".delSysCategoryItem_@(Model.IdName)" ).on("click" , ".delSysCategoryItem_@(Model.IdName)" , function(){
+               var removeKey =   getObjAtr( $(this).parents() ,"data-id");
+                var select_itme = $("#select_@(Model.IdName)");
+                $.each(select_itme[0].options, function(index, item) {
+                if($(this).val() == removeKey){
+                    $(this).attr("disabled", false);
+                }
+        });
+          var array = [];
+         var txtArray =[];
+        $(this).parent().remove();
+          var itmes =  $("#sysCategoryItems_@(Model.IdName)").find(".tagFFF");
+             var multipe = '@Model.multiple';
+         if(multipe !="False"){
+            $.each( itmes.find(".SysCategoryItem")  ,function(index , item){
+                array.push($(this).attr("data-id"));
+                txtArray.push($(this).attr("data-txt"));
+            });
+            $("#@(Model.IdName)").val(JSON.stringify(array));
+            $("#txt@(Model.IdName)").val(JSON.stringify(txtArray) );
+         }
+         if(array.length> 0 ){
+            if(!itmes.hasClass("tagListFr border mt-4") )
+            {
+                itmes.addClass("tagListFr border mt-4");
+            }
+         }else{
+            itmes.removeClass("tagListFr border mt-4");
+         }
+    });
+     $("#select_@(Model.IdName)").change(function(){
+         var multipe = '@Model.multiple';
+         var select = $(this).find(':selected');
+         var _val = MODAhtmlEncode(select , "val");
+         var _text = MODAhtmlEncode(select , "text");
+         var array = [];
+         var txtArray =[];
+         if(multipe !="False"){
+            if(select.val()=="") return;
+            var itmes =  $("#sysCategoryItems_@(Model.IdName)").find(".tagFFF");
+            var itme = "<div class='tagListI SysCategoryItem' data-id="+_val+" data-txt="+_text+" ><span class='tagListITxt'>"+_text +"</span><input value='✖' type='button' class='ubtn-delete delSysCategoryItem_@Model.IdName'></div>";
+            itmes.append(itme);
+            $.each( itmes.find(".SysCategoryItem")  ,function(index , item){
+                array.push($(this).attr("data-id"));
+                txtArray.push($(this).attr("data-txt"));
+                });
+            $("#@(Model.IdName)").val(JSON.stringify(array));
+            $("#txt@(Model.IdName)").val(JSON.stringify(txtArray) );
+
+         }else{
+           $.each($(this)[0].options, function(index, item) { $(this).attr("disabled", false) });
+            var array = [];
+            array.push(select.val());
+            txtArray.push(select.text());
+            $("#@(Model.IdName)").val(JSON.stringify(array));
+            $("#txt@(Model.IdName)").val(JSON.stringify(txtArray) );
+         }
+         if(array.length> 0 ){
+            if(!itmes.hasClass("tagListFr border mt-4") )
+            {
+                itmes.addClass("tagListFr border mt-4");
+            }
+         }else{
+         itmes.removeClass("tagListFr border mt-4");
+         }
+         select.attr("disabled", true);
+     });
+</script>

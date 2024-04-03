@@ -1,0 +1,53 @@
+﻿@model List<Services.Models.WebSiteBreadcrumb>
+@{
+	var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+	var leftMenu = masterModel.LeftMenu;
+	var _WebSiteID = masterModel.Master.WebSiteID;
+	var _Lang = masterModel.Lang;
+	var BaseModel = Model;
+	var BaseSN = BaseModel.FirstOrDefault(x => x.mainSN == BaseModel.FirstOrDefault(x => x.IsActive)?.ParentSN) ?? BaseModel.FirstOrDefault(x => x.IsActive);
+}
+<aside class="leftMenu">
+	<div class="a11yBrickBar1">
+		<a href="#AL" id="AL" accesskey="L" class="a11yBrick position-absolute" title="頁面左方功能區塊[快捷鍵Alt+L]">:::</a>
+	</div>
+
+	<b class="title6 d-block pt-1 lh-sm">@Html.Raw(leftMenu.FirstOrDefault(x => x.MainSN == BaseSN?.ParentSN && x.Lang == _Lang)?.Title ?? masterModel.SysWebSiteLang.Title)</b>
+
+	<ul class="sidebar list-unstyled sidebarJs">
+		<!-- 目前單元highlight時需加class="on" -->
+		@foreach (var item in leftMenu.Where(x => x.ParentSN == BaseSN?.ParentSN && x.MainSN == x.WebLevelSN).OrderBy(x => x.SortOrder))
+        {
+			var itemL = leftMenu.FirstOrDefault(x => x.MainSN == item.WebLevelSN && x.Lang == _Lang);
+            var itemAs = leftMenu.Where(x => x.ParentSN == item.WebLevelSN);
+			@if (itemL != null)
+			{
+				@if (itemAs.Count() > 0)
+				{
+					<li class="@(BaseModel.Exists(x => x.mainSN == itemL.MainSN && x.lang == itemL.Lang) ? "on" : "")">
+						<a class="menuI" href="javascript:;"><span class="menuIFirst">@Html.Raw(itemL.Title)</span></a>
+						@if (itemAs.Count() > 0)
+						{
+							<ul class="menuSub list-unstyled">
+								@foreach (var itemA in itemAs.OrderBy(x => x.SortOrder))
+								{
+									var itemAL = leftMenu.FirstOrDefault(x => x.MainSN == itemA.WebLevelSN && x.Lang == _Lang);
+									@if (itemAL != null)
+									{
+										<li class="@(BaseModel.Exists(x => x.mainSN == itemAL.MainSN && x.lang == itemAL.Lang) ? "on" : "")">
+											<a href="@Url.Content(itemAL.DynamicURL)">@Html.Raw(itemAL.Title)</a>
+										</li>
+									}
+								}
+							</ul>
+						}
+					</li>
+				}
+				else
+				{
+					<li><a class="menuI" href="@Url.Content(itemL.DynamicURL)"><span class="menuIFirst">@Html.Raw(itemL.Title)</span></a></li>
+				}
+			}
+		}
+	</ul>
+</aside>

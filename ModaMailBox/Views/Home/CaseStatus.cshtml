@@ -1,0 +1,137 @@
+﻿@model CaseStatusModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var startName = "";
+    var _ReplyContext = "";
+    var _ReplyDate = "";
+    bool isClose = false;
+    if (md.caseApply == null)
+    {
+
+    }
+    else if (md.caseApply.Status == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step12) ||
+             md.caseApply.Status == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step13) ||
+             md.caseApply.Status == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step14) ||
+             md.caseApply.Status == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step15) ||
+             md.caseApply.Status == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step16)  
+    )
+    {
+        startName = "您申請的案件已結案";
+        isClose = true;
+        if (md.caseApply?.ReplySource == Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumReplySource.Mgr))
+        {
+            _ReplyContext = md.caseApply?.ReplySource2 ?? md.presetReply;
+            _ReplyDate = md.caseApply?.ReplySource2Date?.ToString("yyyy/MM/dd HH:mm:ss") ?? "";
+        }
+        else
+        {
+            _ReplyContext = string.IsNullOrWhiteSpace(md.caseApply?.ReplyContent) ? md.presetReply : md.caseApply?.ReplyContent;
+            _ReplyDate = md.caseApply?.ReplyDate?.ToString("yyyy/MM/dd HH:mm:ss") ?? "";
+        }
+    }
+    else
+    {
+        startName = "您申請的案件已成立，處理中";
+    }
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+    {
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Action("index","Home")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("querycase","Home")">案件進度查詢</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+
+        <div class="">
+            <p>案件編號：@Html.Raw(md.caseApply?.CaseNo)</p>
+            <p>案件狀態：@startName </p>
+
+            <table class="table table-striped" style="margin-bottom: 0;">
+
+                <tbody>
+                    <tr>
+                        <th scope="col" class="text-nowrap text-end">主旨： </th>
+                        <td>@Html.Raw(md.caseApply?.Subject) </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-nowrap text-end">內容： </th>
+                        <td>
+                            @Html.Raw(md.caseApply?.CaseContent.Replace("\n","<br>"))
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-nowrap text-end">申請時間： </th>
+                        <td>@Html.Raw(md.caseApply?.CreateDate.ToString("yyyy/MM/dd HH:mm:ss"))  </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="text-nowrap text-end">成案時間： </th>
+                        <td>@Html.Raw(md.caseApply.AcceptDate.HasValue ? md.caseApply.AcceptDate.Value.ToString("yyyy/MM/dd HH:mm:ss") :"" )  </td>
+                    </tr>
+                </tbody>
+            </table>
+            @if (isClose)
+            {
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th scope="col" class="text-nowrap text-end">回覆說明： </th>
+                            <th scope="col">
+                                @Html.Raw(_ReplyContext.Replace("\n","<br>"))
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="text-nowrap text-end">回覆時間：</th>
+                            <td>@Html.Raw(_ReplyDate) </td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+        @if (_ReplyDate != "")
+        {
+            <ul class="list-unstyled list-inline mb-0 mt-4 justify-content-center">
+                <li class="list-inline-item">
+                    <button type="button" onclick="sendAgain()" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" data-poptitle="重寄案件回覆說明信" role="button">重寄案件回覆說明信</button>
+                </li>
+            </ul>
+        }
+
+
+    </div>
+</div>
+@section Scripts
+    {
+    <script>
+        function sendAgain() {
+            FECommon.basicLoadingOn();
+            $.ajax({
+                url: '/Common/SendAgain',
+                type: 'post',
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        FECommon.basicLoadingOff();
+                        SetMsgShowAlertRedirect(0, "", data.content, "/querycase");
+                    }
+                }
+            });
+        }
+    </script>
+}

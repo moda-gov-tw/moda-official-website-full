@@ -1,0 +1,122 @@
+﻿@model ModaMailBox.SurveyModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+
+}
+@Html.AntiForgeryToken()
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@{
+    if (md.Msg == "")
+    {
+        <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+            <!-- 內容主標 -->
+            <div class="row wrap5">
+
+                <div class="mt-0">
+                    <p style="text-indent: -1.7em;padding-left: 2em;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>請輸入「案件編號」及「案件檢查碼」填寫滿意度調查</p>
+
+                    <div class="row my-2">
+                        <div class="mb-3">
+                            <label for="CaseNo" class="form-label">案件編號<span class="text-danger fs16">*</span></label>
+                            <div class="row g-3 flex-nowrap">
+                                <div class="col">
+                                    <input id="CaseNo" type="text" class="form-control" name="CaseNo" placeholder="請輸入案件編號" aria-label="case-number" maxlength=14 autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="mb-3">
+                            <label for="CasePwd" class="form-label">案件檢查碼<span class="text-danger fs16">*</span></label>
+                            <div class="row g-3 flex-nowrap">
+                                <div class="col">
+                                    <input id="CasePwd" type="text" name="CasePwd" class="form-control" placeholder="請輸入案件檢查碼" aria-label="case-checkcode" maxlength=12 autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="mb-3">
+                            <label for="input_name" class="form-label">驗證</label>
+                            <div class="row g-3 flex-nowrap">
+                                <div class="col">
+                                    <div id="myWidget"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-2">
+                        <input type="button" value="填寫滿意度調查" name="btnSurvey" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+@section Scripts
+{
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_turnstileCb" async defer></script>
+<script>
+var timeoutID = setInterval(_reSetTurnstileCb, 90000);
+    var msg = "@Html.Raw(md.Msg)";
+    if (msg != '') {
+        SetMsgShowAlertRedirect(2, "", msg, "/");
+    }
+
+    $("[name=btnSurvey]").click(function(){
+        var obj = {
+         "CaseNo":$("[name=CaseNo]").val(),
+         "CasePwd" :$("[name=CasePwd]").val(),
+         "cftoken": cftoken
+        };
+        FECommon.basicLoadingOn();
+        var href = '@Url.Action("SurveySearch", "Home")';
+           $.ajax({
+            url: href,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val()
+            },
+            dataType: "json",
+            success: function(data) {
+                if(data.statusCode==200) {
+                    $(".main").load('/surveyform', function () {
+                        _turnstileCb();
+                    });
+                } else {
+                    FECommon.basicLoadingOff();
+                    var cmodel =  data.content;
+                    if(cmodel.focusOn!=""){ FocusOnByName(cmodel.focusOn); }
+                    $("[name=CaseNo]").val("");
+                    $("[name=CasePwd]").val("");
+                    SetMsgShowAlert(2, "", cmodel.errormsg);
+                    turnstile.reset("#myWidget");
+                }
+            }
+         });
+         FECommon.basicLoadingOff();
+    });
+    var cftoken;
+    sitekey = "@(AppSettingHelper.GetAppsetting("CloudFlareTurnstileSitekey"))";
+    _turnstileCb();
+</script>
+
+}

@@ -1,0 +1,41 @@
+﻿@model List<Management.Areas.SystemManageMent.Models.UpdateCssJs.ListModel>
+@{
+    var Model1 = Model;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW4">名稱</th>
+            <th scope="col" style="white-space:nowrap;" class="colW2">檔案更新時間</th>
+            <th scope="col" class="colW7">更新</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model1.Count()>0)
+        {
+            @foreach (var data in Model1)
+            {
+                <tr>
+                    <td>@data.FileName</td>
+                    <td>@data.UpdateDate</td>
+                    <td data-filepath="@data.FilePath">
+                        <input type="file"  class="cjifile">
+                        
+                        @{
+                            var btns = new List<btnModel>();
+                            btns.Add(new btnModel() { Btntype= btnModel.btntype.確認 , onclickFunction="UpdateJC('"+data.FilePath+"','"+data.FileName +"')"  });
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>

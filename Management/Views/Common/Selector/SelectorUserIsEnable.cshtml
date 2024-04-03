@@ -1,0 +1,21 @@
+﻿@model definitionModel
+
+@switch (Model.HtmlType)
+{
+    case definitionModel.htmlType.selector:
+        <select id="@Model.IdName" name="@Model.IdName" class="form-control">
+             @if (Model.NeedNull) {<option value="" selected=@(Model.selectIds.Any(x=>x == ""))>請選擇</option> }
+            <option value="2" selected=@(Model.selectIds.Any(x=>x == "2"))>未啟用</option>
+            <option value="1" selected=@(Model.selectIds.Any(x=>x == "1"))>啟用</option>
+            <option value="0" selected=@(Model.selectIds.Any(x=>x == "0"))>停用</option>
+        </select>
+        break;
+    case definitionModel.htmlType.radion:
+        @if (Model.NeedNull) {<input type="radio" name="@Model.IdName" value="" class="radio radio-inline " selected=@(Model.selectIds.Any(x=>x == "")) /><span>請選擇</span> }
+        <input type="radio" name="@Model.IdName" value="2" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == "2")) /><span>未啟用</span>
+        <input type="radio" name="@Model.IdName" value="1" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == "1")) /><span>啟用</span>
+        <input type="radio" name="@Model.IdName" value="0" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == "0")) /><span>停用</span>
+        break;
+    case definitionModel.htmlType.checkbox:
+        break;
+}

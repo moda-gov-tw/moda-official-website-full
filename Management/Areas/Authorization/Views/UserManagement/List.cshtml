@@ -1,0 +1,80 @@
+﻿@model Management.Areas.Authorization.Models.UserManagement.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="sortTh" data-title="UserID" onclick="sortTh(1,$(this))">帳號<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="sortTh" data-title="UserName" onclick="sortTh(1,$(this))">使用者<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="sortTh" data-title="DepartmentName" onclick="sortTh(1,$(this))">單位<button type="button" class="sortIcon sortNo "></button></th>
+            @*<th scope="col">部門電話</th>*@
+            <th scope="col" class="sortTh colW5" data-title="Email" onclick="sortTh(1,$(this))">E-mail<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="colW3">最後修改密碼日期</th>
+            <th scope="col" class="sortTh colW5" data-title="LastLoginDate" onclick="sortTh(1,$(this))">建立時間/最後上線時間<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="sortTh" data-title="UserSatus" onclick="sortTh(1,$(this))">狀態<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="colW6">功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.UserLeftDeps.Count > 0)
+        {
+            @foreach (var data in Model.UserLeftDeps)
+            {
+                <tr>
+                    <td>@row</td>
+                    <td>@data.UserID</td>
+                    <td>@data.UserName</td>
+                    <td>@data.DepartmentName</td>
+                    @*<td>@data.OfficePhone</td>*@
+                    <td class="text-break text-start">@data.Email</td>
+                    <td>@(data.PwdLastUpdate.HasValue ? data.PwdLastUpdate.Value.ToString("yyyy-MM-dd") : "尚未有修改紀錄" )</td>
+                    <td>
+                        @data.DateCreated.Value.ToString("yyyy-MM-dd")  / @(data.LastLoginDate.HasValue ? data.LastLoginDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "尚未有登入紀錄" )
+                        @if (data.UserSatus == "1" && data.LastLoginDate.HasValue && Management.ManagementUtility.CommonUtility.DiffDate(DateTime.UtcNow.AddHours(8), data.LastLoginDate.Value) >= 90)
+                        {
+                            <div style="color:red">(已超過90天未登入)</div>
+                        }
+                    </td>
+                    <td>@(data.UserSatus == "0" ? "停用" : "啟用")</td>
+                    <td>
+                        @{
+                            var btnlist = new List<btnModel>();
+                            if (!data.LastLoginDate.HasValue)
+                            {
+                                 <input class="ubtn-delete" onclick="buttonFunction($(this))"  data-id="@CommonUtility.GetUrlAesEncrypt(data.UserID)"  data-type="delete" type="button" value="刪除" />
+                            }
+                            if (data.UserSatus == "0")
+                            {
+                                <input class="ubtn-enable" onclick="buttonFunction($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.UserID)" data-type="stop" type="button" value="啟用帳號" />
+                            }
+                            else
+                            {
+                                <input class="ubtn-disabled" onclick="buttonFunction($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.UserID)" data-type="stop" type="button" value="停用帳號" />
+                            }
+                        }
+                        <input class="ubtn-resend" onclick="buttonFunction($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.UserID)" data-type="reset" type="button" value="發送重設密碼信" disabled="@(data.DisableDate != null && data.DisableDate < DateTime.UtcNow.AddHours(8))" style="display:none" />
+                        <a class="ubtn-edit" href="@Url.Action("Mode", "UserManagement", new { area = "Authorization", key = CommonUtility.GetUrlAesEncrypt(data.UserID) })">編修</a>
+                    </td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model.UserLeftDeps.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}
+<script>
+</script>

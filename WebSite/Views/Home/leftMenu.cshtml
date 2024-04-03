@@ -1,0 +1,73 @@
+﻿@model List<WebSiteBreadcrumb>
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var _WebSiteID = masterModel.Master.WebSiteID;
+    var _Lang = masterModel.Lang;
+    var leftMenu = masterModel.LeftMenu.Where(x => x.Lang == _Lang).ToList();
+    var BaseSN = Model.FirstOrDefault(x => x.mainSN == Model.FirstOrDefault(x => x.IsActive)?.ParentSN) ?? Model.FirstOrDefault(x => x.IsActive);
+    var LangSysCategory = masterModel.sysCategories;
+}
+<aside class="leftMenu">
+    <div class="a11yBrickBar1">
+        <a href="#AL" id="AL" accesskey="L" class="a11yBrick position-absolute" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-61")?.Value">:::</a>
+    </div>
+
+    <b class="title6 d-block pt-1 lh-sm">@Html.Raw(leftMenu.FirstOrDefault(x => x.MainSN == BaseSN?.ParentSN && x.Lang == _Lang)?.Title ?? masterModel.SysWebSiteLang.Title)</b>
+
+    <ul class="sidebar list-unstyled sidebarJs">
+        @foreach (var item in leftMenu.Where(x => x.ParentSN == BaseSN?.ParentSN).OrderBy(x => x.SortOrder))
+        {
+            <li class="@(Model.Exists(x => x.mainSN == item.MainSN && x.lang == item.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+                @{
+                    var ChildData = leftMenu.Where(x => x.ParentSN == item.MainSN);
+                    if (ChildData?.Count() > 0)
+                    {
+                        <a class="menuI" href="javascript:;" @Html.Raw(CommFun.getattr(item.target, item.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID +"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(item.Title)</span></a>
+                        <ul class="menuSub list-unstyled">
+                            @foreach (var Child in ChildData.OrderBy(x => x.SortOrder))
+                            {
+                                <li class="@(Model.Exists(x => x.mainSN == Child.MainSN && x.lang == Child.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+                                    <a href="@Url.Content(Child.DynamicURL)" @Html.Raw(CommFun.getattr(Child.target, Child.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID +"-7-33")?.Value))>@Html.Raw(Child.Title)</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <a class="menuI" href="@Url.Content(item.DynamicURL)" @Html.Raw(CommFun.getattr(item.target, item.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID+"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(item.Title)</span></a>
+                    }
+                }
+            </li>
+        }
+        <!-- 目前單元highlight時需加class="on" -->
+        @*        @foreach (var item in leftMenu.Where(x => x.ParentSN == BaseSN?.ParentSN && x.MainSN == x.WebLevelSN).OrderBy(x => x.SortOrder))
+            {
+            var itemL = leftMenu.FirstOrDefault(x => x.MainSN == item.WebLevelSN && x.Lang == _Lang && x.IsEnable == "1"); //語系有開啟
+            @if (itemL != null)
+            {
+            var itemAs = leftMenu.Where(x => x.ParentSN == itemL.MainSN && x.IsEnable == "1").ToList(); //利用main找開啟孩子
+            if (itemAs.Count() > 0)
+            {
+            <li class="@(Model.Exists(x => x.mainSN == itemL.MainSN && x.lang == itemL.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+            <a class="menuI" href="javascript:;" @Html.Raw(CommFun.getattr(itemL.target, itemL.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID +"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(itemL.Title)</span></a>
+            @if (itemAs.Where(x => x.Lang == _Lang).Count() > 0) //確定同語系孩子有開啟
+            {
+            <ul class="menuSub list-unstyled">
+            @foreach (var itemA in itemAs.Where(x => x.Lang == _Lang).OrderBy(x => x.SortOrder))//確定同語系孩子有開啟
+            {
+            <li class="@(Model.Exists(x => x.mainSN == itemA.MainSN && x.lang == itemA.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+            <a href="@Url.Content(itemA.DynamicURL)" @Html.Raw(CommFun.getattr(itemA.target, itemA.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID +"-7-33")?.Value))>@Html.Raw(itemA.Title)</a>
+            </li>
+            }
+            </ul>
+            }
+            </li>
+            }
+            else
+            {
+            <li><a class="menuI" href="@Url.Content(itemL.DynamicURL)" @Html.Raw(CommFun.getattr(itemL.target, itemL.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==_WebSiteID+"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(itemL.Title)</span></a></li>
+            }
+            }
+            }*@
+    </ul>
+</aside>

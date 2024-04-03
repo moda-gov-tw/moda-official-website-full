@@ -1,0 +1,32 @@
+﻿@model List<WebSiteBreadcrumb>
+@{
+	var langPath =  (Model.FirstOrDefault().lang)+"/" ;
+	var WebSiteId = (Model.FirstOrDefault().WebSiteID)+"/" ;
+	var HomeName = Model.FirstOrDefault().lang == "zh-tw" ? "首頁" : "Home";
+}
+<div class="breadcrumb1">
+	<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5">
+		<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+			<ol class="breadcrumb mb-0">
+				<li class="breadcrumb-item breadHome">
+					<a href="@Url.Content($"~/{WebSiteId}{langPath}index")")">@HomeName</a>
+					</li>
+				@{ var i = 1; }
+				@foreach(var item in Model.OrderByDescending(x=>x.sort))
+				{
+					<li class="breadcrumb-item  @(i == Model.Count ? "active" : "")">
+						@if(i== Model.Count)
+						{
+							@(item.Title)
+						}
+						else
+						{
+							<a href="@item.Url">@(item.Title)</a>	
+						}
+					</li>
+					i++;
+				}
+			</ol>
+		</nav>
+	</div>
+</div>

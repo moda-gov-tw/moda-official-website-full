@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section meta
+{
+
+<link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+        <div class="breadcrumb1">
+            <div class="a11yBrickBar1 wrap4 mx-auto px-3 px-md-4 px-lg-5"><a href="#AC" id="AC" accesskey="C"
+                    class="a11yBrick" title="中央內容區塊[快捷鍵Alt+C]">:::</a></div>
+            <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item breadHome"><a href="#">首頁</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">網站導覽 </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+            <!-- 內容主標 -->
+            <div class="row wrap5">
+
+                <div class="">
+                    <div class="a11yBrickBar1">
+                        <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute"
+                            title="中央內容區塊[快捷鍵Alt+C]">:::</a>
+                    </div>
+                    <h2 class="title3 position-relative text-center pb-3  mb-md-5">網站導覽</h2>
+
+                    <div class="article1">
+                        <div class="sitmapIntro">
+                            <div class="article1-m1">
+                                <p><b>本網站依「無障礙網頁設計原則」建置，</b>包括：</p>
+                                <ol class="article1-list1 list-unstyled">
+                                    <li>1、所有的頁面都可以用鍵盤操作，不限於使用滑鼠。</li>
+                                    <li>2、網站設置導盲磚快速鍵（:::），使用者可快速到達各主要區塊。</li>
+                                    <li>3、網頁圖片均標示適當的替代文字說明。</li>
+                                    <li>4、在介面變更、變更網址或開新視窗的連結項目上加上提示文字，使用者不需一一進入連結頁面即可知道每一個連結的目的。</li>
+                                </ol>
+                            </div>
+                            <div class="article1-m1">
+                                <p><b>本網站主要內容分為四大區塊：</b></p>
+                                <ol class="article1-list3 list-unstyled">
+                                    <li>（1）上方功能區塊</li>
+                                    <li>（2）中央內容區塊</li>
+                                    <li>（3）下方功能區塊</li>
+                                  
+                                </ol>
+                            </div>
+                            <div class="article1-m1">
+                                <p><b>本網站之快速鍵﹝Accesskey﹞設定如下：</b></p>
+                                <ul class="list-unstyled">
+                                    <li>Alt+U：右上方功能區塊，包括回首頁、網站導覽、字級大小選擇等。</li>
+                                    <li>Alt+C：中央內容區塊，為本頁主要內容區。</li>                                   
+                                    <li>Alt+Z：下方功能區塊。</li>
+                                </ul>
+                            </div>
+                            <p>如果您的瀏覽器是Firefox，快速鍵的使用方法是 Shift+Alt+（快速鍵字母），例如 Shift+Alt+C會跳至網頁中央內容區塊，以此類推。</p>
+                        </div>
+                    </div>
+
+                    <div class="siteTree">
+                        <ul class="list-unstyled row">
+                            <li class="treeMain col-12 col-sm-6 col-lg-4 "> 
+                                <a href="@Url.Action("processingflow","Home")">
+                                    <div class="tabConTd">民意信箱處理流程</div>
+                                </a></li>
+                            <li class="treeMain col-12 col-sm-6 col-lg-4 ">
+                                <a href="@Url.Action("mailtous","Home")">
+                                    <div class="tabConTd">寫信給我們</div>
+                                </a>
+                            </li>
+                            <li class="treeMain col-12 col-sm-6 col-lg-4 "> 
+                                <a href="@Url.Action("querycase","Home")">
+                                    <div class="tabConTd">案件進度查詢</div>
+                                </a>
+                            </li>
+                            <li class="treeMain col-12 col-sm-6 col-lg-4 "> 
+                                <a href="@Url.Action("resendletter","Home")">
+                                    <div class="tabConTd">重寄「案件受理通知信」</div>
+                                </a>
+                            </li>
+                            <li class="treeMain col-12 col-sm-6 col-lg-4 "> 
+                                <a href="@Url.Action("sitemap","Home")">
+                                    <div class="tabConTd">網站導覽</div>
+                                </a>                               
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+               
+            </div>
+        </div>

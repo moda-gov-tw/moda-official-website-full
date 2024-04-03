@@ -1,0 +1,43 @@
+﻿@model Management.Areas.SystemManageMent.Models.CheckLinks.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="colW1" scope="col" style="white-space:nowrap;">序號</th>
+            <th scope="col">網站編號</th>
+            <th scope="col">網站名稱</th>
+            <th class="colW7" scope="col">上次掃描時間</th>
+            <th class="colW4" scope="col">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model.sysWebSites)
+        {
+            <tr>
+                <td>@row</td>
+                <td>@data.WebSiteID</td>
+                <td>@data.Title</td>
+                <td>@(data.CheckLinksDate?.ToString("yyyy-MM-dd HH:mm"))</td>
+                <td>
+                    @{
+                        var btns = new List<btnModel>()
+                        {
+                            new btnModel(){ Btntype = btnModel.btntype.開始掃描 , onclickFunction=@$"CheckFun('{data.WebSiteID.ToString()}')"  },
+                        };
+                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                    }
+                </td>
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+
+<script>
+</script>

@@ -1,0 +1,53 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+}
+<div class="list3-2 row gy-3 gx-sm-5 mb-5" id="ListTable">
+    @foreach (var item in md.list)
+    {
+
+        <div class="col-12 col-sm-6 position-relative">
+            <div class="card h-100 rounded-0">
+                <div class="card-body ps-0 pb-0 pe-4">
+                    <div class="d-flex flex-wrap">
+                        <a href="@item.webUrl" class="cardT col-12" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+                            <b class="card-title title5 fw-normal">
+                                @if (item.webNews.IsTop != null)
+                                {
+                                    <i class="ci ci-pushpin"></i>
+                                }
+                                @(item.webNews.Title)
+                                @if (item.webFile?.FileType != null)
+                                {
+                                    <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+                                }
+                                else
+                                {
+                                    if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+                                    {
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    }
+                                }
+                            </b>
+                            @if (!string.IsNullOrWhiteSpace(item.webNews.SubTitle))
+                            {
+                                <p class="card-text">@(item.webNews.SubTitle)</p>
+                            }
+                        </a>
+                        <div class="listDate me-auto pt-2"><span class="pe-2">@item.webNews.StartDate.Value.ToString("yyyy-MM-dd")</span></div>
+                        @if (item.sysCategories != null && item.sysCategories.Count() > 0)
+                        {
+                            <div class="listTag2 flex-fill pt-2">
+                                @foreach (var item2 in item.sysCategories)
+                                {
+                                    <a class="btn" href="javascript:;" role="button">@item2.Value</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

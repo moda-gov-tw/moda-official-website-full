@@ -1,0 +1,111 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="idxNews" data-aos="fade-up">
+    <div class="wrap5 mx-auto px-3 px-md-4 px-lg-5">
+        <div class="wrap6 border-bottom">
+            <!-- title -->
+            <div class="titleBar1">
+                <h2 class="title1 mb-3 mb-md-5">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+            </div>
+            <!-- content -->
+            <div class="idxNewsCon row">
+                <!-- 新聞發布 -->
+                @{
+                    var newschild = Model?.Childlevels.OrderBy(x => x.LevelView.BasicLevel.SortOrder).FirstOrDefault(x => x.LevelView.BasicLevel.Module == "TAB");
+                    if (newschild != null)
+                    {
+                        var tab = newschild.NewsViews.Count() > 0 ? newschild.NewsViews[0] : null;
+                        <div class="col col-lg-6">
+                            <div class="listWrap1 position-relative">
+                                <h3 class="title8 text-center">@Html.Raw(newschild.LevelView?.BasicLevel.Title)</h3>
+                                @if (tab != null)
+                                {
+                                    <ul class="list4-2 list-group divider">
+                                        @foreach (var news in tab.TabNewsView.Take(5))
+                                        {
+                                            var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                            <li class="list-group-item d-block bg-transparent px-0">
+                                                <a href="@news.DynamicURL" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                                                    <div class="listDate ms-md-3 order-md-2">@Html.Raw(news.TabNews?.strDate.Value.ToString("yyyy-MM-dd"))</div>
+                                                    <div class="col mb-0">
+                                                        <b class="title5 fw-normal">
+                                                            @if (news.TabNews?.IsTop ?? false)
+                                                            {
+                                                                <i class="ci ci-pushpin"></i>
+                                                            }
+                                                            @Html.Raw(news.TabNews?.Title)
+                                                        </b>
+                                                        @if (!string.IsNullOrEmpty(news.fileType))
+                                                        {
+                                                            <span class="fileTypeI">@Html.Raw(news.fileType.Replace(".",""))</span>
+                                                        }
+                                                    </div>
+                                                </a>
+                                                @if (news.NewsTags != null && news.NewsTags.Count() > 0)
+                                                {
+                                                    <div class="listTag2">
+                                                        @foreach (var tag in news.NewsTags)
+                                                        {
+                                                            <a class="btn" href="javascript:;" role="button">@Html.Raw(tag.Value)</a>
+                                                        }
+                                                    </div>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                            @if (tab != null && tab.TabNewsView?.Count() > 5)
+                            {
+                                <div class="btnBar1 text-center">
+                                    <a href="@tab?.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({newschild.LevelView?.BasicLevel.Title})")">
+                                        @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+                                        <span class="visually-hidden"> @("(" + newschild.LevelView?.BasicLevel.Title + ")")</span>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                <!-- 影音快遞 -->
+                @{
+                    newschild = Model?.Childlevels.OrderByDescending(x => x.LevelView.BasicLevel.SortOrder).FirstOrDefault(x => x.LevelView.BasicLevel.Module == "TAB");
+                    if (newschild != null)
+                    {
+                        var tab = newschild.NewsViews.Count() > 0 ? newschild.NewsViews[0] : null;
+                        <div class="col col-lg-6">
+                            <h3 class="title8 text-center">@Html.Raw(newschild.LevelView?.BasicLevel.Title)</h3>
+                            @if (tab != null)
+                            {
+                                <div class="listWrap1 position-relative">
+                                    <div class="idxList4 position-relative">
+                                        <div class="swiper idxList4Swiper idxList4SwiperJs">
+                                            <div class="swiper-wrapper">
+                                                @if (newschild?.NewsViews != null)
+                                                {
+                                                    foreach (var item in tab.TabNewsView.Take(5))
+                                                    {
+                                                        <div class="swiper-slide">
+                                                            <div class="ytWrap">
+                                                                <div class="ytPlayer" data-id="@item.MediaKey" data-title="@item.TabNews?.Title"></div>
+                                                            </div>
+                                                            <b class="title">@Html.Raw(item.TabNews?.Title)</b>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="idxList4SwiperNav swiper-pagination idxList4SwiperPageJs"></div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,22 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+}
+<div class="list8 row imgCover mb-5 g-3" id="ListTable">
+    @{
+        foreach (var item in md.list)
+        {
+            <div class="col-12 col-sm-6 col-md-4 position-relative">
+                <a href="@item.webUrl" class="card h-100 d-block rounded-4 border-0" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+                    <div class="pic position-relative overflow-hidden rounded-4">
+                        <img src="@item.webLogo?.FilePath" alt="@item.webLogo?.FileTitle">
+                    </div>
+                    <div class="card-body">
+                        <b class="card-title fw-normal">@item.webNews.Title</b>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>

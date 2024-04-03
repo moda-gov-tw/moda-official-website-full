@@ -1,0 +1,7 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+	var md = Model;
+	var item = md?.NewsViews?.FirstOrDefault();
+}
+<!--擴充圖文-->
+@Html.Raw(item?.BasicNews.ContentText ?? "")

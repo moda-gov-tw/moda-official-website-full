@@ -1,0 +1,243 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.CreateArticleModel
+<partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+@{
+    var md = Model;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="form-horizontal">
+                    <!--節點名稱-->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            <span style="color:red">*</span>節點代號
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" value="" id="WebLevelKey" class="form-control" placeholder="節點代號">
+                        </div>
+                    </div>
+                    <!--節點名稱-->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            <span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.Title
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" value="" id="Title" class="form-control" placeholder="節點名稱">
+                        </div>
+                    </div>
+                    <!--類型-->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-right">
+                            <span></span>@Utility.sysConstTable.field.WebLevel.ModuleType
+                        </label>
+                        <div class="col-sm-10 pt-3">
+                            @foreach (var item in Model.LevelMenu)
+                            {
+                                @if ((Model.WeblevelType == "2" && item.value != "DEPT") || (Model.WeblevelType == "1") || (Model.WeblevelType == "3" && item.value != "DEPT"))
+                                {
+                                    <input type="radio" value="@item.value" name="LevelMenu" data-type="@item.TypeName" class="radio-inline radio" onclick="changeLevelMenu($(this))" /> @item.title
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!--列表類型-->
+                    <div class="form-group row" id="div_LevelMenu2" style="display:none;">
+                        <label class="col-sm-2 col-form-label text-right">
+                            <span></span>@Utility.sysConstTable.field.WebLevel.ListType
+                        </label>
+                        <div class="col-sm-10 pt-3" id="LevelMenu2List">
+                        </div>
+                    </div>
+                    <!--模組-->
+                    <div class="form-group row" id="div_LevelMenu3" >
+                        <label class="col-sm-2 col-form-label text-right">
+                            <span></span>@Utility.sysConstTable.field.WebLevel.Module
+                        </label>
+                        <div class="col-sm-10 pt-3" id="LevelMenu3List">
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="div_Condition" style="display:none;">
+                        <label class="col-sm-2 col-form-label text-right">
+                            <span></span>@Utility.sysConstTable.field.WebLevel.Condition
+                        </label>
+                        <div class="col-sm-10 pt-3" id="Condition"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+                        <div class="col-sm-10">
+                            <div>
+                                @{
+                                    var selectIds = new List<string>();
+                                    var DepID = Model.sysUserSysDepartmentID;
+                                    selectIds.Add(DepID);
+                                    var depControl = new definitionModel()
+            {
+                IdName = $"dep",
+                selectIds = selectIds,
+            };
+                                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center uBtnList">
+                        @{
+                            var btns = new List<btnModel>()
+                        {
+                        new btnModel(){  Btntype = btnModel.btntype.新增 , onclickFunction="SavwFun()"}  ,
+                        new btnModel(){ Btntype = btnModel.btntype.刪除 , onclickFunction="back2NodeList($(this))" ,attr_data_id=CommonUtility.GetUrlAesEncrypt(Model.WebLevelSN.ToString()) }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    var data = @Html.Raw(Json.Serialize(Model));
+    function changeLevelMenu(e) {
+        var levelMenu = e.val();
+        var weblevelType = '@Model.WeblevelType';
+        if (levelMenu != "CP") {
+            if (weblevelType == "1" && levelMenu != "DEPT") {
+                $("#div_Condition").hide();
+                $("#Condition").empty();
+                $("#div_LevelMenu2").show();
+                LevelMenu2(e);
+                if (levelMenu == "NEWS") {
+                    $("#div_Condition").show();
+                    conditions();
+                }
+            }
+            else {
+                $("#div_LevelMenu2").hide();
+                $("#div_Condition").hide();
+                $("#Condition").empty();
+            }
+
+        } else {
+            $("#div_LevelMenu2").hide();
+            $("#div_Condition").hide();
+            $("#Condition").empty();
+        }
+        $("#div_LevelMenu3").show();
+        LevelMenu3(levelMenu)
+    }
+    function changeLevel3Menu(e) {
+        var level3Menu = e.val();
+        var Module = e.val();
+        var weblevelType = '@Model.WeblevelType';
+        if (weblevelType == "1") {
+            if (Module == "RSS" || Module == "BANKNOTE1" || Module == "BANKNOTE2" || Module == "JOURNAL" || Module == "DEPT") {
+                $("#div_LevelMenu2").hide();
+                $("#div_Condition").hide();
+                $("#Condition").empty();
+            }
+            else {
+                $("#div_LevelMenu2").show();
+            }
+        }
+        else {
+            $("#div_LevelMenu2").hide();
+            $("#div_RSS").hide();
+        }
+    }
+
+    function LevelMenu2(e) {
+        var radio = "";
+        $("#LevelMenu2List").empty();
+        var typeName = e.attr("data-type");
+        var LevelMenu2Data = data.levelMenu2.filter(x => x.typeName.includes(typeName));
+        LevelMenu2Data.forEach(function(item) {
+                radio += "<div class='form-check form-check-inline'><input type='radio'  value='" + item.value + "' name='LevelMenu2' data-type='" + item.typeName + "' class='radio-inline radio' /> " + item.title + "</div>";
+        });
+        $("#LevelMenu2List").append(radio);
+    }
+    function LevelMenu3(levelMenu) {
+
+        var radio = "";
+        $("#LevelMenu3List").empty();
+        if (levelMenu == "NEWS") {
+            var LevelMenu3Data = data.levelMenu3.filter(x => x.typeName != "CP" && x.typeName != "PAGELIST" && x.typeName != "DEPT");
+            LevelMenu3Data.forEach(function(item) {
+                var checked = "";
+                if (item.value == "NEWS") checked = "checked";
+                radio += "<div class='form-check form-check-inline'><input type='radio' value='" + item.value + "' " + checked + " name='LevelMenu3' data-type='" + item.typeName + "' class='radio-inline radio'  onclick='changeLevel3Menu($(this))' /> " + item.title + "</div>";
+            });
+        } else {
+
+            var LevelMenu3Data = data.levelMenu3.filter(x => x.typeName == levelMenu);
+            LevelMenu3Data.forEach(function(item) {
+                radio += "<div class='form-check form-check-inline'><input type='radio' checked  value='" + item.value + "' name='LevelMenu3' data-type='" + item.typeName + "' class='radio-inline radio' /> " + item.title + "</div>";
+            });
+        }
+        $("#LevelMenu3List").append(radio);
+    }
+    function conditions()
+    {
+        $("#Conditions").empty();
+        var checkbox = "";
+        $.each(data.condition, function(i, item) {
+            checkbox += "<div class='form-check form-check-inline'><input type='checkbox' value='" + MODAhtmlEncode($("#drlWebSite"), "val") + "-" + item.value + "' name='condition' class='checkbox-inline checkbox' />" + item.title + "</div>";
+        });
+
+        $("#Condition").append(checkbox);
+    }
+    function SavwFun() {
+        $('.preloader').show();
+        var title = $("#Title").val();
+        var weblevelType = $("input[name='LevelMenu3']:checked").val();
+        var listType = weblevelType == "RSS" ? $("input[name='LevelMenu2'][value='LabelList']").attr('checked', true).val() : $("input[name='LevelMenu2']").length > 0 ? $("input[name='LevelMenu2']:checked").val() : "";
+        var key = "@CommonUtility.GetUrlAesEncrypt(Model.WebLevelSN)";
+        var dep = MODASelectVal("dep");
+        var WebLevelKey = $("#WebLevelKey").val();
+        var condition = $("input[name='condition']:checked").map(function(i, e) { return e.value }).toArray().join(",");
+         $.ajax({
+         url: '@Url.Action("CreateArticle", "WebLevelManagement", new  { area = "WebContent" })',
+         data: {
+             title: title,
+             weblevelType:weblevelType,
+             listType: listType,
+             WebLevelKey: WebLevelKey,
+             key: key,
+             Condition :condition ,
+             DepartmentID :dep
+            },
+         headers:
+         {
+             "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+         },
+         type: 'post',
+         dataType: 'json',
+         success: function(data) {
+             $('.preloader').hide();
+             if (data.statusCode == 200) {
+                 Swal.fire({
+                     icon: "success",
+                     title: "新增成功"
+                 });
+                 RefWebLevelTree(key);
+                 var href = "@Url.Action("Module", "WebLevelManagement", new { area = "WebContent" })?key=" + data.content;
+                 $("#fox_box").load(href, function() { });
+             }
+             else {
+                 Swal.fire({
+                     icon: "warning",
+                     title: data.content
+                 });
+             }
+         }
+        });
+
+    }
+    function back2NodeList(e) {
+        var key = e.data("id");
+        var href = "@Url.Action("ChildNodeList", "WebLevelManagement", new { area = "WebContent" })?key=" + key;
+        $("#fox_box").load(href, function() { });
+    }
+</script>

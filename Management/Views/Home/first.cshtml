@@ -1,0 +1,127 @@
+﻿@model SysUser
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>全球資訊網後端管理系統</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <!-- CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-extension.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/colors/default.css" rel="stylesheet" id="theme">
+    <link href="/sweetalert2/sweetalert2.min.css" rel="stylesheet" id="theme">
+    <!-- Js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sidebar-nav/metismenu.js"></script>
+    <script src="/js/jquery.slimscroll.min.js"></script>
+    <script src="/js/waves.js"></script>
+    <script src="/styleswitcher/jQuery.style.switcher.js"></script>
+    <script src="/js/custom.min.js"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/js/common.js")"></script>
+    <script src="@Url.Content("~/sweetalert2/sweetalert2.min.js")"></script>
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+    <section id="wrapper" class="login-register">
+        <div class="login-box">
+            <h1 class="logo1"><span class="sr-only">數位發展部</span></h1>
+            <div class="white-box">
+                <div class="form-horizontal form-material" id="loginform">
+                    <h2 class="box-title m-b-20 text-center">重設密碼</h2>
+                    <p class="m-b-15">密碼長度12個字元以上，需含英文大小寫、數字及特殊字元</p>
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            <input type="password" id="tbpwad" class="form-control"
+                                    placeholder="請輸入新密碼" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" id="tbpwad2" class="form-control"
+                                    placeholder="再次輸入新密碼" />
+                        </div>
+                    </div>
+                    <div class="row mx-0">
+                        <div class="col-8 px-0">
+                            <input type="text" name="captcha" class="form-control" placeholder="驗證碼" />
+                        </div>
+                        <div class="col-4 px-0">
+                            <img id="imgCaptcha" class="verification-container" src="@Url.Action("GetCaptcha", "Common")" width="100%" height="38" alt="" onclick="ChangeCaptcha()">
+                        </div>
+                    </div>
+                    <div class="form-group text-center m-t-30 m-b-10">
+                        <div class="col-xs-12">
+                            <input type="button" name="btnLogin" value="確認" id="btnLogin" class="ubtn-login waves-effect waves-light" onclick="changepwd()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript">
+        function changepwd() {
+            var pwd1 = $("#tbpwad").val();
+            var pwd2 = $("#tbpwad2").val();
+            var captcha = $("[name=captcha]").val();
+            var msg = "";
+            if (strIsNull(pwd1)) msg += "請輸入新密碼\n";
+            if (strIsNull(pwd2)) msg += "請輸入相同的新密碼\n";
+            if (!strIsNull(pwd1) && !strIsNull(pwd2)) {
+                if (pwd1 != pwd2) msg += "請輸入相同的新密碼 \n";
+            }
+            if (strIsNull(captcha)) msg += "請輸入驗證碼\n";
+            if (msg != "") {
+                Swal.fire({
+                     icon: "warning",
+                     title: msg
+                 });
+
+            } else {
+                var model = {
+                    ac: "@Model.UserID",
+                    psd: pwd1,
+                    captcha: $("[name=captcha]").val()
+                };
+              $.ajax({
+                url: '@Url.Action("ChangePwd", "Home")',
+                data: { ac: model.ac, psd: model.psd, captcha: model.captcha },
+                type: 'post',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "變更成功，請使用新密碼登入"
+                        }).then(result => {
+                            location.href = "@Url.Action("Index","Home")";
+                        })
+                    } else {
+                        $("[name=captcha]").val("");
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        }).then(result => {
+                            ChangeCaptcha();
+                        })
+                    }
+                }
+            });
+            }
+        }
+        function ChangeCaptcha()
+        {
+            $("#imgCaptcha").attr("src", "@Url.Action("GetCaptcha","Common")" + "?" + Math.random());
+        }
+    </script>
+
+</body>
+</html>

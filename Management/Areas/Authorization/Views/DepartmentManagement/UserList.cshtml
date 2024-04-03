@@ -1,0 +1,37 @@
+﻿@model Management.Areas.Authorization.Models.DepartmentManagement.UserListModel
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" class="colW5">帳號</th>
+            <th scope="col" class="colW5">姓名</th>
+            <th scope="col">聯絡信箱</th>
+            <th scope="col" class="colW4">狀態</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Users.Count() > 0)
+        {
+            @foreach (var data in Model.Users)
+            {
+                <tr>
+                    <td>@data.UserID</td>
+                    <td>@data.UserName</td>
+                    <td class="text-break text-start">@data.Email</td>
+                    <td>@(data.UserSatus =="1"?"啟用":"停用")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+<script>
+</script>

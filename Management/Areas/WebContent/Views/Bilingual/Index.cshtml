@@ -1,0 +1,421 @@
+﻿@model Management.Areas.WebContent.Models.BilingualModel
+<div class="bootstrap-table">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+    @if (Model.newCommonModels?.Count() > 0)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a href="#bilingual" class="nav-link active" id="authority-tab" data-bs-toggle="tab" data-bs-target="#bilingual" role="tab" aria-controls="bilingual" aria-selected="false">雙語詞彙</a>
+            </li>
+            @foreach (var lan in Model.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link" id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw" ? "中文內文" : "英文內文")</a>
+                </li>
+            }
+            @foreach (var lan in Model.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@("Regulations"+lan.Lang)" class="nav-link" id="authority-tab" data-bs-toggle="tab" data-bs-target="#@("Regulations" + lan.Lang)" role="tab" aria-controls="@("Regulations"+lan.Lang)" aria-selected="false">@(lan.Lang == "zh-tw" ? "中文法規" : "英文法規")</a>
+                </li>
+            }
+        </ul>
+    }
+    <hr />
+    <div class="form-horizontal tab-content">
+        <div class="tab-pane fade  show active bootstrap-table" role="tabpanel" id="bilingual" aria-labelledby="@($"bilingual-tab")">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">中文詞彙</label>
+                <div class="col-sm-10">
+                    <input name="twTitle" type="text" value="@Model.twWEBNews?.Title" class="form-control" placeholder="中文詞彙" maxlength="1024">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">英文詞彙</label>
+                <div class="col-sm-10">
+                    <input name="enTitle" type="text" value="@Model.enWEBNews?.Title" class="form-control" placeholder="英文詞彙" maxlength="1024">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+                <div class="col-sm-10 pt-3">
+                    <input type="radio" name="IsEnable" value="1" class="radio radio-inline " @(Model.twWEBNews?.IsEnable == "1" ? "checked" : "") /> 發布
+                    <input type="radio" name="IsEnable" value="0" class="radio radio-inline " @(Model.twWEBNews?.IsEnable == null ? "checked" : (Model.twWEBNews?.IsEnable == "0" ? "checked" : "")) />不公開
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">發布日期</label>
+                <div class="col-sm-10">
+                    <input name="StartDate" type="datetime-local" step="1" value="@( Model.twWEBNews == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.twWEBNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.twWEBNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+                <div class="col-sm-10">
+                    <input name="EndDate" type="datetime-local" step="1" value="@( Model.twWEBNews == null?"":Model.twWEBNews.EndDate == null ? "" : Model.twWEBNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="form-group text-center uBtnList">
+                @{
+                    var btns = new List<btnModel>() {
+                new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Savebilingual()" },
+                new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction="backward(0)" },
+                };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                }
+            </div>
+        </div>
+        @if (Model.newCommonModels?.Count() > 0)
+        {
+            foreach (var lan in Model.newCommonModels)
+            {
+                <partial name="~/Areas/WebContent/Views/Bilingual/ModeView.cshtml" model="lan" />
+            }
+            foreach (var lan in Model.newCommonModels)
+            {
+                <partial name="~/Areas/WebContent/Views/Bilingual/RegulationsModeView.cshtml" model="lan" />
+            }
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function Savebilingual() {
+        var saveHref = '@Url.Action("WEBNewsSave", "Bilingual", new { area = "WebContent" })';
+        var isEnable = MODAhtmlEncode($('input[name=IsEnable]:checked'), "val");
+        var twTitle = MODAhtmlEncode($('[name=twTitle]'), "val");
+        var enTitle = MODAhtmlEncode($('[name=enTitle]'), "val");
+        var chk = true; 
+        if (twTitle == "" || enTitle ==""){
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入完整雙語詞彙資料"
+            });
+            chk = false;
+        }
+        if (chk){
+            var obj = {
+                mainsn: '@(Model.twWEBNews == null ? 0 : Model.twWEBNews.MainSN)',
+                weblevelsn: '@Model.webLevel.WebLevelSN',
+                module: '@Model.webLevel.Module',
+                twtitle: twTitle ,
+                entitle :enTitle ,
+                isenable: isEnable,
+                startdate: MODAhtmlEncode($("[name=StartDate]"), "val"),
+                enddate: MODAhtmlEncode($("[name=EndDate]"), "val"),
+            };
+            SaveNews(obj, saveHref, isEnable)
+        }
+    }
+    function SaveNews(obj, saveHref, IsEnable) {
+        $('.preloader').show();
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function (data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                    backward();
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + ArticleID;
+        $("#fox_box").load(href, function () { });
+    }
+
+
+</script>
+<script>
+    changeArticleType('zh-tw');
+    changeArticleType('en');
+    function changeArticleType(lan) {
+        var name = "ArticleType" + lan;
+        var ArticleType = MODAhtmlEncode($('input[name=' + name + ']:checked'), "val");
+        $("#ArticleType_0" + lan).hide();
+        $(".ArticleType_0" + lan).hide();
+        $("#ArticleType_1" + lan).hide();
+        $("#ArticleType_2" + lan).hide();
+        $("#ArticleType_10" + lan).hide();
+        $("#ArticleType_" + ArticleType + lan).show();
+        $(".ArticleType_" + ArticleType + lan).show();
+    }
+    function Save(IsEnable, lan) {
+        var name = "ArticleType" + lan;
+        var ArticleType = MODAhtmlEncode($('input[name=' + name + ']:checked'), "val");
+        var isEnable = "";
+        if (IsEnable == "4" || IsEnable == "-2" || IsEnable == "-1") {
+            isEnable = IsEnable;
+        }
+        else {
+            isEnable = @(Model.wEBNews == null ? 0 : Model.wEBNews.IsEnable);
+           // isEnable = MODAhtmlEncode($('input[name=IsEnable' + lan + ']:checked'), "val");
+        }
+
+        if (IsEnable == "-1" && (ArticleType == "1" || ArticleType == "2")) {
+            Swal.fire({
+                icon: "warning",
+                title: "只有一般資料/逐字稿 格式才有預覽功能"
+            });
+            return false;
+        }
+       // var tab = $("#tab" + lan).val();
+       // var whole = $("#whole" + lan).val();
+       // var policy = $("#policy" + lan).val();
+       // var business = $("#business" + lan).val();
+        var serve = "";
+        var keyword = txtAreaObj("key" + lan);
+        var relatedlink = [];
+        var relatedvideo = [];
+        var relatedmoj = [];
+        var seodescription = MODAhtmlEncode($("[name='SEODescription" + lan + "']"), "val");
+        var seokeywords = MODAhtmlEncode($("[name='SEOKeywords" + lan + "']"), "val");
+        var saveHref = '@Url.Action("WEBNewsSave", "NEWS", new { area = "WebContent" })';
+        if (IsEnable == "-1") {
+            saveHref = '@Url.Action("news", "Demo", new { area = "WebContent" })';
+        }
+        var contenttext = "";
+        var url = "";
+        switch ($('input[name=ArticleType' + lan + ']:checked').val()) {
+            case "0": //一般
+                contenttext = lan == "en" ? CKEDITOR.instances.editoren.getData() : CKEDITOR.instances.editorzhtw.getData();
+                relatedlink = txtAreaObj("link" + lan);
+                relatedvideo = txtAreaObj("video" + lan);
+                relatedmoj = txtAreaObj("moj" + lan);
+                break;
+            case "1": //檔案下載
+                break;
+            case "2": //Url
+                url = $("#URL" + lan).val();
+                break;
+            case "10":
+                relatedlink = txtAreaObj("link" + lan);
+                relatedvideo = txtAreaObj("video" + lan);
+                relatedmoj = txtAreaObj("moj" + lan);
+                break;
+        }
+
+        var d = [{ link: relatedlink, video: relatedvideo, moj: relatedmoj, key: keyword }];
+        var msg = "";
+        $.each(d, function (index, item) {
+            $.each(item, function (iidex, iitem) {
+                if (iitem.filter(x => x.txt == "" || x.val == "").length > 0) {
+                    msg += "請完整輸入" + (iidex == "link" ? "[相關連結]" : iidex == "video" ? "[相關影片]" : iidex == "moj" ? "[相關法規]" : iidex == "key" ? "[關鍵字]" : "") + "所需欄位\n";
+                }
+            });
+        });
+
+        if (msg != "") {
+            Swal.fire({
+                icon: "warning",
+                info: msg
+            });
+            return false;
+        }
+
+        var key = @Model.webLevel.WebLevelSN;
+        var key2 = @(Model.wEBNews == null ? 0 : Model.wEBNews.WEBNewsSN);
+        var ct = '@(Model.webLevel.ListType)' == "ImageTextList" ? $("#Title" + lan).val() : contenttext;
+        var obj = {
+            webNewssn: '@(Model.wEBNews == null ? 0 : Model.wEBNews.WEBNewsSN)',
+            weblevelsn: '@(Model.webLevel.WebLevelSN)',
+            module: '@(Model.webLevel.Module)',
+            articletype: $('input[name=ArticleType' + lan + ']:checked').val(),
+            title: $("#Title" + lan).val(),
+            subtitle: "",
+            description: "",
+            DepartmentID: $('#dep' + lan).val(),
+            contenttext: ct,
+            url: url,
+            target: $('input[name=target' + lan + ']:checked').val(),
+            youtubeid: "",
+            isenable: isEnable,
+            startdate: MODAhtmlEncode($("[name=StartDate]"), "val"),
+            enddate: MODAhtmlEncode($("[name=EndDate]"), "val"),
+            fileinfo: fileinfo(lan),
+            lang: lan,
+            keyword: keyword,
+            relatedlink: relatedlink,
+            relatedvideo: relatedvideo,
+            relatedmoj: relatedmoj,
+            seodescription: seodescription,
+            seokeywords: seokeywords,
+            processuserid: '@(Model.wEBNews == null ? null : Model.wEBNews.ProcessUserID)'
+        };
+        if (isEnable == "1" || isEnable == "0") {
+            Swal.fire({
+                title: '確定要儲存?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SaveNews(obj, saveHref, IsEnable);
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+        else if (isEnable == "4" || isEnable == "3") {
+            var content = IsEnable == "4" ? "送審確定送出?" : "確定要送審?"
+            Swal.fire({
+                title: content,
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SaveNews(obj, saveHref, IsEnable);
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+        else {
+            SaveNews(obj, saveHref, IsEnable);
+        }
+    }
+    function SaveNews(obj, saveHref, IsEnable) {
+        $('.preloader').show();
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function (data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    if (IsEnable == -1) {
+                        window.open("@Url.Action("PageView", "Demo", new { area = "WebContent" })", "temp", config = 'height=800,width=1204');
+                    } else {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        });
+                        backward();
+                    }
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+
+                }
+            }
+        });
+    }
+    //
+    function SaveRegulations(sn , lan)
+    {
+        $('.preloader').show();
+        var obj ={
+            webnewssn : sn,
+            column_1: MODAhtmlEncode($("[name='RegulationsUrl" + lan + "']"), "val"),
+            column_2: MODAhtmlEncode($("[name='RegulationsTitle" + lan + "']"), "val"),
+            RegulationsType: MODAhtmlEncode($('input[name=RegulationsType' + lan + ']:checked'), "val")
+    };
+        $.ajax({
+            url: '@Url.Action("RegulationsSave", "Bilingual", new { area = "WebContent" })',
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function (data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                    backward();
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    //
+    function CPFun(key, key2) {
+        var href = "@Url.Action("Index", "NEWS", new { area = "WebContent" })?key=" + key + "&key2=" + key2;
+        $("#fox_box").load(href, function () { });
+    }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" ,  key= CommonUtility.GetUrlAesEncrypt(Model.webLevel.WebLevelSN.ToString()) }   )";
+        $("#fox_box").load(href, function () { });
+    }
+    function DeleteLink(e) {
+        var tr = e.closest("tr");
+        tr.remove();
+    }
+    function DepSelector() {
+        $("#DepArea").load("@Url.Action("CommonDepartment", "Common", new { area = "" })", function () {
+            DepartmentSelectorTrigger().then(function (result) {
+                var DepData = JSON.parse(result);
+                $('#dep').data('id', DepData.DepID);
+                $('#dep').html(DepData.DepName);
+            })
+        });
+    }
+    function GetDepartment() {
+        if ($('#dep').data('id')) {
+            $.ajax({
+                url: '@Url.Action("GetDepartment", "Common", new { area = "" })',
+                type: 'post',
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                data: {
+                    depID: $('#dep').data('id'),
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#dep').html(data.content);
+                }
+            });
+        }
+    }
+
+    function txtAreaObj(Name) {
+        var array = [];
+        $.each($(".class" + Name), function () {
+            var val = $(this).find(".classval" + Name).val() == undefined ? null : $(this).find(".classval" + Name).val();
+            var txt = $(this).find(".classtxt" + Name).val();
+            array.push({ val: val, txt: txt });
+        });
+        return array;
+    }
+</script>

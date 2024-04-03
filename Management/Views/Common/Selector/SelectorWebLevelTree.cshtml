@@ -1,0 +1,24 @@
+﻿@model SelectorWebLevelTreeModel
+@{
+    var dataList = Services.Authorization.WebLevelManagementService.GetWebLevelTree(Model.WebSiteID, Utility.EnumTpye.GetEnumName(Model.EnumWebLevelModuleLevel));
+    dataList = dataList.Where(X => X.MainSN != Model.MainSN).ToList();
+}
+<select id="@Model.IdName" name="@Model.IdName" class="form-control">
+    <option value="">--請選擇--</option>
+    @foreach (var lv in dataList.Where(x => x.ParentSN == 0).OrderBy(x => x.SortOrder))
+    {
+        <option value="@lv.MainSN" selected="@(Model.ParentSN == lv.MainSN)" >@lv.Title</option>
+        foreach (var lv2 in dataList.Where(x => x.ParentSN == lv.MainSN).OrderBy(x => x.SortOrder))
+        {
+            <option value="@lv2.MainSN" selected="@(Model.ParentSN == lv2.MainSN)">@(""+lv.Title+"-"+ lv2.Title)</option>
+            foreach (var lv3 in dataList.Where(x => x.ParentSN == lv2.MainSN).OrderBy(x => x.SortOrder))
+            {
+                <option value="@lv3.MainSN" selected="@(Model.ParentSN == lv3.MainSN)">@(""+lv.Title+"-"+ lv2.Title+"-"+ lv3.Title)</option>
+                foreach (var lv4 in dataList.Where(x => x.ParentSN == lv3.MainSN).OrderBy(x => x.SortOrder))
+                {
+                    <option value="@lv4.MainSN" selected="@(Model.ParentSN == lv4.MainSN)">@(""+lv.Title+"-"+ lv2.Title+"-"+ lv3.Title+"-"+ lv4.Title)</option>
+                }
+            }
+        }
+    }
+</select>

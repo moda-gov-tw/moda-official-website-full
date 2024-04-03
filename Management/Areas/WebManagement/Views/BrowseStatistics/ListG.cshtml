@@ -1,0 +1,82 @@
+﻿@model Management.Areas.WebManagement.Models.OperationStatistics.GAViewModel
+@{
+    var md = Model;
+}
+<script>
+    ChartObject = [];
+</script>
+<div class="dashboard1 row">
+    @if (string.IsNullOrEmpty(Model.Name))
+    {
+        <div class="dashboard1Col12 mb-5">
+            <div class="mb-3">
+                <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3">訪客流量</h2>
+                @{
+                    var flowbtns = new List<btnModel>() {
+            new btnModel() { IdName = "flowExport", Btntype = btnModel.btntype.匯出,  onclickFunction = "GA4export('flowChart','訪客流量')"}  };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="flowbtns" />
+                }
+            </div>
+            <partial name="~/Areas/WebManagement/Views/BrowseStatistics/ChartTemplate.cshtml" model=md.Flow2Data />
+        </div>
+        <div class="dashboard1Col12 my-5">
+            <div class="mb-3">
+                <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3">訪客來源國家</h2>
+                @{
+                    var countrybtns = new List<btnModel>() {
+                    new btnModel() { IdName = "countryExport", Btntype = btnModel.btntype.匯出, onclickFunction = "GA4export('countryChart','訪客來源國家')"}  };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="countrybtns" />
+                }
+            </div>
+            <partial name="~/Areas/WebManagement/Views/BrowseStatistics/ChartTemplate.cshtml"  model=md.Country2Data  />
+        </div>
+        <div class="dashboard1Col12 my-5">
+            <div class="mb-3">
+                <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3">臺灣地區</h2>
+                @{
+                    var citybtns = new List<btnModel>() {
+            new btnModel() { IdName = "cityExport", Btntype = btnModel.btntype.匯出, onclickFunction = "GA4export('cityChart','臺灣地區')"}  };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="citybtns" />
+                }
+            </div>
+            <partial name="~/Areas/WebManagement/Views/BrowseStatistics/ChartTemplate.cshtml" model=md.City2Data />
+        </div>
+        <div class="dashboard1Col12 my-5">
+            <div class="mb-3">
+                <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3">熱門單元排行</h2>
+                @{
+                    var hotbtns = new List<btnModel>() {
+            new btnModel() { IdName = "hotExport", Btntype = btnModel.btntype.匯出, onclickFunction = "GA4export('hotChart','熱門單元排行')"}  };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="hotbtns" />
+                }
+                <partial name="~/Areas/WebManagement/Views/BrowseStatistics/ChartTemplate.cshtml" model=md.HotData />
+            </div>
+        </div>
+        <div class="dashboard1Col12 my-5">
+            <div class="mb-3">
+                <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3">冷門單元排行</h2>
+                @{
+                    var coldbtns = new List<btnModel>() {
+            new btnModel() { IdName = "coldExport", Btntype = btnModel.btntype.匯出, onclickFunction = "GA4export('coldChart','冷門單元排行')"}  };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="coldbtns" />
+                }
+                <partial name="~/Areas/WebManagement/Views/BrowseStatistics/ChartTemplate.cshtml" model=md.ColdData />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="dashboard1Col12 my-5">
+            <h2 class="d-inline-block align-middle font-weight-bold my-0 me-3"><span style="color:red">@Model.Name</span></h2>
+        </div>
+    }
+</div>
+<script>
+    function GA4export(e,name)
+    {
+        let tempA = document.createElement('a');
+        tempA.download ="GA4資料-"+name+'.png';
+        tempA.href =  ChartObject.filter(x=>x.id== e)[0].chart.toBase64Image();
+        tempA.click();
+    }
+</script>

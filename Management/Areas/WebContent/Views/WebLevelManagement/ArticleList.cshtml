@@ -1,0 +1,271 @@
+﻿@model Management.Areas.WebContent.Models.ArticleListModel
+@{
+    var Model1 = Model;
+    var IsLook = false;
+    var WEBLevelSN = Model1.wEBNews.FirstOrDefault() == null ? 0 : Model1.wEBNews.First().WebLevelSN;
+    var Weblevel = Services.Authorization.WebLevelManagementService.GetWebLevel(WEBLevelSN);
+    var IsLooksWebLevels = new List<int>() { 334, };
+    IsLook = IsLooksWebLevels.Any(x => x == Model1.wEBNews.FirstOrDefault()?.WebLevelSN);
+    int row = ((Model1.defaultPager.p - 1) * Model1.defaultPager.DisplayCount) == 0 ? 1 : ((Model1.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+    var needSortList = new List<string>() {"BANNER","TAB","LINK" ,"BANNER2","TEXT" };
+}
+ <input type="hidden" name="sortType" data-title="@Model.sorttitle" data-sort="@Model.sorttype" />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" width="60">語系</th>
+            <th scope="col" class="sortTh" data-title="Title" onclick="sortTh(1,$(this))">標題<button type="button" class="sortIcon sortNo "></button></th>
+            @if(Model.Module == "Schedule")
+            {
+            <th scope="col"  class="sortTh" data-title="PublishDate" onclick="sortTh(1,$(this))">行程日期<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            <th scope="col"  class="sortTh" data-title="StartDate" onclick="sortTh(1,$(this))">發布日期<button type="button" class="sortIcon sortNo "></button></th>
+            @if (Model.Module != "Schedule")
+            {
+             <th scope="col"  class="sortTh" data-title="EndDate" onclick="sortTh(1,$(this))">下架日期<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            <th scope="col"  class="sortTh" data-title="ProcessUserID" onclick="sortTh(1,$(this))">最後維護人<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col"  class="sortTh" data-title="ProcessDate" onclick="sortTh(1,$(this))">維護時間<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col"  class="sortTh" data-title="IsEnable" onclick="sortTh(1,$(this))">資料狀態<button type="button" class="sortIcon sortNo "></button></th>
+            @if (  needSortList.Any(x=> x==Model1.Module)  || (Model1.Module == "NEWS" && Model1.SortMethod == "0"))
+            {
+                <th scope="col"  class="colW2 sortTh" data-title="SortOrder" onclick="sortTh(1,$(this))">排序<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            @if (Model1.Module == "NEWS")
+            {
+                <th scope="col"  class="colW2 sortTh" data-title="SortOrder" onclick="sortTh(1,$(this))" >置頂排序<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            <th scope="col" width="220">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model1.wEBNews.Count > 0)
+        {
+            var ListData = needSortList.Any(x=> x==Model1.Module) ? Model1.wEBNews.OrderBy(x => x.SortOrder).ToList() : Model1.wEBNews.ToList();
+            var auth = Model.AuthSysGroupWebLevels.Where(x => x.AuthType == "Reviewer").FirstOrDefault();
+            @foreach (var data in ListData)
+            {
+                var MainSN = CommonUtility.GetUrlAesEncrypt(data.MainSN.ToString());
+                var isenable = Utility.CommFun2.Status.GetIsEnableDesc(data.IsEnable, data.StartDate, data.EndDate);
+                var action = Model.logActions.Where(x => x.SourceSN == data.MainSN).OrderByDescending(x => x.CreatedDate).Take(1).FirstOrDefault();
+                <tr>
+                    <td>@row</td>
+                    <td class="text-nowrap">@data.Lang</td>
+                    <td align="left">@data.Title</td>
+                    @if(Model.Module == "Schedule")
+                    {
+                        <td>@(data.PublishDate?.ToString("yyyy-MM-dd HH:mm"))</td>
+                    }
+                    <td>@data.StartDate</td>
+                     @if (Model.Module != "Schedule")
+                    {
+                        <td>@(data.EndDate?.ToString("yyyy-MM-dd HH:mm"))</td>
+                  
+                    }
+                    <td>@data.ProcessUserID</td>
+                    <td><a href="javascript:;" onclick="Logpup('@data.WEBNewsSN','WEBNews')">@data.ProcessDate.ToString("yyyy-MM-dd HH:mm")</a></td>
+                    <td>@isenable.desc</td>
+                    @if (needSortList.Any(x=> x==Model1.Module) || (Model1.Module == "NEWS" && Model1.SortMethod == "0"))
+                    {
+                        <td>
+                            <select onchange="ArticleReArrange($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.WEBNewsSN.ToString())" disabled="@(data.IsTop != null)">
+                                @{
+                                    int i = 1;
+                                }
+                                @foreach (var sort in Model1.SortList.OrderBy(x => x.SortOrder))
+                                {
+                                    <option selected="@(sort.SortOrder == data.SortOrder)" value="@(sort.SortOrder)" disabled="@(sort.IsTop != null )">@(i)</option>
+                                    i++;
+                                }
+                            </select>
+                        </td>
+                    }
+
+                    @if (Model1.Module == "NEWS" )
+                    {
+                        @if (data.IsTop != null)
+                        {
+                            <td>
+                                <select onchange="NewsReArrangeByIsTop($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.WEBNewsSN.ToString())">
+                                    @{
+                                        int i = 1;
+                                    }
+                                    @foreach (var sort in Model1.SortIstop.OrderBy(x => x.IsTop == null).ThenBy(x => x.IsTop))
+                                    {
+                                        <option selected="@(sort.IsTop == data.IsTop)" value="@(sort.IsTop)">@(i)</option>
+                                        i++;
+                                    }
+                                </select>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>否</td>
+                        }
+                    }
+                    <td>
+                        <input type="button" class="@($"ubtn-preview {(data.ArticleType == "0" ? "" : data.ArticleType == "10" ? "" : "disabled")}")" value="預覽" onclick="PreView('@data.MainSN','@data.Lang')" disabled="@(data.ArticleType != "0" && data.ArticleType != "10")" style="@(Weblevel?.WeblevelType == "1" ? "":"display:none")"/>
+                        <input type="button" class="@($"ubtn-edit {(((isenable.desc == "審稿中" &&  auth == null) || (isenable.desc == "審稿退回" && action != null)) ? "disabled" : "")}")" value="編修" onclick="EditFun('@data.MainSN')"/>
+                        <input type="button" class="ubtn-delete" value="刪除" onclick="Delete('@CommonUtility.GetUrlAesEncrypt(data.MainSN.ToString())')" />
+                    </td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="@(needSortList.Any(x=> x==Model1.Module) ? 10 : (Model1.Module == "NEWS" && Model1.SortMethod == "0")? 11: 10)">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model1.defaultPager" />
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function Delete(key) {
+        var href = '@Url.Action("WEBNewsDelete", "NEWS", new { area = "WebContent" })';
+        Swal.fire({
+            title: '確定要刪除?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '刪除',
+            denyButtonText: '不要刪除',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: href,
+                    type: 'post',
+                    data: {
+                        key: key
+                    },
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.statusCode == 200) {
+                            var p = $("ul.pagination > li.active > a")[0].innerHTML;
+                            searchFunction(p);
+                            Swal.fire({
+                                icon: "success",
+                                title: "更新成功"
+                            });
+                        }
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('已取消!', '', 'info')
+            }
+        })
+    }
+
+    function ArticleReArrange(e) {
+        var data_id = e.attr("data-id");
+        var sort = e.find(':selected').val();
+        var Url = "@Url.Action("NewsReArrange", "NEWS", new { area = "WebContent" })";
+        $.ajax({
+            url: Url,
+            data: {
+                key: data_id,
+                sort: sort,
+                lan: MODAhtmlEncode($("#language"), "val")
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function(data) {
+                if (data.statusCode == 200) {
+                    searchFunction(1);
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+
+    function NewsReArrangeByIsTop(e) {
+        var data_id = e.attr("data-id");
+        var isTop = e.find(':selected').val();
+        var Url = "@Url.Action("NewsReArrangeByIsTop", "NEWS", new { area = "WebContent" })";
+        $.ajax({
+            url: Url,
+            data: {
+                key: data_id,
+                isTop: isTop,
+                lan: MODAhtmlEncode($("#language"), "val"),
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function(data) {
+                if (data.statusCode == 200) {
+                    searchFunction(1);
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+
+    function Logpup(sn, module) {
+        var websiteid = MODAhtmlEncode($("#drlWebSite"), "val");
+        var obj = {
+            popUrl: "@Url.Action("CommonLogAction", "Common",new  {area =""})?module=" + module + "&SourceSN=" + sn + "&websiteid=" + websiteid
+        };
+        pop(obj);
+    }
+
+    function PreView(webnswsn,lang) {
+        var saveHref = '@Url.Action("news", "Demo", new { area = "WebContent" })';
+        $('.preloader').show();
+        var obj = {
+            webNewssn: webnswsn,
+            lang : lang,
+        };
+
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    window.open("@Url.Action("PageView", "Demo", new { area = "WebContent" })", "temp", config = 'height=800,width=1204');
+                } 
+                else { }
+            }
+        });
+    }
+</script>

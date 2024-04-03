@@ -1,0 +1,73 @@
+﻿@model List<SysDepartment>
+@{
+    var tree = "";
+    void findTree(List<SysDepartment> data, int ParentID)
+    {
+        foreach (var d in data.Where(x => x.ParentID == ParentID).OrderBy(x => x.SortOrder))
+        {
+            tree += $@"
+        <div class='simpleTree-mainContainer staticTree'>
+            <div class='simpleTree-nodeContainer hasChild'>
+                <div class='simpleTree-indent'></div>";
+            if (data.Any(x => x.ParentID == d.SysDepartmentSN))
+            {
+                tree += "<div class='simpleTree-toggle'></div>";
+            }
+            tree += $@"
+                <div class='simpleTree-label depBtn' data-id='{d.DepartmentID}' style='cursor: pointer;'>{d.DepartmentName}</div>
+            </div>";
+            if (data.Any(x => x.ParentID == d.SysDepartmentSN))
+            {
+                tree += "<div class='simpleTree-childrenContainer hasChild'>";
+                findTree(data, d.SysDepartmentSN);
+                tree += "</div>";
+            }
+            tree += @"
+        </div>";
+        }
+    }
+    findTree(Model, 0);
+}
+
+<div id="DepartmentSelecterModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-4">
+                <button type="button" class="close" aria-label="Close" onclick="DepClose()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title">單位清單</h3>
+            </div>
+            <div class="modal-body px-5 py-4">
+                @Html.Raw(tree)
+                <div class='btn depBtn' data-id=''>不選取</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function DepartmentSelectorTrigger() {
+        $('#DepartmentSelecterModal').modal('show');
+        return new Promise((resolve, reject) => {
+            $(".depBtn").each(function (idx, item) {
+                item.addEventListener('click', function (e) {
+                    var data = { 'DepID': $(this).data('id'), 'DepName': ($(this).data('id') == "" ? "" : $(this).html()) };
+                    $('#DepartmentSelecterModal').modal('hide');
+                    resolve(JSON.stringify(data));
+                }, { once: true });
+            });
+        });
+    }
+    function DepClose() {
+        $('#DepartmentSelecterModal').modal('hide');
+    }
+    $(function () {
+        $("#DepartmentSelecterModal .simpleTree-toggle").click(function () {
+            if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+                $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+            } else {
+                $(this).parents(".simpleTree-nodeContainer").addClass("on");
+            }
+        });
+    });
+</script>

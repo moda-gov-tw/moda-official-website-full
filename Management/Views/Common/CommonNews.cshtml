@@ -1,0 +1,113 @@
+﻿@model Management.Models.CommonScheduleModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="row searchBar1">
+            <div class="col col-dateToDate" style="text-align:left">
+                <label class="col-form-label">
+                    發布日期：
+                </label>
+                <div class="row">
+                    <div class="col">
+                        <input type="date" id="str" class="form-control" placeholder="yyyy/MM/dd">
+                    </div>
+                    <div class="col">~</div>
+                    <div class="col">
+                        <input type="date" id="end" class="form-control" placeholder="yyyy/MM/dd">
+                    </div>
+                    <div class="col col-btn">
+                        <input type="button" value="查詢" class="ubtn-search search" onclick="searchFunction(1)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-striped mb-4">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">語系</th>
+            <th scope="col">標題</th>
+            <th scope="col">發布日期</th>
+            <th scope="col">下架日期</th>
+        </tr>
+    </thead>
+    <tbody id="newstbody">
+        @if (Model.SchedulewEBNews.Count > 0)
+        {
+            @foreach (var data in Model.SchedulewEBNews)
+            {
+                <tr>
+                    <td><input type="checkbox" value="@data.WEBNewsSN" onchange="chkbox(this)" /></td>
+                    <td>@data.Lang</td>
+                    <td>@data.Title</td>
+                    <td>@data.StartDate</td>
+                    <td>@data.EndDate</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model.SchedulewEBNews.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}
+<button type="button" id="close_news" class="ubtn-close">關閉</button>
+<script>
+
+    var objstr = getCookie("NewsObj");
+    $("#newstbody > tr").each(function() {
+        var sn = $(this).find("td").eq(0).find('input').val();
+        var objchk = getCookie("sysChk");
+        var obj = JSON.parse(objchk);
+        if (obj != "undefined" && obj != "") {
+            if (obj.filter(x => x == sn).length > 0) {
+                $(this).find("td").eq(0).find(":checkbox").attr("checked", true);
+            }
+        }
+        else if (chk.filter(x => x == sn).length > 0) {
+            $(this).find("td").eq(0).find(":checkbox").attr("checked", true);
+        }
+    });
+
+    if (JSON.parse(objstr) != "") {
+        var obj = JSON.parse(objstr);
+        $("#str").val(obj.str);
+        $("#end").val(obj.end);
+    }
+
+    //已勾選資料
+    function chkbox(c) {
+        var s = c.value;
+        if (c.checked) {
+            chk.push(s);
+        } else {
+            var index = chk.indexOf(s);
+            if (index > -1) {
+                chk.splice(index, 1);
+            }
+        }
+        SetCookie("sysChk", chk);
+    }
+
+    $(document).ready(function() {
+        $("#close_news").click(function() {
+            var lan = '@(Model.SchedulewEBNews.Count > 0 ? Model.SchedulewEBNews.First().Lang : "en")';
+            parent.NewsSelector(getCookie("sysChk"), lan);
+            Swal.close();
+        });
+    });
+</script>
+

@@ -1,0 +1,205 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row searchBar1">
+                    <div class="col">
+                        <label class="col-form-label">
+                            帳號/使用者：
+                        </label>
+                        <input type="text" id="QryKeyword" class="form-control" placeholder="帳號/使用者">
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            單位：
+                        </label>
+                        @{
+                            var DepModel = new definitionModel() { IdName = "dep" };
+                            <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@DepModel />
+                        }
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            狀態：
+                        </label>
+                        <div class="row">
+                            <div class="col">
+                                @{
+                                    var selectModel2 = new definitionModel() { IdName = "IsEnable" };
+                                    <partial name="~/Views/Common/Selector/SelectorUserIsEnable.cshtml" model=@selectModel2 />
+                                }
+                            </div>
+                            <div class="col">
+                                <input type="button"
+                                       value="查詢" onclick="searchFunction(1)"
+                                       class="ubtn-search">
+                                <input type="button"
+                                       value="匯出"
+                                       class="ubtn-export" onclick="Export()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-right pb-3">
+                            <input type="button"
+                                   value="新增"
+                                   class="ubtn-add" onclick="Create()">
+                        </div>
+                    </div>
+                </div>
+                <div class="uTable1">
+                   <input type="hidden" name="sortType" data-title="UserID" data-sort="asc" />
+                    <div id="tableList" style="min-width: 1200px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var href = "@Url.Action("List", "UserManagement", new { area = "Authorization" })";
+        var backperPageShow = 0;
+        var back = getCookie("back");
+        if (back == 1) {
+            var objstr = getCookie("UserObj");
+            if (objstr != "") {
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $('#perPageShow').val(obj.displayCount);
+                    backperPageShow = obj.displayCount;
+                    $("#QryKeyword").val(obj.key);
+                    $("#dep").val(obj.dep);
+                    $("#IsEnable").val(obj.states);
+                    searchFunction(obj.p);
+                } else {
+                    searchFunction(1);
+                }
+            } else {
+                searchFunction(1);
+            }
+
+        } else {
+            searchFunction(1);
+        }
+        SetCookie("back", "");
+        $(document).on("click", ".page_a", function() {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+        function searchFunction(p) {
+            var key = MODAhtmlEncode($("#QryKeyword"), "val");
+            var dep = MODAhtmlEncode($("#dep"), "val");
+            var states = MODAhtmlEncode($("#IsEnable"), "val");
+            
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var sorttitle= getObjAtr($("[name=sortType]") ,"data-title");
+            var sorttype=  getObjAtr($("[name=sortType]") ,"data-sort");
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "key": key,
+                "dep": dep,
+                "states": states,
+                "sorttitle":sorttitle,
+                "sorttype":sorttype
+            };
+            var getUrl = "?sorttitle="+sorttitle+"&sorttype="+sorttype+"&key=" + key + "&dep=" + dep + "&states=" + states + "&p=" + p;
+            var pageUrl = href + getUrl;
+            SetCookie("UserObj", selectobj);
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function() {
+                var sortobj =  $("[name=sortType]");
+                $(".sortTh").each(function(){
+                    if($(this).attr("data-title")==sortobj.attr("data-title")){
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if(sortobj.attr("data-sort")!="asc"){
+                            sort = "sortDesc"
+                        }
+                         $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+            });
+        }
+        function buttonFunction(e) {
+            var id = e.attr("data-id");
+            var type = e.attr("data-type");
+            var Satus = e.val();
+            var Url = "";
+            switch (type) {
+                case "reset":
+                    Url = "@Url.Action("SendResetPwd", "UserManagement", new {area= "Authorization" })";
+                    break;
+                case "stop":
+                    Url = "@Url.Action("StopUser", "UserManagement", new {area= "Authorization" })";
+                    break;
+                case "delete":
+                    Url = "@Url.Action("DelUser", "UserManagement", new {area= "Authorization" })";
+                break;
+            }
+            Swal.fire({
+                title: '確定要' + Satus + '?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: Url,
+                        data: { key: id },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        type: 'post',
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: data.content
+                                }).then(result => {
+                                    location.reload();
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+        function DelFunction(e){
+          var id = e.attr("data-id");
+        }
+        function Create() {
+            location.href = '@Url.Action("Mode", "UserManagement", new { area = "Authorization" })'
+        }
+        function Export() {
+            var key = MODAhtmlEncode($("#QryKeyword"), "val");
+            var dep = MODAhtmlEncode($("#dep"), "val");
+            var states = MODAhtmlEncode($("#IsEnable"), "val");
+            location.href = '@Url.Action("ExcelReport", "UserManagement", new { area = "Authorization" })?key=' + key + "&states=" + states + "&dep=" + dep
+        }
+    </script>
+}

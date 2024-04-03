@@ -1,0 +1,96 @@
+trigger:
+  - main
+
+resources:
+  - repo: self
+
+variables:
+  - group: gcp
+  - name: image_tag 
+    value: $(Build.BuildNumber)
+  - name: BUILD_NUMBER
+    value: $(Build.BuildNumber)
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Staging_Build
+  condition: eq(variables['Build.SourceBranchName'], variables['staging_branch'])
+  variables:
+      image_registry: $(staging_image_registry)
+      image_repo: $(staging_image_repo)
+      image_management: $(image_registry)/$(image_repo)/management
+      image_fileservices: $(image_registry)/$(image_repo)/fileservices
+      image_webapi: $(image_registry)/$(image_repo)/webapi
+      image_website: $(image_registry)/$(image_repo)/website
+      image_mailbox: $(image_registry)/$(image_repo)/mailbox
+      image_search: $(image_registry)/$(image_repo)/search
+      image_create: $(image_registry)/$(image_repo)/create
+      image_static: $(image_registry)/$(image_repo)/static
+      image_youtube: $(image_registry)/$(image_repo)/youtube
+  jobs:
+  - template: azure-pipelines-build.yml
+    parameters:
+        gcp_secret: gcp_production2.json
+
+- stage: Production_Build
+  condition: eq(variables['Build.SourceBranchName'], variables['production_branch'])
+  variables:
+    image_registry: $(production_image_registry)
+    image_repo: $(production_image_repo)
+    image_management: $(image_registry)/$(image_repo)/management
+    image_fileservices: $(image_registry)/$(image_repo)/fileservices
+    image_webapi: $(image_registry)/$(image_repo)/webapi
+    image_website: $(image_registry)/$(image_repo)/website
+    image_mailbox: $(image_registry)/$(image_repo)/mailbox
+    image_search: $(image_registry)/$(image_repo)/search
+    image_create: $(image_registry)/$(image_repo)/create
+    image_static: $(image_registry)/$(image_repo)/static
+    image_youtube: $(image_registry)/$(image_repo)/youtube
+  jobs:
+  - template: azure-pipelines-build.yml
+    parameters:
+        gcp_secret: gcp_staging.json
+
+- stage: Staging_Deploy
+  condition: eq(variables['Build.SourceBranchName'], variables['staging_branch'])
+  variables:
+    GCS_BUCKET: $(staging_gcs_bucket)
+    NFS_SERVER: $(staging_nfs_server)
+    image_registry: $(staging_image_registry)
+    image_repo: $(staging_image_repo)
+    image_management: $(image_registry)/$(image_repo)/management
+    image_fileservices: $(image_registry)/$(image_repo)/fileservices
+    image_webapi: $(image_registry)/$(image_repo)/webapi
+    image_website: $(image_registry)/$(image_repo)/website
+    image_mailbox: $(image_registry)/$(image_repo)/mailbox
+    image_search: $(image_registry)/$(image_repo)/search
+    image_create: $(image_registry)/$(image_repo)/create
+    image_static: $(image_registry)/$(image_repo)/static
+    image_youtube: $(image_registry)/$(image_repo)/youtube
+  jobs:
+  - template: azure-pipelines-staging-deploy.yml
+    parameters:
+      gcp_secret: gcp_production2.json
+
+- stage: Production_Deploy
+  condition: eq(variables['Build.SourceBranchName'], variables['production_branch'])
+  variables:
+    GCS_BUCKET: $(production_gcs_bucket)
+    NFS_SERVER: $(production_nfs_server)
+    image_registry: $(production_image_registry)
+    image_repo: $(production_image_repo)
+    image_management: $(image_registry)/$(image_repo)/management
+    image_fileservices: $(image_registry)/$(image_repo)/fileservices
+    image_webapi: $(image_registry)/$(image_repo)/webapi
+    image_website: $(image_registry)/$(image_repo)/website
+    image_mailbox: $(image_registry)/$(image_repo)/mailbox
+    image_search: $(image_registry)/$(image_repo)/search
+    image_create: $(image_registry)/$(image_repo)/create
+    image_static: $(image_registry)/$(image_repo)/static
+    image_youtube: $(image_registry)/$(image_repo)/youtube
+  jobs:
+  - template: azure-pipelines-deploy.yml
+    parameters:
+      gcp_secret: gcp_staging.json

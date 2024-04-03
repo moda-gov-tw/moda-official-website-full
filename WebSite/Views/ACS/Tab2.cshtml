@@ -1,0 +1,36 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+
+<section class="idxBusiness lazy" data-bg="/ACS/assets/img/bg_idxIcon1.png" data-aos="fade-up">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <div class="wrap6">
+            <div class="row idxBusinessCon">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="titleBar1 row h-100 align-items-center">
+                        <h2 class="title1 col mb-0 text-center"><span>@Html.Raw(Model?.LevelView.BasicLevel.Title)</span></h2>
+                    </div>
+                </div>
+                @if (item != null)
+                {
+                    foreach (var news in item.TabNewsView.Take(5))
+                    {
+                        var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <a href="@news.DynamicURL" class="card h-100 rounded-4 border-0" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                                <div class="card-body position-relative">
+                                    <span class="idxBusinessIcon position-absolute d-block lazy" data-bg="@news.Logo?.FilePath"></span>
+                                    <div class="card-title text-center">@Html.Raw(news.TabNews.Title)</div>
+                                    <div class="card-text">@Html.Raw(news.TabNews.SubTitle)</div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,236 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row searchBar1">
+                    <div class="col">
+                        <label class="col-form-label">
+                            群組：
+                        </label>
+                        <input type="text" id="QryKeyword" class="form-control" placeholder="群組名稱">
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            群組狀態：
+                        </label>
+                        @{
+                            var selectorModel = new definitionModel() { IdName = "IsEnable" };
+                                        <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model=selectorModel />
+                        }
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            帳號/使用者：
+                        </label>
+                        <input type="text" class="form-control" id="UserKeyword" placeholder="請輸入帳號或姓名" />
+                    </div>
+                    <div class="col" style="display:none">
+                        <label class="col-form-label">
+                            功能：
+                        </label>
+                        @{
+                            var selectorModel2 = new definitionModel() { IdName = "sec" };
+                                        <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model=selectorModel2 />
+                        }
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            單位：
+                        </label>
+                        <div class="row">
+                            <div class="col">
+                                @{
+                                    var DepModel = new definitionModel() { IdName = "dep" };
+                                                <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@DepModel />
+                                }
+                            </div>
+                            <div class="col">
+                                <input type="button"
+                                       value="查詢" onclick="searchFunction(1)"
+                                       class="ubtn-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <div class="col text-end pb-3 px-0">
+                        <input type="button" value="新增" class="ubtn-add" onclick="Create()">
+                    </div>
+                </div>
+                <div class="uTable1">
+                    <input type="hidden" name="sortType" data-title="SortOrder" data-sort="asc" />
+                    <div id="tableList"></div>
+                </div>
+            </div>
+            <div id="DepArea"></div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var href = "@Url.Action("List", "GroupManagement", new { area = "Authorization" })";
+        var backperPageShow = 0;
+        var back = getCookie("back");
+        if (back == 1) {
+            var objstr = getCookie("GupObj");
+            if (objstr != "") {
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $('#perPageShow').val(obj.displayCount);
+                    backperPageShow = obj.displayCount;
+                    $("#QryKeyword").val(obj.key);
+                    $("#dep").val(obj.dep);
+                    $("#IsEnable").val(obj.states);
+                    $("#UserKeyword").val(obj.keyword);
+                    $("#sec").val(obj.sec);
+                    searchFunction(obj.p);
+                } else {
+                    searchFunction(1);
+                }
+            } else {
+                searchFunction(1);
+            }
+        } else {
+            searchFunction(1);
+        }
+        SetCookie("back", "");
+        $(document).on("click", ".page_a", function() {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+
+        function searchFunction(p) {
+           $('.preloader').show();
+            var key = MODAhtmlEncode($("#QryKeyword"), "val");
+            var dep = MODAhtmlEncode($("#dep"), "val");
+            var states = MODAhtmlEncode($("#IsEnable"), "val");
+            var keyword = MODAhtmlEncode($("#UserKeyword"), "val");
+            var sec = MODAhtmlEncode($("#sec"), "val");
+            var sorttitle= getObjAtr($("[name=sortType]") ,"data-title");
+            var sorttype=getObjAtr($("[name=sortType]") ,"data-sort");
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+         
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "key": key,
+                "dep": dep,
+                "states": states,
+                "keyword": keyword,
+                "sec": sec,
+                "sorttitle":sorttitle,
+                "sorttype":sorttype
+            };
+            SetCookie("GupObj", selectobj);
+            var getUrl = "?sorttitle="+sorttitle+"&sorttype="+sorttype+"&key=" + key + "&dep=" + dep + "&keyword=" + keyword + "&sec=" + sec + "&states=" + states + "&p=" + p
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl); 
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function() {
+                var sortobj =  $("[name=sortType]");
+                $(".sortTh").each(function(){
+                    if($(this).attr("data-title")==sortobj.attr("data-title")){
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if(sortobj.attr("data-sort")!="asc"){
+                            sort = "sortDesc"
+                        }
+                         $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+
+                $('.preloader').hide();
+            });
+        }
+        function buttonFunction(e) {
+            var id = e.attr("data-id");
+            var type = e.attr("data-type");
+            var Satus = e.val();
+            var Url = "";
+            switch (type) {
+                case "delete":
+                    Url = "@Url.Action("Delete", "GroupManagement", new {area= "Authorization" })";
+                    Swal.fire({
+                        showCancelButton: true,
+                        icon: "warning",
+                        title: "確定刪除?",
+                        text: "刪除後將無法復原",
+                        confirmButtonText: '刪除',
+                        cancelButtonText: '取消',
+                    }).then((result) => {
+                        $('.preloader').show();
+                        if (result.isConfirmed) {
+                            AJAX();
+                        }
+                        $('.preloader').hide();
+                    });
+
+                    break;
+                case "ability":
+                    Url = "@Url.Action("Ability", "GroupManagement", new {area= "Authorization" })";
+                    $('.preloader').hide();
+                    Swal.fire({
+                        title: '確定要'+Satus+'群組?',
+                        icon: 'warning',
+                        showDenyButton: true,
+                        showCancelButton: false,
+                        confirmButtonText: '確定',
+                        denyButtonText: '取消',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            AJAX();
+                        } else if (result.isDenied) {
+                            Swal.fire('已取消!', '', 'info')
+                        }
+                    })
+                    break;
+            }
+            function AJAX() {
+                $.ajax({
+                    url: Url,
+                    data: { key: id },
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    type: 'post',
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.statusCode == 200) {
+                            Swal.fire({
+                                icon: "success",
+                                title: data.content
+                            }).then(result => {
+                                location.reload();
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    }
+                });
+            }
+        }
+        function DepSelector() {
+            $("#DepArea").load("@Url.Action("CommonDepartment", "Common", new { area = "" })", function() {
+                DepartmentSelectorTrigger().then(function(result) {
+                    var DepData = JSON.parse(result);
+                    $('#dep').data('id', DepData.DepID);
+                    $('#dep').html(DepData.DepName);
+                })
+            });
+        }
+        function Create() {
+            location.href = '@Url.Action("Create", "GroupManagement", new { area = "Authorization" })'
+        }
+    </script>
+}

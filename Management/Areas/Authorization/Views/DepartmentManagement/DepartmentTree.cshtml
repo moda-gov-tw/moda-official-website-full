@@ -1,0 +1,35 @@
+﻿@model List<DBModel.SysDepartment>
+
+@{
+    var tree = "";
+    void findTree(List<SysDepartment> data, int? ParentID)
+    {
+        data = data.Where(x => x.Lang == "zh-tw").ToList();
+        foreach (var d in data.Where(x => x.ParentID == ParentID).OrderBy(x => x.SortOrder))
+        {
+            var toggle = data.FirstOrDefault(x => x.ParentID == d.SysDepartmentSN);
+            var togglediv = toggle != null ? "<div class='simpleTree-toggle'></div>" : "";
+            var ModuleType = d;
+            var Module_class = "treeDotEditBtn";
+            var m_id = CommonUtility.GetUrlAesEncrypt(d.ParentID.ToString());
+            var data_id = CommonUtility.GetUrlAesEncrypt(d.SysDepartmentSN.ToString());
+            var ison = "";
+            if (ParentID == 0) { ison = " on"; }
+            tree += $@"
+    <div class='simpleTree-nodeContainer hasChild{ison}'>
+        <div class='simpleTree-indent'></div>
+        {togglediv }
+        <div class='simpleTree-label btnOp' data-type='List' data-id='{data_id}'>{d.DepartmentName}</div>
+            <span class='editBar1'>
+                <a href='javascript:; ' class='btn btn-sm {Module_class}  btnOp' m_id='{m_id}' data-id='{data_id}'  data-type='Edit' title='部門編輯'><i class='fa fa-list - ul'></i></a>
+            </span>
+     </div>
+     ";
+            tree += "<div class='simpleTree-childrenContainer hasChild' >  ";
+            findTree(data, d.SysDepartmentSN);
+            tree += "</div> ";
+        }
+    }
+    findTree(Model, 0);
+}
+   @Html.Raw(tree)

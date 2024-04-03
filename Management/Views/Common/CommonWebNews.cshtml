@@ -1,0 +1,97 @@
+﻿@model List<Management.Models.CommonWebNewsModel>
+@{
+    Layout = Url.Content("~/Views/Shared/_UploadLayout.cshtml");
+}
+
+<div class="uTable3">
+    <div class="text-start pb-4">
+        <h2 class="font-weight-bold my-0" id="breadcrumb"></h2>
+    </div>
+    <table class="table table-striped mb-4">
+        <thead>
+            <tr>
+                <th style="width:10%">父</th>
+                <th style="width:60%">名稱</th>
+                <th style="width:10%">子</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="CommonNewstbody">
+            @foreach (var m in Model.Where(x => x.ParentSN == "0"))
+            {
+                var HaveParent = Model.Any(x => x.WebLevelSN == m.ParentSN);
+                var HaveChild = Model.Any(x => x.ParentSN == m.MainSN);
+                <tr>
+                    <td>
+                        @if (HaveParent)
+                        {
+                            <input type="button" data-parent="@m.ParentSN" class='btn btn-outline-secondary haveParent' onclick="haveParent($(this))" value=" < " />
+                        }
+                    </td>
+                    <td class="news_info">@m.Title</td>
+                    <td>
+                        @if (HaveChild)
+                        {
+                            <input type="button" data-child="@m.MainSN" class='btn btn-outline-secondary haveChild' onclick="haveChild($(this))" value=" > " />
+                        }
+                    </td>
+                    <td><input type="button" data-SN="@m.WebLevelSN" data-title="@m.Title" class="ubtn-add newbtn" value="新增" onclick="newbtn($(this),'@(m.Disabled)')" style="@((m.Module == "PAGELIST" || m.Module == "CP" || m.Module == "DEPT") ? "display:none" : "")" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="button" id="close_news" class="ubtn-close">關閉</button>
+</div>
+<script>
+    var jsonStr = '@Html.Raw(JsonConvert.SerializeObject(Model))';
+    var objt = JSON.parse(jsonStr);
+
+
+    function haveParent(e) {
+        var ParentSN = getObjAtr(e, "data-parent");
+        var p1 = objt.filter(x => x.MainSN == ParentSN);
+        var breadcrumb = MODAhtmlEncode($('#breadcrumb'), "text");
+
+        $('#breadcrumb').empty();
+        $('#breadcrumb').append(breadcrumb.replace(((objt.filter(x => x.MainSN == p1[0].ParentSN).length > 0 ? ">" : "") + p1[0].Title), ""));
+        ReoladCommonNewstbody(objt.filter(x => x.ParentSN == p1[0].ParentSN));
+    }
+    function haveChild(e) {
+        var WebLevelSN = getObjAtr(e, "data-child");
+        $('#breadcrumb').append((objt.filter(x => x.MainSN == WebLevelSN)[0].ParentSN > 0 ? ">" : "") + objt.filter(x => x.MainSN == WebLevelSN)[0].Title);
+        ReoladCommonNewstbody(objt.filter(x => x.ParentSN == WebLevelSN));
+    }
+    function ReoladCommonNewstbody(list) {
+        $("#CommonNewstbody").empty();
+        var info = "";
+        list.forEach(function(item, i) {
+            var HaveParent = objt.filter(x => x.MainSN == item.ParentSN);
+            var HaveChild = objt.filter(x => x.ParentSN == item.MainSN);
+            var Parent = "";
+            var Child = "";
+            info += "<tr>";
+            if (HaveParent.length > 0) { Parent = "<input type='button' class='btn btn-outline-secondary haveParent' onclick='haveParent($(this))' data-parent=" + item.ParentSN + " value=' < ' >" }
+            if (HaveChild.length > 0) { Child = "<input type='button' class='btn btn-outline-secondary haveChild' onclick='haveChild($(this))'  data-child=" + item.MainSN + " value=' > ' >" }
+            info += "<td>" + Parent + " </td>";
+            info += "<td>" + item.Title + "</td>";
+            info += "<td>" + Child + " </td>";
+            info += "<td><input type='button' data-title='" + item.Title + "' data-SN='" + item.WebLevelSN + "' data-lang='" + item.Lang + "'data-module=" + item.Module + " class='ubtn-add newbtn' value='新增'  onclick='newbtn($(this),"+ item.Disabled +")' style="+((item.Module == 'PAGELIST' || item.Module == 'CP' || item.Module == 'DEPT') ? "display:none":"")+"></td>";
+            info += "</tr>";
+        });
+        $("#CommonNewstbody").append(info);
+    }
+    function newbtn(e,disabled) {
+        var SN = getObjAtr(e, "data-SN");
+        var title = disabled == true ? $('#breadcrumb').text() + ">" + getObjAtr(e, "data-title") : getObjAtr(e, "data-title");
+        var lang = getObjAtr(e, "data-lang");
+        var module = getObjAtr(e, "data-module");
+        parent.NewsSelector(SN, title, lang);
+        Swal.close();
+    }
+
+    $(function(){
+      $("#close_news").click(function() {
+      Swal.close();
+        });
+     });
+</script>

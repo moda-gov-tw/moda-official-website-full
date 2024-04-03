@@ -1,0 +1,37 @@
+parameters:
+- name: gcp_secret
+  default: ''
+jobs:
+- job: DeployToStaging
+  pool: CD   
+  variables:
+  - group: production(staging)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+      sudo apt-get update && sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+    displayName: Install dependency packages # https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud container clusters get-credentials $(staging_gcp_gke) --region $(staging_gcp_gke_region) --project $(staging_gcp_project)
+    displayName: Gcloud login
+  - script: |
+      echo $(image_tag)
+      export -p
+      env | grep ^ENV_ | sed 's/^ENV_//g' > .env
+      kubectl create configmap env --from-env-file .env -o yaml --dry-run=client | kubectl apply -f -
+      kubectl delete cronjob static
+      kubectl delete cronjob staticall
+      kubectl delete cronjob youtube
+      kubectl delete cronjob create
+      kubectl delete cronjob daysearch
+      kubectl delete cronjob nightsearch
+      envsubst < kubernetes.yml > tmp.yml
+      cat tmp.yml
+      kubectl apply -f tmp.yml
+    displayName: Deploy to K8s

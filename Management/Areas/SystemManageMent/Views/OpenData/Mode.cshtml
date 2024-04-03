@@ -1,0 +1,724 @@
+﻿@model Management.Areas.SystemManageMent.Models.OpenData.WEBOpenDataEditModel
+@using System.Data;
+@{
+    var tablenames = Services.SystemManageMent.OpenDataService.GetTableNames();
+    var colum = Services.SystemManageMent.OpenDataService.GetTableAndColumn();
+    var join = Utility.OpenDataType.GetJoin();
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="font-weight-bold my-0">@((Model.wEBOpenDataMain == null) ?"建立":"修改" )</h2>
+                    </div>
+                </div>
+                <div class="bootstrap-table">
+                    <div class="form-horizontal tab-content">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right">模式</label>
+                            <div class="col-sm-10 pt-3">
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" value="1" name="model" class="form-check-input" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 1 ? "checked" :"":"checked") /><label class="form-check-label">一般</label>
+                                    <input type="radio" value="2" name="model" class="form-check-input" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 2 ? "checked" :"":"") /><label class="form-check-label">附件</label>
+                                    <input type="radio" value="3" name="model" class="form-check-input" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 3 ? "checked" :"":"") /><label class="form-check-label">其他</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>標題</label>
+                            <div class="col-sm-10">
+                                <input name="Title" type="text" value="@Model.wEBOpenDataMain?.Title" id="Title" class="form-control" placeholder="標題">
+                            </div>
+                        </div>
+                        <!--模式(一般)Start-->
+                        <div id="model1" style=@(Model.wEBOpenDataMain != null ? (Model.wEBOpenDataMain.ModuleType == 1 || Model.wEBOpenDataMain.ModuleType == 3) ? "": "display:none":"")>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>格式</label>
+                                <div class="col-sm-10 pt-3">
+                                    @foreach (var tmp in Utility.OpenDataType.GetForm())
+                                    {
+                                        <input type="checkbox" value="@tmp.value" name="Forms" class="checkbox-inline checkbox" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.IsXML == int.Parse(tmp.value) ? "checked" :Model.wEBOpenDataMain.IsJSON == int.Parse(tmp.value) ? "checked":Model.wEBOpenDataMain.IsCSV == int.Parse(tmp.value)? "checked":"": "")> @tmp.title
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                <label class="col-sm-2 col-form-label text-sm-right">語系</label>
+                                <div class="col-sm-10">
+                                    <select id="Lang" class="form-control">
+                                        <option value="">--請選擇--</option>
+                                        <option value="zh-tw">中文</option>
+                                        <option value="EN">英文</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">濾除HTML格式</label>
+                                <div class="col-sm-10 pt-3">
+                                    <input type="checkbox" value="1" name="Tag" class="checkbox-inline checkbox" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.IsRemoveTag == 1 ?"checked":"":"")>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">顯示筆數</label>
+                                <div class="col-sm-10">
+                                    <input name="Count" type="number" value="@Model.wEBOpenDataMain?.Count" id="Count" class="form-control" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">資料起日</label>
+                                <div class="col-sm-10">
+                                    <input name="StartDate" StartDate" type="datetime-local" value="@( Model.wEBOpenDataMain == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.wEBOpenDataMain.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.wEBOpenDataMain.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="StartDate" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">資料迄日</label>
+                                <div class="col-sm-10">
+                                    <input name="EndDate" type="datetime-local" value="@( Model.wEBOpenDataMain == null?"":Model.wEBOpenDataMain.EndDate == null ? "" : Model.wEBOpenDataMain.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="EndDate" class="form-control" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group row" name="ModuleType1" style=@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 1 ? "": "display:none":"")>
+                                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>資料節點</label>
+                                <div class="col-sm-10">
+                                    <p>
+                                        <input type="button" value="請選擇" class="ubtn-choose test_btn" onclick="Newspup()" />
+                                        <span id="@($"SPzh-tw")">@Model.wEBNewsExtend?.Column_2</span>
+                                    </p>
+                                    <input name="URL" type="hidden" value="@Model.wEBNewsExtend?.Column_3" id="URLzh-tw" class="form-control" placeholder="資料節點">
+                                </div>
+                                <label class="col-sm-2 col-form-label text-sm-right"></label>
+                                <div class="col-sm-10">
+                                    <span style="color:red;font-weight:bold">僅限「資料上稿模組」單元</span>
+                                </div>
+                            </div>
+                            <div class="form-group row" name="ModuleType3" style=@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 3 ? "": "display:none":"display:none")>
+                                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>資料來源</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="TableName" name="TableName" onchange="removeselect()">
+                                        <option value="">--請選擇--</option>
+                                        @foreach (var item in tablenames)
+                                        {
+                                            <!option value="@item" @(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.TableName == item ? "selected" : "":"")>@item</!option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row" name="ModuleType3" style=@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 3 ? "": "display:none":"display:none")>
+                                <label class="col-sm-2 col-form-label text-sm-right">關聯資料</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var btn0 =
+            new List<btnModel>()
+            {
+                                    new btnModel() { jsUseClassName = "addtable", Btntype = btnModel.btntype.新增 }
+            };
+                                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn0" />
+                                    }
+
+                                    <table class="table table-striped mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th hidden>編號</th>
+                                                <th>資料來源</th>
+                                                <th>關聯方式</th>
+                                                <th>代號</th>
+                                                <th>關聯參數</th>
+                                                <th class="colW3">動作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodytable">
+                                            @if (Model.wEBOpenDataDetails != null && Model.wEBOpenDataDetails.Count > 0)
+                                            {
+                                                @foreach (var details in Model.wEBOpenDataDetails)
+                                                {
+                                                    <tr>
+                                                        <td hidden>
+                                                            <input type="text" class="@($"class{details.OpenDataDetailSN}") col-sm-8 form-control text-sm-left " value="@details.OpenDataDetailSN">
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control" name="tablename">
+                                                                @foreach (var data in tablenames)
+                                                                {
+                                                                    <option value="@(data)" selected="@(details.TableName == data)">@data</option>
+                                                                }
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control" name="join">
+                                                                @foreach (var data in join)
+                                                                {
+                                                                    <option value="@(data.value)" selected="@(details.Join == int.Parse(data.value))">@data.title</option>
+                                                                }
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="@($"class{details.Code}") col-sm-8 form-control text-sm-left " value="@details.Code" disabled>
+                                                        </td>
+                                                        <td>
+                                                            <textarea type="text" class="@($"class{details.SQLParameter}") col-sm-8 form-control text-sm-left " value="@(details.SQLParameter)">@details.SQLParameter</textarea>
+                                                        </td>
+                                                        <td>
+                                                            @{
+                                                                var Dbtn =
+                    new List<btnModel>()
+                    {
+                                                    new btnModel() { jsUseClassName = "deltable", Btntype = btnModel.btntype.刪除 }
+                    };
+                                                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="Dbtn" />
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>欄位</label>
+                                <div class="col-sm-10">
+                                    @{
+                                        var btn1 =
+            new List<btnModel>()
+            {
+                                    new btnModel() { jsUseClassName = "addcluom", Btntype = btnModel.btntype.新增 }
+            };
+                                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn1" />
+                                    }
+                                    <table class="table table-striped mt-3">
+                                        <thead>
+                                            <tr>
+                                                <th hidden>編號</th>
+                                                <th style="display:none">是否必填</th>
+                                                <th>欄位名稱</th>
+                                                <th>資料來源</th>
+                                                <th style="display:none">資料型態</th>
+                                                <th class="colW3">動作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodycolumn">
+                                            @if (Model.wEBOpenDataSchemas != null && Model.wEBOpenDataSchemas.Count > 0)
+                                            {
+                                                foreach (var data in Model.wEBOpenDataSchemas)
+                                                {
+                                                    <tr>
+                                                        <td hidden>
+                                                            <input type="text" class="@($"class{data.OpenDataSchemaSN}") col-sm-8 form-control text-sm-left " value="@data.OpenDataSchemaSN">
+                                                        </td>
+                                                        <td hidden>
+                                                            <select class="form-control" name="isRequired">
+                                                                <option value="0" selected="@(data.isRequired == "0")">No</option>
+                                                                <option value="1" selected="@(data.isRequired == "1")">Yes</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="col-sm-8 form-control text-sm-left" value="@(data.Name)">
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control" name="cloumn">
+                                                                @foreach (var col in Model.SchemasObject)
+                                                                {
+                                                                    <option value="@(col.Code != null ? (col.Code +"."+ col.Column) : (col.TableName + "." + col.Column))" selected="@(data.OpenDataDetailSN == col.OpenDataDetailSN && data.Column == col.Column)">@(col.Code != null ? (col.Code +"."+ col.Column) : (col.TableName + "." + col.Column))</option>
+                                                                }
+                                                                <option value=".RelPic" selected="@(data.Column == "RelPic")">RelPic</option>
+                                                                <option value=".RelFile" selected="@(data.Column == "RelFile")">RelFile</option>
+                                                                <option value=".RelLink" selected="@(data.Column == "RelLink")">RelLink</option>
+                                                                <option value=".RelVideo" selected="@(data.Column == "RelVideo")">RelVideo</option>
+                                                                 <option value=".RelMoj" selected="@(data.Column == "RelMoj")">RelMoj</option>
+                                                                <option value=".RelWebNews" selected="@(data.Column == "RelWebNews")">RelWebNews</option>
+                                                            </select>
+                                                        </td>
+                                                        <td hidden>
+                                                            <select class="form-control" name="DataType">
+                                                                <option value="nvarchar" selected="@(data.DataType == "nvarchar")">文字</option>
+                                                                <option value="datetime" selected="@(data.DataType == "datetime")">日期</option>
+                                                                <option value="list" selected="@(data.DataType == "list")">清單</option>
+                                                                <option value="int" selected="@(data.DataType == "int")">唯一識別碼</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type='button' class='ubtn-delete delcolum' value='刪除' />
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">查詢條件</label>
+                                <div class="col-sm-10">
+                                    <textarea name="Parameter" value="@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.SQLParameter : "" )" id="Parameter" class="form-control" placeholder="查詢條件">@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.SQLParameter : "" )</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--模式(一般)End-->
+                        <!--模式(附件)Start-->
+                        <div id="model2" style=@(Model.wEBOpenDataMain != null ? Model.wEBOpenDataMain.ModuleType == 2 ? "": "display:none" :"display:none")>
+                            <div class="form-group row">
+                                @{
+                                    var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.OpenData.File,
+                file_trNumber = $"{Utility.WebFileGroupID.OpenData.File}" + "zh-tw",
+                needCopy = false,
+                title = "相關檔案",
+                FileType = "0",
+                fth = "OpenData",
+                lan = "zh-tw",
+                FileCountState = 1,
+                Required = 1,
+
+            };
+                                    <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+                                }
+                            </div>
+                        </div>
+                        <!--模式(附件)End-->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+                            <div class="col-sm-10 pt-3">
+                                <input type="radio" name="@("IsEnable")" value="1" class="radio radio-inline " @( Model.wEBOpenDataMain == null ? "" : Model.wEBOpenDataMain.IsEnable == "1" ?"checked" : "" ) /> 發布
+                                <input type="radio" name="@("IsEnable")" value="0" class="radio radio-inline " @( Model.wEBOpenDataMain == null ? "checked" : (Model.wEBOpenDataMain.IsEnable == "0" ? "checked" : "") ) />不公開
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+                            <div class="col-sm-10">
+                                <div>
+                                    @{
+                                        var selectIds = new List<string>();
+                                        var DepID = string.IsNullOrWhiteSpace(Model.wEBOpenDataMain?.DepartmentID) ? Model.sysUserSysDepartmentID : Model.wEBOpenDataMain?.DepartmentID;
+                                        selectIds.Add(DepID);
+                                        var depControl = new definitionModel()
+            {
+                IdName = $"dep",
+                selectIds = selectIds,
+
+            };
+                                        <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group text-center uBtnList">
+                @{
+                    var btns = new List<btnModel>()
+                {
+                new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Create(1)"},
+                new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction=$"CancelFun()" },
+                };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var jsontable = '@Html.Raw(JsonConvert.SerializeObject(tablenames))';
+    var table = JSON.parse(jsontable);
+    var jsoncolum = '@Html.Raw(JsonConvert.SerializeObject(colum))';
+    var colum = JSON.parse(jsoncolum);
+    var jsonjoin = '@Html.Raw(JsonConvert.SerializeObject(join))';
+    var joins = JSON.parse(jsonjoin);
+    $(document).off("click", ".deltable").on("click", ".deltable", function() {
+        $(this).parent().parent().remove();
+        $('#tbodycolumn').empty();
+        $('#ContentText').empty();
+    });
+
+    $(document).off("click", ".delcolum").on("click", ".delcolum", function() {
+        $(this).parent().parent().remove();
+        $('#ContentText').empty();
+    });
+    $(document).off("click", ".addtable").on("click", ".addtable", function() {
+        $('#tbodycolumn').empty();
+        $('#ContentText').empty();
+        var item = "";
+        item = "<tr>";
+        item += "<td hidden>";
+        item += "<input type='text' class='col-sm-8 form-control text-sm-left' value='0'>";
+        item += "</td>";
+        item += "<td>";
+        item += "<select class='form-control' name='tablename'>";
+        for (var i = 0; i < table.length; i++) {
+            item += "<option value=" + table[i] + ">" + table[i] + "</option>";
+        }
+        item += "</select>";
+        item += "</td>";
+
+        item += "<td>";
+        item += "<select class='form-control' name='join'>"
+        for (var i = 0; i < joins.length; i++) {
+            item += "<option value=" + i + ">" + joins[i].title + "</option>";
+        }
+        item += "</select>";
+        item += "</td>";
+        item += "<td>";
+        item += "<input type='text' class = 'col-sm-8 form-control text-sm-left' name='code' value='' onkeyup='check(this)'>";
+        item += "</td>";
+        item += "<td>";
+        item += "<textarea type='text' class='col-sm-8 form-control text-sm-left'  value=''></textarea>";
+        item += "</td>";
+        item += "<td>";
+        item += "<input type='button' class='ubtn-delete deltable' value='刪除' />";
+        item += "</td>";
+        item += "</tr>";
+        $("#tbodytable").append(item);
+    });
+
+    $(document).off("click", ".addcluom").on("click", ".addcluom", function() {
+        $('#ContentText').empty();
+        var item = "";
+        var error = "";
+        $('#tbodytable > tr').each(function() {
+            if ($(this).find("td").eq(2).find('input').val() == "") {
+                error += "請輸入關聯資料代號 \n";
+                return false;
+            }
+        });
+
+        if ($('#TableName').val() == '' && MODAhtmlEncode($('input[name=model]:checked'), "val") == "3") {
+            error += "請選擇資料來源 \n";
+        }
+        else if ($("#SPzh-tw").text() == "" && MODAhtmlEncode($('input[name=model]:checked'), "val") == "1") {
+            error += "請選擇一筆資料\n";
+        }
+
+        if (error != "") {
+            Swal.fire({
+                icon: "warning",
+                title: error
+            });
+        }
+        else {
+            var table = Tabledata();
+
+            item = "<tr>";
+            item += "<td hidden>";
+            item += "<input type='text' class='col-sm-8 form-control text-sm-left' value='0'>";
+            item += "</td>";
+            item += "<td hidden>";
+            item += "<select class='form-control' name='isRequired'>";
+            item += "<option value='0'>No</option>";
+            item += "<option value='1'>Yes</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td>";
+            item += "<input type='text' class ='col-sm-8 form-control text-sm-left'/>";
+            item += "</td>";
+            item += "<td>";
+            item += "<select class='form-control' name='cloumn'>";
+            for (var j = 0; j < table.length; j++) {
+                var data = colum.filter(x => x.TABLE_NAME == table[j].tablenames);
+                for (var i = 0; i < data.length; i++) {
+                    item += "<option value=" + (table[j].code == '' ? data[i].TABLE_NAME : table[j].code) + "." + data[i].COLUMN_NAME + ">" + (table[j].code == '' ? data[i].TABLE_NAME : table[j].code) + "." + data[i].COLUMN_NAME + "</option>";
+                }
+            }
+            item += "<option value='.RelPic'>RelPic</option>";
+            item += "<option value='.RelFile'>RelFile</option>";
+            item += "<option value='.RelLink'>RelLink</option>";
+            item += "<option value='.RelVideo'>RelVideo</option>";
+             item += "<option value='.RelMoj'>RelMoj</option>";
+            item += "<option value='.RelWebNews'>RelWebNews</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td hidden>";
+            item += "<select class='form-control' name='DataType'>";
+            item += "<option value='nvarchar'>文字</option>";
+            item += "<option value='datetime'>日期(yyyy-mm-dd)</option>";
+            item += "<option value='list'>清單</option>";
+            item += "<option value='int'>唯一識別碼</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td>";
+            item += "<input type='button' class='ubtn-delete delcolum' value='刪除' />";
+            item += "</td>";
+            item += "</tr>";
+
+            $("#tbodycolumn").append(item);
+        }
+    });
+
+    function Tabledata() {
+        var array = [];
+        if (array.length == 0) {
+            if ($('input[name=model]').val() == "1") {
+                array.push({ tablenames: "WEBNews", code: "" });
+            }
+            else {
+                array.push({ tablenames: MODAhtmlEncode($("#TableName"), "val"), code: "" });
+            }
+
+        }
+
+        $('#tbodytable > tr').each(function() {
+            if (getPosition(array, $(this).find("td").eq(1).find('option:selected').val(), $(this).find("td").eq(3).find('input').val()) == true) {
+                array.push({ tablenames: $(this).find("td").eq(1).find('option:selected').val(), code: $(this).find("td").eq(3).find('input').val() });
+            }
+        });
+        return array;
+    }
+    function getPosition(arrayName, tableItem, codeItem) {
+        for (var i = 0; i < arrayName.length; i++) {
+            if ((arrayName[i].tablenames != tableItem || arrayName[i].code != codeItem))
+                return true;
+        }
+    }
+    function removeselect() {
+        $('#tbodycolumn').empty();
+        $('#tbodytable').empty();
+        $('#ContentText').empty();
+    }
+    function Create(isEnable) {
+        var tableary = [];
+        var columnary = [];
+        var xml = "";
+        var json = "";
+        var csv = "";
+        var error = "";
+        var moduletype = $('input[name=model]:checked').val();
+        var dep = MODASelectVal('dep');
+        var ary = $("input[name='Forms']:checked").map(function(i, e) { return e.value }).toArray();
+
+        $('#tbodytable > tr').each(function() {
+            tableary.push({ OpenDataDetailSN: $(this).find("td").eq(0).find('input').val(), TableName: $(this).find("td").eq(1).find('option:selected').val(), Join: $(this).find("td").eq(2).find('option:selected').val(), Code: $(this).find("td").eq(3).find('input').val(), SQLParameter: $(this).find("td").eq(4).find('textarea').val() });
+        });
+
+        $('#tbodycolumn > tr').each(function() {
+            var data = $(this).find("td").eq(3).find('option:selected').val().split('.');
+            columnary.push({ OpenDataSchemaSN: $(this).find("td").eq(0).find('input').val(), isRequired: $(this).find("td").eq(1).find('option:selected').val(), Name: $(this).find("td").eq(2).find('input').val(), TableName: data[0], Column: data[1], DataType: $(this).find("td").eq(4).find('option:selected').val() });
+        });
+
+        for (var i = 0; i < ary.length; i++) {
+            switch (ary[i]) {
+                case "1":
+                    xml = ary[i];
+                    break;
+                case "2":
+                    json = ary[i];
+                    break;
+                case "3":
+                    csv = ary[i];
+                    break;
+            };
+        };
+
+        if (MODAhtmlEncode($("input[name='Title']"), "val") == "") {
+            error += "標題尚未輸入\n";
+        }
+
+        if ($(".file_trzh-tw").length == 0 && moduletype == "2") {
+            error += "檔案未上傳\n";
+        }
+
+        if (ary.length == 0 && moduletype != "2") {
+            error += "請勾選至少一項[格式]\n";
+        }
+
+        if ($('#TableName').val() == '' && moduletype == "3") {
+            error += "請選擇資料來源 \n";
+        }
+        else if ($("#SPzh-tw").text() == "" && moduletype == "1") {
+            error += "請選擇一筆資料\n";
+        }
+
+        if (columnary.length == 0 && moduletype != "2") {
+            error += "至少有一筆欄位資料\n";
+        }
+        if (dep == "") {
+            error += "部門尚未輸入\n";
+        }
+        if (error != "") {
+            Swal.fire({
+                icon: "warning",
+                title: error
+            });
+        }
+        else {
+
+            var saveHref = '@Url.Action("Save", "OpenData", new { area = "SystemManageMent" })';
+
+            var main = {
+                WEBOpenDataMainSN: '@(Model.wEBOpenDataMain == null ? 0 :  Model.wEBOpenDataMain.WEBOpenDataMainSN)',
+                ModuleType: MODAhtmlEncode($('input[name=model]:checked'), "val"), //模式
+                Title: MODAhtmlEncode($("input[name='Title']"), "val"),//標題
+                IsXML: xml,
+                IsJSON: json,
+                IsCSV: csv,
+                TableName: moduletype == "3" ? MODAhtmlEncode($("select[name='TableName']"), "val") : moduletype == "1" ? "WEBNews" : "",//下拉式選單及彈跳視窗得資料庫名稱
+                SQLParameter: MODAhtmlEncode($("textarea[name='Parameter']"), "val"),//條件式
+                IsRemoveTag: $("input[name='Tag']:checked").map(function(i, e) { return e.value }).toArray(),//是否移除標籤
+                Count: MODAhtmlEncode($("input[name='Count']"), "val"),//筆數
+                StartDate: MODAhtmlEncode($("#StartDate"), "val"),//起始日期
+                EndDate: MODAhtmlEncode($("#EndDate"), "val"),//結束日期
+                IsEnable: MODAhtmlEncode($('input[name=IsEnable]:checked'), "val"),
+                DepartmentID:dep
+            };
+            var extend = {
+                Column_1: '@(Model.wEBOpenDataMain == null ? 0 :  Model.wEBOpenDataMain.WEBOpenDataMainSN)',
+                Column_2: $("#SPzh-tw").text(),
+                Column_3: $("#URLzh-tw").val(),
+            }
+            Swal.fire({
+                title: '確定要儲存?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: saveHref,
+                        type: 'post',
+                        data: {
+                            wEBOpenDataMain: main,
+                            wEBOpenDataDetail: tableary,
+                            wEBOpenDataSchema: columnary,
+                            wEBNewsExtend: extend,
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: data.content
+                                }).then(result => {
+                                    location.href = '@Url.Action("index", "OpenData", new { area = "SystemManageMent" })';
+                                })
+                            }
+                            else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+    }
+
+    //取消
+    function CancelFun() {
+        SetCookie("back", 1);
+        location.href = '@Url.Action("index", "OpenData", new { area = "SystemManageMent" })';
+    }
+
+    //檢查重複輸入值
+    function check(obj) {
+        $("input[name='code']").not($(obj)).each(function(i, o) {
+            if ($(obj).val().toLowerCase() != "" && $(obj).val().toLowerCase() == $(o).val().toLowerCase()) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "有相同代號！"
+                });
+                return;
+            }
+        });
+    }
+
+    //radio change
+    $('input[name=model]').change(function() {
+        $("#tbodycolumn").empty();
+        $('#SPzh-tw').text("");
+        $("#URLzh-tw").val("");
+        if (this.value == '1') {
+            $('#model1').show();
+            $('#model2').hide();
+            $('[name=ModuleType1]').show()
+            $('[name=ModuleType3]').hide()
+            $('#tab2').show();
+        }
+        else if (this.value == '2') {
+            $('#model1').hide();
+            $('#model2').show();
+            $('#tab2').hide();
+        }
+        else {
+            $('#model1').show();
+            $('#model2').hide();
+            $('[name=ModuleType1]').hide()
+            $('[name=ModuleType3]').show()
+        }
+    });
+
+    //使用News Selector
+    function NewsSelector(sn, title, lan) {
+        $('#SP' + lan).text(title);
+        $("#URL" + lan).val(sn);
+        $("#tbodycolumn").empty();
+        var item = "";
+        var table = Tabledata();
+        var DefaultColum = [{ COLUMN_NAME: 'StatesUrl', TITLE: '來源網址' }, { COLUMN_NAME: 'Title', TITLE: '標題' }, { COLUMN_NAME: 'ContentText', 'TITLE': '內容' },
+        { COLUMN_NAME: 'StartDate', TITLE: '上版日期' }, { COLUMN_NAME: 'ProcessDate', TITLE: '更新日期' }, { COLUMN_NAME: '.RelPic', TITLE: '相關圖片' },
+        { COLUMN_NAME: '.RelFile', TITLE: '相關檔案' }, { COLUMN_NAME: '.RelLink', TITLE: '相關連結' }];
+
+        for (var i = 0; i < DefaultColum.length; i++) {
+            item = "<tr>";
+            item += "<td hidden>";
+            item += "<input type='text' class='col-sm-8 form-control text-sm-left' value='0'>";
+            item += "</td>";
+            item += "<td hidden>";
+            item += "<select class='form-control' name='isRequired'>";
+            item += "<option value='0'>No</option>";
+            item += "<option value='1'>Yes</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td>";
+            item += "<input type='text' class ='col-sm-8 form-control text-sm-left' value='" + DefaultColum[i].TITLE + "'" + "/>";
+            item += "</td>";
+            item += "<td>";
+            item += "<select class='form-control' name='cloumn'>";
+            var data = colum.filter(x => x.TABLE_NAME == table[0].tablenames);
+            for (var x = 0; x < data.length; x++) {
+                item += "<option value='" + data[x].TABLE_NAME + "." + data[x].COLUMN_NAME + "'" + (data[x].COLUMN_NAME == DefaultColum[i].COLUMN_NAME ? "SELECTED" : "") + ">" + (data[x].TABLE_NAME + "." + data[x].COLUMN_NAME) + "</option>";
+            }
+            item += "<option value='.RelPic'" + (DefaultColum[i].COLUMN_NAME == ".RelPic" ? "SELECTED" : "") + ">RelPic</option>";
+            item += "<option value='.RelFile'" + (DefaultColum[i].COLUMN_NAME == ".RelFile" ? "SELECTED" : "") + ">RelFile</option>";
+            item += "<option value='.RelLink'" + (DefaultColum[i].COLUMN_NAME == ".RelLink" ? "SELECTED" : "") + ">RelLink</option>";
+            item += "<option value='.RelVideo'" + (DefaultColum[i].COLUMN_NAME == ".RelVideo" ? "SELECTED" : "") + ">RelVideo</option>";
+            item += "<option value='.RelMoj'" + (DefaultColum[i].COLUMN_NAME == ".RelMoj" ? "SELECTED" : "") + ">RelMoj</option>";
+            item += "<option value='.RelWebNews'>RelWebNews</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td hidden>";
+            item += "<select class='form-control' name='DataType'>";
+            item += "<option value='nvarchar'>文字</option>";
+            item += "<option value='datetime'>日期(yyyy-mm-dd)</option>";
+            item += "<option value='list'>清單</option>";
+            item += "<option value='int'>唯一識別碼</option>";
+            item += "</select>";
+            item += "</td>";
+            item += "<td>";
+            item += "<input type='button' class='ubtn-delete delcolum' value='刪除' />";
+            item += "</td>";
+            item += "</tr>";
+            $("#tbodycolumn").append(item);
+        }
+        var params = "WHERE WebLevelSN = '" + sn + "' AND Lang = 'zh-tw' AND IsEnable = '1' ORDER BY SortOrder ASC";
+        $("textarea[name='Parameter']").val(params);
+    }
+
+    function Newspup() {
+        var websiteid = MODAhtmlEncode($("#drlWebSite"), "val");
+        var obj = {
+            popUrl: "@Url.Action("CommonWebNews", "Common",new  {area ="" , webLevelManagment = Utility.EnumWeblevelType.WebLevelManagment})&websiteid=" + websiteid + "&lan=zh-tw" + "&disabled=" + true
+        };
+        pop(obj);
+    }
+</script>

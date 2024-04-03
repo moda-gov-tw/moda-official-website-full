@@ -1,0 +1,44 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="idxTrending" data-aos="fade-up">
+	<div class="wrap5 mx-auto px-3 px-md-4 px-lg-5">
+		<div class="wrap6 border-bottom lazy" data-bg="/ADI/assets/img/bg_idxIcon1.png">
+			<div class="titleBar1 d-md-flex justify-content-between">
+				<h2 class="title1">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+				<div class="serachBar border border-1 rounded-pill w-100 d-flex">
+					<input class="ipt2 border-0 rounded-pill w-100 px-4" type="text" name="q" id="queryNews" placeholder="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-1")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-25")?.Value">
+					<button class="searchSubmit border-0 bg-transparent rounded-pill" type="button" value="Search" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-10")?.Value" onclick="gooSearch('@masterModel.SysWebSiteLang.Lang','@masterModel.SysWebSiteLang.WebSiteID', $('#queryNews').val())">
+						<i class="ci ci-scope"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-10")?.Value</span>
+					</button>
+				</div>
+			</div>
+			<div class="trendingList row pt-2 pt-md-4">
+				<div class="list-group col-12 col-md-6 col-lg-4">
+					@if (Model?.NewsViews != null)
+					{
+						var i = 1;
+						foreach(var item in Model.NewsViews.Take(5))
+						{
+							<a href="@(item.DynamicURL)" class="list-group-item"><span class="badge rounded-pill border border-1">@i.ToString()</span><b>@item.BasicNews.Title</b></a>
+							i++;
+						}
+					}
+				</div>
+				<div class="list-group col-12 col-md-6 col-lg-4">
+					@if (Model?.NewsViews != null)
+					{
+						var i = 6;
+						foreach(var item in Model.NewsViews.Skip(5).Take(5))
+						{
+							<a href="@(item.DynamicURL)" class="list-group-item"><span class="badge rounded-pill border border-1">@i.ToString()</span><b>@item.BasicNews.Title</b></a>
+							i++;
+						}
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

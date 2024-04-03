@@ -1,0 +1,277 @@
+﻿@model Management.Areas.Authorization.Models.DepartmentManagement.EditModel
+@{
+    var Main = Model.SysDepartments != null ? Model.SysDepartments.FirstOrDefault(x => x.Lang == "zh-tw") : null;
+}
+<div class="col-sm-12 pb-3">
+    <h2 class="font-weight-bold my-0">@string.Join(">",Model.Titles.OrderByDescending(x => x.SortOrder).Select(x => x.Description))</h2>
+</div>
+<ul class="nav nav-tabs customtab">
+
+    @if (Model.SysDepartments != null)
+    {
+        foreach (var item in Model.sysLangs)
+        {
+            var lang = Model.sysLangs.FirstOrDefault(y => y.Lang == item.Lang);
+            <li class="nav-item"><a class="nav-link @(item.Lang == "zh-tw" ? "active" : "")" href="javascript:;" onclick="changeTab($(this))" data-type="@("tab" + item.Lang)">@(lang.Lang == "zh-tw" ? "中文":"英文")</a></li>
+        }
+        <li class="nav-item"><a class="nav-link" href="javascript:;" onclick="changeTab($(this))" data-type="tab2">人員</a></li>
+    }
+    else
+    {
+        <li class="nav-item"><a class="nav-link active" href="javascript:;" onclick="changeTab($(this))" data-type="tab1">單位基本資料</a></li>
+    }
+</ul>
+<div class="row"></div>
+<div class="bootstrap-table">
+    @if (Model.SysDepartments == null)
+    {
+        <div class="form-horizontal tabDiv" id="tab1_div">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">
+                    <span style="color:red">*</span>單位代號
+                </label>
+                <div class="col-sm-10">
+                    <input name="DepartmentID_0" type="text" value="" id="DepartmentID" class="form-control" placeholder="單位代號">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">
+                    <span style="color:red">*</span>單位名稱
+                </label>
+                <div class="col-sm-10">
+                    <input name="DepartmentName_0" type="text" value="" id="DepartmentName" class="form-control" placeholder="單位名稱">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">
+                    單位描述
+                </label>
+                <div class="col-sm-10">
+                    <input name="Description_0" type="text" value="" id="Description" class="form-control" placeholder="單位描述">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right">是否啟用</label>
+                <div class="col-sm-10 pt-3">
+                    @{
+                        var selectIds = new List<string>();
+                        var IsEnableModel = new definitionModel() { IdName = "IsEnable_0", selectIds = selectIds, NeedNull = false, HtmlType = definitionModel.htmlType.radion };
+                        <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model=@IsEnableModel />
+                    }
+                </div>
+            </div>
+            <div class="form-group row" style="display:none">
+                <label class="col-sm-2 col-form-label text-sm-right">
+                    排序
+                </label>
+                <div class="col-sm-10">
+                    <input name="SortOrder" type="text" value="" id="SortOrder" class="form-control" placeholder="排序">
+                </div>
+            </div>
+            <div class="form-group text-center uBtnList">
+                @{
+                    var btns = new List<btnModel>() {
+            new btnModel() { IdName = "editModule", Btntype = btnModel.btntype.儲存 , attr_data_id = "0"},
+            new btnModel() { Btntype = btnModel.btntype.取消, onclickFunction = "SetCookie('back', 1); ListFun('" + CommonUtility.GetUrlAesEncrypt(Model.ParentID) + "');"}
+            };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        int tab = 1;
+        @foreach (var item in Model.sysLangs)
+        {
+            var dep = Model.SysDepartments.FirstOrDefault(x => x.Lang == item.Lang);
+
+            <div class="form-horizontal tabDiv" id="@("tab" + item.Lang + "_div")" style="@(item.Lang != "zh-tw" ? "display:none" : "")">
+                <div class="form-group row" style="@(item.Lang != "zh-tw" ? "display:none" : "")">
+                    <label class="col-sm-2 col-form-label text-sm-right">
+                        <span style="color:red">*</span>單位代號
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="@( "DepartmentID_" + tab)" type="text" value="@(dep?.DepartmentID)" id="DepartmentID" class="form-control" placeholder="單位代號" disabled="@(dep?.MainSN != dep?.SysDepartmentSN)">
+                        <input name="@( "SysDepartmentSN_" + tab)" type="hidden" value="@(dep?.SysDepartmentSN)">
+                        <input name="@( "Lang_" + tab)" type="hidden" value="@(item.Lang)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label text-sm-right">
+                        <span style="color:red">*</span>單位名稱
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="@("DepartmentName_" + tab)" type="text" value="@(dep?.DepartmentName)" id="DepartmentName" class="form-control" placeholder="單位名稱">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label text-sm-right">
+                        單位描述
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="@("Description_" + tab)" type="text" value="@(dep?.Description)" id="Description" class="form-control" placeholder="單位描述">
+                    </div>
+                </div>
+                <div class="form-group row" style="@(item.Lang != "zh-tw" ? "display:none" : "")">
+                    <label class="col-sm-2 col-form-label text-sm-right">是否啟用</label>
+                    <div class="col-sm-10 pt-3">
+                        @{
+                            var selectIds = dep == null ? new List<string>() : new List<string>() { dep.IsEnable };
+                            var IsEnableModel = new definitionModel() { IdName = "IsEnable_" + tab, selectIds = selectIds, NeedNull = false, HtmlType = definitionModel.htmlType.radion };
+                            <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model=@IsEnableModel />
+                        }
+                    </div>
+                </div>
+                <div class="form-group row" style="display:none">
+                    <label class="col-sm-2 col-form-label text-sm-right">
+                        排序
+                    </label>
+                    <div class="col-sm-10">
+                        <input name="SortOrder" type="text" value="item?.SortOrder" id="SortOrder" class="form-control" placeholder="排序">
+                    </div>
+                </div>
+                <div class="form-group text-center uBtnList">
+                    @{
+                        var btns = new List<btnModel>() {
+            new btnModel() { IdName = "editModule", Btntype = btnModel.btntype.儲存 , attr_data_id = tab.ToString() },
+            new btnModel() { Btntype = btnModel.btntype.取消, onclickFunction = "SetCookie('back', 1); ListFun('" + CommonUtility.GetUrlAesEncrypt(Model.ParentID) + "');"}
+            };
+                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                    }
+                </div>
+            </div>
+
+            tab++;
+        }
+    }
+    <div class="tabDiv" id="tab2_div" style="display:none">
+        <div id="tableList"></div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    var href = "@Url.Action("UserList", "DepartmentManagement", new { area = "Authorization" })";
+    UserSearchFunction(1);
+    $(document).on("click", ".page_a", function() {
+        var p = getObjAtr($(this), "data-page");
+        UserSearchFunction(p);
+    });
+    function UserSearchFunction(p) {
+        var dep = '@(Main == null ? "": Main.DepartmentID)';
+        var getUrl = "?dep=" + dep + "&p=" + p
+        var pageUrl = href + getUrl;
+        UserReloadDataTable(pageUrl);
+    }
+    function UserReloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function() { });
+    }
+    $("input[name='editModule']").click(function() {
+        checkedFun(this);
+    });
+    function checkedFun(btn) {
+        $('.preloader').show();
+
+        var tab = $(btn).data('id');
+
+        var error = "";
+        var DepartmentID = MODAhtmlEncode($("input[name='DepartmentID_1']"), "val");
+        var DepartmentName = MODAhtmlEncode($("input[name='DepartmentName_" + tab + "']"), "val");
+        if (strIsNull(DepartmentID)) error += "[單位代號]必填 \n";
+        if (strIsNull(DepartmentName)) error += "[單位名稱]必填 \n";
+        if (error != "") {
+            $('.preloader').hide();
+            Swal.fire({
+                icon: "warning",
+                title: error
+            });
+        }
+        else {
+            $('.preloader').hide();
+            Swal.fire({
+                title: '確定要儲存?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveFun(tab);
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+    }
+    function saveFun(tab) {
+        $('.preloader').show();
+        var saveHref = '@Url.Action("Save", "DepartmentManagement", new { area = "Authorization" })';
+        var iSort = 0;
+
+        var val = MODAhtmlEncode($("#SortOrder"), "val");
+        if (val == "") {
+            iSort = 0;
+        } else {
+
+            var ival = parseInt(val);
+
+            if (!isNaN(ival)) {
+                iSort = ival;
+            } else {
+                iSort = 0;
+            }
+        }
+
+
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: {
+                SysDepartmentSN: MODAhtmlEncode($("input[name='SysDepartmentSN_" + tab + "']"), "val"),
+                Lang: MODAhtmlEncode($("input[name='Lang_" + tab + "']"), "val"),
+                DepartmentID: MODAhtmlEncode($("input[name='DepartmentID_" + (tab == 0 ? 0 : 1) + "']"), "val"),
+                ParentID: '@Model.ParentID',
+                DepartmentName: MODAhtmlEncode($("input[name='DepartmentName_" + tab + "']"), "val"),
+                ShortName: "",
+                Description: MODAhtmlEncode($("input[name='Description_" + tab + "']"), "val"),
+                IsEnable: MODAhtmlEncode($("input[name='IsEnable_" + (tab == 0 ? 0 : 1) + "']:checked"), "val"),
+                SortOrder: iSort,
+                MainSN: '@(Main == null ? 0: Main.MainSN)'
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    }).then(result => {
+                        back();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    function back() {
+        SetCookie('back', 1);
+        location.href = '@Url.Action("Index", "DepartmentManagement", new { area = "Authorization" })?key=@(CommonUtility.GetUrlAesEncrypt(Model.ParentID))'
+    }
+    function changeTab(e) {
+        $(".tabDiv").hide();
+        var type = "#".concat(getObjAtr(e, "data-type"), "_div");
+        $(type).show();
+        $('.nav-tabs .nav-link').removeClass('active');
+        e.addClass('active');
+    }
+</script>

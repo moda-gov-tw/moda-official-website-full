@@ -1,0 +1,152 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div id="tableList">
+                </div>
+            </div>
+            <span class="text-danger">@($"*僅檢核提供跨域請求之網頁；20秒未回應、檔案判斷為失效連結")</span>
+            <div id="status">
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+
+    var href = "@Url.Action("List", "CheckLinks", new { area = "SystemManageMent" })";
+        searchFunction(1);
+        $(document).on("click", ".page_a", function () {
+            var p = getObjAtr($(this),"data-page");
+            searchFunction(p);
+        });
+    function searchFunction(p) {
+        var getUrl = "?p=" + p;
+        var pageUrl = href + getUrl;
+        reloadDataTable(pageUrl);
+    }
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function () {});
+    }
+    var errorLink = [];
+    var total = 0;
+    var finish = 0;
+    function CheckFun(websiteid){
+        errorLink = [];
+        var saveHref ='@Url.Action("GetLinks","CheckLinks",new {area ="SystemManageMent"  })';
+        Swal.fire({
+            title: '確定要開始掃描?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '確定',
+            denyButtonText: '取消'
+        }).then(result => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: saveHref,
+                    type: 'post',
+                    data: {
+                        websiteid: websiteid
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.statusCode == 200) {
+                            searchFunction(1);
+                            var obj =  JSON.parse(data.content);
+                            total = obj.length;
+                            finish = 0;
+                            $.each( obj, function( key, value ) {
+                              check(value, websiteid);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            })
+                        };
+                    }
+                });
+            }
+        });
+    }
+    function exportFun(websiteid){
+        console.log(errorLink.length);
+        obj = {
+            links : errorLink,
+            websiteid : websiteid,
+        };
+        var _href = '@Url.Action("CreateExportFile", "CheckLinks", new {area= "SystemManageMent" })';
+        $.ajax({
+            url: _href,
+            type: 'post',
+            data: obj,
+            dataType: "json",
+            success: function(data) {
+                if (data.statusCode == 200) {
+                    location.href = '@Url.Action("Export", "CheckLinks", new {area= "SystemManageMent" })?fileName=' + data.content;
+                } else {
+
+                }
+            }
+        });
+    }
+    function check (obj, websiteid){
+        $.ajax({
+            url: obj.URL,
+            contentType : 'application/json; charset=utf-8',
+            dataType: "jsonp",
+            timeout : 20000,
+            statusCode: {
+                200: function(response) {
+
+                },
+                404: function(response) {
+                    obj.error = "404";
+                    errorLink.push(obj);
+                }
+            },
+            error: function (xmlhttprequest, textstatus, message) {
+                if(textstatus === "timeout") {
+                    obj.error = "timeout";
+                    errorLink.push(obj);
+                }
+            },
+            complete: function (data) {
+                finish ++;
+                if (total === finish){
+                    $("#status").html("掃描完成");
+                    exportFun(websiteid);
+                } else {
+                    $("#status").html(finish.toString() + "/" + total.toString() + " 掃描中...");
+                }
+
+                
+            }
+        });
+    }
+    function ajaxtext(url){
+        $.ajax({
+            url: url,
+            contentType : 'application/json; charset=utf-8',
+            dataType: 'jsonp',
+            timeout : 20000,
+            statusCode: {
+                200: function(response) {
+                    console.log('200');
+                },
+                404: function(response) {
+                    console.log('404');
+                }
+            },
+            error: function (xmlhttprequest, textstatus, message) {
+                console.log(textstatus);
+            }
+        });
+    }
+</script>
+}

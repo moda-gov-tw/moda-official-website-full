@@ -1,0 +1,39 @@
+﻿@model Management.Areas.SystemManageMent.Models.FilePath.FilePathViewModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW8">名稱</th>
+            <th scope="col">麵包屑</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.filePaths.Count > 0)
+        {
+            @foreach (var d in Model.filePaths)
+            {
+                <tr>
+                    <td>@row</td>
+                    <td class="text-break text-start">@d.FileTitle</td>
+                    <td class="text-break text-start">@d.FilePath</td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>

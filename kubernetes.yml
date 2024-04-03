@@ -1,0 +1,631 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: management
+  template:
+    metadata:
+      labels:
+        app: management
+        build: "$BUILD_NUMBER"
+    spec:
+      containers:
+      - name: app
+        image: $IMAGE_MANAGEMENT:$IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Taipei
+        envFrom:
+        - configMapRef:
+            name: env
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 3Gi
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 3Gi
+            memory: 2Gi
+        volumeMounts:
+        - name: myfiles
+          mountPath: /app/files
+      volumes:
+      - name: myfiles
+        persistentVolumeClaim:
+          claimName: filesharepvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: management
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: management
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fileservices
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fileservices
+  template:
+    metadata:
+      labels:
+        app: fileservices
+        build: "$BUILD_NUMBER"
+    spec:
+      containers:
+      - name: app
+        image: $IMAGE_FILESERVICES:$IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Taipei
+        envFrom:
+        - configMapRef:
+            name: env
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 5Gi
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 5Gi
+            memory: 2Gi     
+        volumeMounts:
+        - name: myfiles
+          mountPath: /app/files
+      volumes:
+      - name: myfiles
+        persistentVolumeClaim:
+          claimName: filesharepvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fileservices
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: fileservices
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+        build: "$BUILD_NUMBER"
+    spec:
+      containers:
+      - name: app
+        image: $IMAGE_WEBAPI:$IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Taipei
+        envFrom:
+        - configMapRef:
+            name: env
+        resources:
+          limits:
+            cpu: 2000m
+            ephemeral-storage: 3Gi
+            memory: 8Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 3Gi
+            memory: 2Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: webapi
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+        build: "$BUILD_NUMBER"
+    spec:
+      containers:
+      - name: app
+        image: $IMAGE_WEBSITE:$IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Taipei
+        - name: GITHUB_KEY
+          valueFrom:
+            secretKeyRef:
+              name: github
+              key: GITHUB_KEY
+        - name: GITHUB_PUBKEY
+          valueFrom:
+            secretKeyRef:
+              name: github
+              key: GITHUB_PUBKEY  
+        envFrom:
+        - configMapRef:
+            name: env
+        resources:
+          limits:
+            cpu: 1000m
+            ephemeral-storage: 3Gi
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 3Gi
+            memory: 2Gi        
+        volumeMounts:
+        - name: myfiles
+          mountPath: /app/files
+      volumes:
+      - name: myfiles
+        persistentVolumeClaim:
+          claimName: filesharepvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: website
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: website
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailbox
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailbox
+  template:
+    metadata:
+      labels:
+        app: mailbox
+        build: "$BUILD_NUMBER"
+    spec:
+      containers:
+      - name: app
+        image: $IMAGE_MAILBOX:$IMAGE_TAG
+        ports:
+        - containerPort: 80
+        env:
+        - name: TZ
+          value: Asia/Taipei
+        envFrom:
+        - configMapRef:
+            name: env
+        resources:
+          limits:
+            cpu: 2000m
+            ephemeral-storage: 3Gi
+            memory: 8Gi
+          requests:
+            cpu: 500m
+            ephemeral-storage: 3Gi
+            memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailbox
+  labels:
+    build: "$BUILD_NUMBER"
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: mailbox
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: filesharepv
+spec:
+ capacity:
+   storage: 1T
+ accessModes:
+ - ReadWriteMany
+ nfs:
+   path: /website
+   server: "$NFS_SERVER"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: filesharepvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: filesharepv
+  resources:
+    requests:
+      storage: 500Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: static
+spec:
+  schedule: "*/3 0-19,21-23 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: static
+            image: $IMAGE_STATIC:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            - name: GITHUB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: GITHUB_KEY
+            - name: GITHUB_PUBKEY
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: GITHUB_PUBKEY  
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            - name: myfiles
+              mountPath: /app/files
+            envFrom:
+            - configMapRef:
+                name: env
+            resources:
+              limits:
+                cpu: 1000m
+                ephemeral-storage: 3Gi
+                memory: 4Gi
+              requests:
+                cpu: 1000m
+                ephemeral-storage: 3Gi
+                memory: 4Gi
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          - name: myfiles
+            persistentVolumeClaim:
+              claimName: filesharepvc
+          restartPolicy: Never
+      backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: staticall
+spec:
+  schedule: "2 20 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: static
+            image: $IMAGE_STATIC:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            - name: GITHUB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: GITHUB_KEY
+            - name: GITHUB_PUBKEY
+              valueFrom:
+                secretKeyRef:
+                  name: github
+                  key: GITHUB_PUBKEY  
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            - name: myfiles
+              mountPath: /app/files
+            envFrom:
+            - configMapRef:
+                name: env
+            resources:
+              limits:
+                cpu: 1000m
+                ephemeral-storage: 3Gi
+                memory: 4Gi
+              requests:
+                cpu: 1000m
+                ephemeral-storage: 3Gi
+                memory: 4Gi
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          - name: myfiles
+            persistentVolumeClaim:
+              claimName: filesharepvc
+          restartPolicy: Never
+      backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: youtube
+spec:
+  schedule: "0 4,16 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: youtube
+            image: $IMAGE_YOUTUBE:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            envFrom:
+            - configMapRef:
+                name: env
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          restartPolicy: Never
+      backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: create
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: create
+            image: $IMAGE_CREATE:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            envFrom:
+            - configMapRef:
+                name: env
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          restartPolicy: Never
+      backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daysearch
+spec:
+  schedule: "0 23,0-13 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: search
+            image: $IMAGE_SEARCH:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            envFrom:
+            - configMapRef:
+                name: env
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          restartPolicy: Never
+      backoffLimit: 0
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nightsearch
+spec:
+  schedule: "0 14,17,20 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            gke-gcsfuse/volumes: "true"
+        spec:
+          serviceAccountName: website
+          containers:
+          - name: search
+            image: $IMAGE_SEARCH:$IMAGE_TAG
+            args:
+            - /bin/sh
+            - -c
+            - docker-entrypoints.sh
+            env:
+            - name: TZ
+              value: Asia/Taipei
+            volumeMounts:
+            - name: gcs-fuse-csi
+              mountPath: /app/log
+            envFrom:
+            - configMapRef:
+                name: env
+          volumes:
+          - name: gcs-fuse-csi
+            csi:
+              driver: gcsfuse.csi.storage.gke.io
+              volumeAttributes:
+                bucketName: "$GCS_BUCKET"
+          restartPolicy: Never
+      backoffLimit: 0

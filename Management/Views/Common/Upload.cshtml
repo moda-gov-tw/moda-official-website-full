@@ -1,0 +1,66 @@
+﻿
+@{
+    Layout = Url.Content("~/Views/Shared/_UploadLayout.cshtml");
+}
+
+<form enctype="multipart/form-data">
+    <div class="file-loading">
+        <input id="kv-explorer" type="file" multiple name="files">
+    </div>
+    <br />
+    <button type="button" id="close_file" class="ubtn-close">關閉</button>
+</form>
+@section scripts{
+    <script>
+        var fileInfo = parent.objFile;
+        //目前版本 fileinput 5.01
+        //官方資料 https://plugins.krajee.com/file-input
+        // 參數資料 :
+        //language 可以參考bootstrap-fileinput/js/locales 有哪些語系
+        //theme 版型 可以參考bootstrap-fileinput/js/theme 有哪些版型
+        //uploadUrl 檔案上傳路徑
+        //deleteUrl 刪除檔案路徑
+        //sortUrl   修改sort路徑
+        //overwriteInitial false 
+        //initialPreviewAsData 初始預覽數據
+        //minFileCount  : 最小檔案數量
+        //maxFileCount  : 最大檔案數量
+        //allowedFileExtensions : 檔案類型  ["jpg", "gif", "png", "txt","zip", "rar", "gz", "tgz", "md", "ini", "text"]
+        //initialCaption : 上傳 文字客製化 <基本上不用特別設定>
+        //maxFileSize : 單檔上傳檔案限制:單位 KB 如果不设置，默认大小25M
+        //initialPreview:[] 初始loading進來的資料 裡面塞路徑
+        //initialPreviewConfig 初始loading進來的資料 [{caption: "檔案名稱" ,  size:檔案大小kb , width:120px, url 刪除路徑(不設定的話就是預設使用deleteUrl) , key:  } ]
+
+
+        $(document).ready(function () {
+            $("#close_file").click(function () {
+                //父層重新呼叫上傳檔案的function 請 用reloadfilesTable這個名稱
+                parent.reloadfilesTable();
+                Swal.close();
+            });
+            $("#kv-explorer").fileinput({
+                'theme': fileInfo.theme,
+                'uploadUrl': fileInfo.uploadUrl,
+                language: fileInfo.language,
+                overwriteInitial: fileInfo.overwriteInitial,
+                allowedFileExtensions: fileInfo.allowedFileExtensions,
+                initialPreview: fileInfo.initialPreview,
+                initialPreviewConfig: fileInfo.initialPreviewConfig,
+                maxFileCount: fileInfo.maxFileCount,
+                maxFileSize : fileInfo.maxFileSize,
+                uploadAsync:false,
+                showUpload:false,
+                autoReplace: true
+            }).on('filesorted', function (e, params) {
+                $.ajax({
+                    url: fileInfo.sortUrl,
+                    data: { changeSortModel: params },
+                    type: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                    }
+                });            
+            });
+        });
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿@model List<WebSiteWebLevelPageListModel>
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!-- 列表樣式八 -->
+<div class="list2 row text-center px-lg-5 mb-5">
+    @foreach (var item in Model)
+    {
+        var img = item.webLogo==null ? @Url.Content("/assets/img/icon_dept4-2-1.svg")  :item.webLogo.FilePath ;
+        <div class="col-6 col-sm-4 pt-2 pb-2 pb-lg-4">
+            <a href="@item.url" class="d-block" @Html.Raw(CommFun.getattr(item.target, item.webLevel.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                <div class="listPic">
+                    <div class="bg-full"></div>
+                    <span class="listIcon lazy" data-bg="@img"></span>
+                </div>
+                <b class="title5">@item.webLevel.Title</b>
+            </a>
+        </div>
+    }
+</div>

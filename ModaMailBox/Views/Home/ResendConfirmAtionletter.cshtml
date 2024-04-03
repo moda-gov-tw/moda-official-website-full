@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+   <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("resendconfirm", "Home")">重寄確認信</a></li>
+                <li class="breadcrumb-item active" aria-current="page">重新發送確認信件</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+
+        <div class="">
+            <p>系統將發送一封「送出申請確認信」到您的電子信箱，請打開並點選信件中的「<a href="#" class="text-decoration-underline ">確認送出申請</a>」連結，完成確認程序。</p>
+            <p>上述確認程序須於3天內完成，超過3天則過期失效，請重新留言。 </p>
+            <p>一定要記得到您的電子郵件中點擊「<a href="#" class="text-decoration-underline ">確認送出申請</a>」才算成功送件喔！</p>
+            <p>成功送出申請後，您可使用「案件編號」及「案件驗證碼」，至「<a href="#" class="text-decoration-underline ">案件進度查詢</a>」功能查看目前的最新處理狀態。</p>
+            <p class="text-end pt-2 pb-4">數位發展部民意信箱小組 敬啟</p>
+        </div>
+        <ul class="list-unstyled list-inline mb-0 justify-content-center">
+            <!-- 分享 -->
+            <li class="list-inline-item ">
+                <a href="@Url.Action("querycase","Home")" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 me-sm-5 me-3 rounded-3 file_btn_color" role="button">案件進度查詢</a>
+            </li>
+            <li class="list-inline-item">
+                <a href="@Url.Content("/")" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button">民意信箱首頁</a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>

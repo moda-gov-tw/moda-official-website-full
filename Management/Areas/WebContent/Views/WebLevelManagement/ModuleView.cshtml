@@ -1,0 +1,427 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.ModuleViewModel
+@{
+    var webLevelModule = Utility.EnumTpye.GetEnum<Utility.EnumWebLevelModuleLevel2>(Model.mainWebLevel.Module);
+    var list = Utility.WebLevelModule.GetTemplate();
+    var Customizes = Services.Authorization.WebLevelManagementService.GetCustomizeList(Model.webLevelData.WebLevelSN);
+    var canChangeTree = false;
+    var canChangeTreeType = new List<Utility.EnumWebLevelModuleLevel2>() { EnumWebLevelModuleLevel2.NEWS, EnumWebLevelModuleLevel2.CP, EnumWebLevelModuleLevel2.PAGELIST };
+    if (Model.mainWebLevel.WeblevelType == "1" && (canChangeTreeType.Contains(Utility.EnumTpye.GetEnum<Utility.EnumWebLevelModuleLevel2>(Model.mainWebLevel.Module))))
+    { canChangeTree = true; }
+
+}
+<div class="tab-pane fade @(Model.webLevelData.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model.webLevelData.Lang" role="tabpanel" aria-labelledby="@($"{Model.webLevelData.Lang}-tab")">
+    <!--節點名稱-->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.WebLevelKey</label>
+        <div class="col-sm-10">
+            <input name="@($"webLevelKey{Model.webLevelData.WebLevelKey}")" disabled type="text" value="@Model.webLevelData?.WebLevelKey" id="@($"webLevelKey{Model.webLevelData.WebLevelKey}")" class="form-control">
+        </div>
+    </div>
+    <!-- #region 類型 -->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.ModuleType</label>
+        <div class="col-sm-10 pt-3">
+            @foreach (var item in Model.LevelMenu)
+            {
+                if ((Model.webLevelData.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebHomeManagment) && item.value != Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.DEPT))
+                || (Model.webLevelData.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebLevelManagment))
+                || (Model.webLevelData.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebHeaderFooterManagment) && item.value != Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.DEPT)))
+                {
+                    <div class="form-check form-check-inline"><input type="radio" value="@item.value" disabled="@(Model.webLevelData != null)" name="@($"LevelMenu{Model.webLevelData.Lang}")" @(Model.levelMenuString == item.value ? "checked" : "") data-type="@item.TypeName" class="radio-inline radio" onclick="changeLevelMenu($(this),'@Model.webLevelData.Lang' )" /> @item.title </div>
+                }
+            }
+        </div>
+    </div>
+    <!--列表類型-->
+    <div class="form-group row @Model.DivClassName.div_LevelMenu2" id="div_LevelMenu2">
+        <label class="col-sm-2 col-form-label text-sm-right">
+            <span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.ListType
+        </label>
+        <div class="col-sm-10 pt-3" id="LevelMenu2List">
+            @if (Model.levelMenuString != Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel1.CP))
+            {
+                foreach (var item in Model.LevelMenu2.FindAll(x => x.TypeName.Contains(Model.typeNameString)))
+                {
+                    <div class="form-check form-check-inline">
+                         <input type="radio" value="@item.value" @(item.value == Model.webLevelData.ListType ? "checked" : "") name="@($"LevelMenu2{Model.webLevelData.Lang}")" data-type="@item.TypeName" class="form-check-input" /><label class="form-check-label">@item.title</label>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <!--模組-->
+    <div class="form-group row" id="div_LevelMenu3">
+        <label class="col-sm-2 col-form-label text-sm-right">
+            <span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.Module
+        </label>
+        <div class="col-sm-10 pt-3" id="LevelMenu3List">
+            @if (
+            Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.CP)
+            || Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.PAGELIST)
+            || Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.RSS)
+            || (Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.NEWS) && Model.webLevelData.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebLevelManagment))
+            || (Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.DEPT) && Model.webLevelData.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebLevelManagment)))
+            {
+                <div class="form-check form-check-inline">
+                    <input type="radio" value="@Model.webLevelData.Module" checked name="@($"LevelMenu3{Model.webLevelData.Lang}")" class="form-check-input" onclick="changeLevel3Menu($(this),'@Model.webLevelData.Lang')" /><label class="form-check-label">
+                        @(Model.LevelMenu3.FirstOrDefault(x => x.value == Model.webLevelData.Module)?.title)
+                    </label>
+                </div>
+            }
+            else
+            {
+                var LevelMenu3noLike = new List<string>() { Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.CP), Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.PAGELIST), Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.DEPT) };
+                foreach (var item in Model.LevelMenu3.Where(x => !LevelMenu3noLike.Contains(x.value)))
+                {
+                    <div class="form-check form-check-inline">
+                        <input type="radio" value="@item.value" @(item.value == Model.webLevelData.Module ? "checked" : "") name="@($"LevelMenu3{Model.webLevelData.Lang}")" data-type="@item.TypeName" class="form-check-input" onclick="changeLevel3Menu($(this),'@Model.webLevelData.Lang')" /><label class="form-check-label">@item.title</label>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <!--搜尋條件-->
+    <div class="form-group row @Model.DivClassName.div_Search">
+        <label class="col-sm-2 col-form-label text-sm-right">
+            <span></span>@Utility.sysConstTable.field.WebLevel.Condition
+        </label>
+        <div class="col-sm-10 pt-3" id="Condition">
+            @{
+                var data = Model.webLevelData.Condition != null ? Model.webLevelData.Condition.Split(',') : new string[] { };
+                foreach (var item in Model.Condition)
+                {
+                    var s = Model.mainWebLevel.WebSiteID + "-" + item.value;
+                    <input type="checkbox" value="@s" name="@($"condition{Model.webLevelData.Lang}")" class="checkbox-inline checkbox" @(data.Length > 0 ? data.Where(x => x == s).FirstOrDefault() != null ? "checked" : "" : "")>
+                    <label>@item.title</label>
+                }
+            }
+        </div>
+    </div>
+    <!--版型-->
+    <div class="form-group row div_LevelMenu5">
+        @if (list.Where(x => x.value == Model.webLevelData.Module && x.IsEnable == "1").FirstOrDefault() != null)
+        {
+            <label class="col-sm-2 col-form-label text-sm-right">@Utility.sysConstTable.field.WebLevel.Template</label>
+            <div class="col-sm-10 pt-3">
+                @foreach (var tmp in list.Where(x => x.value == Model.webLevelData.Module && x.IsEnable == "1"))
+                {
+                    @foreach (var rds in Model.LevelMenu5.Where(x => x.TypeName == tmp.TypeName))
+                    {
+                        <input type="radio" value="@rds.value" name="@($"LevelMenu5{Model.webLevelData.Lang}")" data-type="@rds.TypeName" class="radio-inline radio" @(Model.webLevelData.TemplateValue != null ? rds.value == Model.webLevelData.TemplateValue.TrimEnd() ? "checked" : "" : "") /> @rds.title
+                    }
+                }
+            </div>
+        }
+    </div>
+    <!--節點名稱-->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.Title</label>
+        <div class="col-sm-10">
+            <input name="@($"title{Model.webLevelData.Lang}")" type="text" value="@Model.webLevelData?.Title" id="@($"title{Model.webLevelData.Lang}")" class="form-control" placeholder="前台標題">
+        </div>
+    </div>
+    <!--摘要簡介-->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">@Utility.sysConstTable.field.WebLevel.Description</label>
+        <div class="col-sm-10">
+            <input name="@($"Description{Model.webLevelData.Lang}")" type="text" value="@Model.webLevelData?.Description" id="@($"Description{Model.webLevelData.Lang}")" class="form-control" placeholder="摘要簡介">
+        </div>
+    </div>
+    <!--SEODescription-->
+    <div class="form-group row @Model.DivClassName.div_SEO">
+        <label class="col-sm-2 col-form-label text-sm-right">Meta Description</label>
+        <div class="col-sm-10">
+            <input name="@($"SEODescription{Model.webLevelData.Lang}")" type="text" value="@Model.webLevelData?.SEODescription" id="@($"SEODescription{Model.webLevelData.Lang}")" class="form-control" placeholder="摘要描述，建議勿超過 150 字元">
+        </div>
+    </div>
+    <!--SEOKeywords-->
+    <div class="form-group row  @Model.DivClassName.div_SEO">
+        <label class="col-sm-2 col-form-label text-sm-right">Meta Keywords</label>
+        <div class="col-sm-10">
+            <input name="@($"SEOKeywords{Model.webLevelData.Lang}")" type="text" value="@Model.webLevelData?.SEOKeywords" id="@($"SEOKeywords{Model.webLevelData.Lang}")" class="form-control" placeholder="關鍵字，如有多個，請以半形逗號隔開">
+        </div>
+    </div>
+
+    <!--str上傳-->
+    <div class="form-group row">
+        @{
+            var _title = "列表顯示圖"; var _filetype = Utility.EnumTpye.GetEnumNumberToSting(EnumFileType.img);
+            if (Model.mainWebLevel.WeblevelType == Utility.EnumTpye.GetEnumNumberToSting(Utility.EnumWeblevelType.WebHeaderFooterManagment) && (Model.mainWebLevel.WebLevelKey == "footer" || Model.mainWebLevel.WebLevelKey == "header"))
+            {
+                _filetype = Utility.EnumTpye.GetEnumNumberToSting(EnumFileType.headerfooterLogo);
+                if (Model.mainWebLevel.WebLevelKey == "header")
+                    _title = "頁首Logo";
+                else
+                    _title = "頁尾Logo";
+            }
+
+            var f4 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.Module.LogoImg,
+                file_trNumber = $"{Utility.WebFileGroupID.Module.LogoImg}{Model.webLevelData.Lang}",
+                FileType = _filetype,
+                title = _title,
+                fth = "Level",
+                lan = Model.webLevelData.Lang
+            };
+            <partial name="~/Views/Common/LoadUpload.cshtml" model="f4" />
+        }
+    </div>
+    <!--Str司關聯選單-->
+    <div class="form-group row @Model.DivClassName.div_DEPT">
+        <label class="col-sm-2 col-form-label text-sm-right">司關聯頁</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="@($"select{Model.webLevelData.Lang}")">
+                <!option class="" value="0" @(Model.webLevelData.Parameter == null ? "selected" : "")>請選擇</!option>
+                @foreach (var option in Model.DepsysCategories)
+                {
+                    <!option value="@(option.WebLevelSN)" @(Model.webLevelData.Parameter != null ? int.Parse(Model.webLevelData.Parameter) == option.WebLevelSN ? "selected" : "" : "")>@option.Title</!option>
+                }
+            </select>
+        </div>
+    </div>
+    <!--End司關聯選單-->
+    <!--end上傳-->
+    <!-- 顯示於FatFooter -->
+    <div class="form-group row @Model.DivClassName.div_FatFooter" id="div_FatFooter">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.FatFooterShow</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"FatFooterShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start)" class="radio radio-inline " @(Model.webLevelData == null ? "checked" : (Model.webLevelData.FatFooterShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start) ? "checked" : "")) /> 顯示
+            <input type="radio" name="@($"FatFooterShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop)" class="radio radio-inline " @(Model.webLevelData == null ? "" : (Model.webLevelData.FatFooterShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop) ? "checked" : "")) /> 不顯示
+        </div>
+    </div>
+    <!--顯示於主選單-->
+    <div class="form-group row @Model.DivClassName.div_MainMenu" id="div_MainMenu">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.MainMenuShow</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"MainMenuShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start)" class="radio radio-inline " @(Model.webLevelData == null ? "checked" : (Model.webLevelData.MainMenuShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start) ? "checked" : "")) /> 顯示
+            <input type="radio" name="@($"MainMenuShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop)" class="radio radio-inline " @(Model.webLevelData == null ? "" : (Model.webLevelData.MainMenuShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop) ? "checked" : "")) /> 不顯示
+        </div>
+    </div>
+    <!--RSS-->
+    <div class="form-group row @Model.DivClassName.div_RSS" id="div_RSS">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.RSSShow</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"RSSShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start)" class="radio radio-inline " @(Model.webLevelData == null ? "" : (Model.webLevelData.RSSShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start) ? "checked" : "")) /> 顯示
+            <input type="radio" name="@($"RSSShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop)" class="radio radio-inline " @(Model.webLevelData == null ? "checked" : (Model.webLevelData.RSSShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop) ? "checked" : "")) /> 不顯示
+        </div>
+    </div>
+    <!--顯示於左側選單-->
+    <div class="form-group row @Model.DivClassName.div_LeftMenuShow">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.LeftMenuShow</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"LeftMenuShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start)" class="radio radio-inline" @(Model.webLevelData == null ? "checked" : (Model.webLevelData.LeftMenuShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start) ? "checked" : "")) />顯示
+            <input type="radio" name="@($"LeftMenuShow{Model.webLevelData.Lang}")" value="@Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop)" class="radio radio-inline" @(Model.webLevelData == null ? "" : (Model.webLevelData.LeftMenuShow == Utility.EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop) ? "checked" : "")) />不顯示
+        </div>
+    </div>
+    <!--排序方式-->
+    <div class="form-group row @Model.DivClassName.div_Sort" id="div_Sort">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>@Utility.sysConstTable.field.WebLevel.SortMethod</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"SortMethod{Model.webLevelData.Lang}")" value="0" class="radio radio-inline" @(Model.webLevelData == null ? "checked" : (Model.webLevelData.SortMethod == "0" ? "checked" : "")) @(Model.webLevelData.Lang != "zh-tw" ? "disabled" : "") />系統排序
+            <input type="radio" name="@($"SortMethod{Model.webLevelData.Lang}")" value="1" class="radio radio-inline" @(Model.webLevelData == null ? "" : (Model.webLevelData.SortMethod == "1" ? "checked" : "")) @(Model.webLevelData.Lang != "zh-tw" ? "disabled" : "") />發布日期排序
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webLevelData.Lang}")" value="1" class="radio radio-inline " @(Model.webLevelData == null ? "" : (Model.webLevelData.IsEnable == "1" ? "checked" : "")) /> 發布
+            <input type="radio" name="@($"IsEnable{Model.webLevelData.Lang}")" value="0" class="radio radio-inline " @(Model.webLevelData == null ? "checked" : (Model.webLevelData.IsEnable == "0" ? "checked" : "")) /> 不公開
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布日期</label>
+        <div class="col-sm-10">
+            <input id="@($"StartDate{Model.webLevelData.Lang}")" step="1" name="@($"StartDate{Model.webLevelData.Lang}")" type="datetime-local" value="@( Model.webLevelData == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.webLevelData.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webLevelData.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架時間</label>
+        <div class="col-sm-10">
+            <input id="@($"EndDate{Model.webLevelData.Lang}")" step="1" name="@($"EndDate{Model.webLevelData.Lang}")" type="datetime-local" value="@(Model.webLevelData == null ? "" : Model.webLevelData.EndDate == null ? "" : Model.webLevelData.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+        </div>
+    </div>
+    <!-- #region ckeditor Header Footer -->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">內容區塊標頭</label>
+        <div class="col-sm-10">
+            <textarea name="@($"ContentHeader{Model.webLevelData.Lang.Replace("-","")}")" id="@($"ContentHeader{Model.webLevelData.Lang.Replace("-","")}")">@Model.webLevelData?.ContentHeader</textarea>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">內容區塊頁尾</label>
+        <div class="col-sm-10">
+            <textarea name="@($"ContentFooter{Model.webLevelData.Lang.Replace("-","")}")" id="@($"ContentFooter{Model.webLevelData.Lang.Replace("-","")}")">@Model.webLevelData?.ContentFooter</textarea>
+        </div>
+    </div>
+    <!-- #endregion -->
+    <!--str上傳-->
+    <div class="form-group row">
+        @{
+            var f2 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.Module.InlineImgs,
+                file_trNumber = $"{Utility.WebFileGroupID.Module.InlineImgs}{Model.webLevelData.Lang}",
+                needCopy = true,
+                FileType = Utility.EnumTpye.GetEnumNumberToSting(EnumFileType.img),
+                title = "內嵌圖片",
+                fth = "Level",
+                lan = Model.webLevelData.Lang
+            };
+            <partial name="~/Views/Common/LoadUpload.cshtml" model="f2" />
+        }
+    </div>
+    <!--end上傳-->
+    <!--str分類-->
+    <div class="form-group row @Model.DivClassName.div_custom">
+        @{
+            var customModel = new SelectTextArrayModel()
+            {
+                IdName = $"custom{Model.webLevelData.Lang}",
+                selectTextType = selectTextType.onlyText,
+                txtName = "分類",
+                title = "分類",
+                SelectTxts = Customizes.Select(x => new SelectTxt() { txt = x.TagName, val = x.WebLevelCustomizeTagSn.ToString() }).ToList()
+            };
+            <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="customModel" />
+        }
+    </div>
+    <!--end自定義標籤-->
+    <!-- 司首頁專用 -->
+    @if (webLevelModule == EnumWebLevelModuleLevel2.PAGELIST && Model.mainWebLevel.WeblevelType == "2")
+    {
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">司首頁專用CSS</label>
+            <div class="col-sm-10">
+                <textarea name="@($"AdditionalCSS{Model.webLevelData.Lang.Replace("-","")}")" id="@($"AdditionalCSS{Model.webLevelData.Lang.Replace("-","")}")">@Model.webLevelData?.AdditionalCSS</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">司首頁專用Script</label>
+            <div class="col-sm-10">
+                <textarea name="@($"AdditionalScript{Model.webLevelData.Lang.Replace("-","")}")" id="@($"AdditionalScript{Model.webLevelData.Lang.Replace("-","")}")">@Model.webLevelData?.AdditionalScript</textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            @{
+                var otherFile = new Management.Models.Common.LoadUploadModel()
+                {
+                    commonFileModels = Model.commonFileModels,
+                    fileGroup = Utility.WebFileGroupID.Module.OtherFiles,
+                    file_trNumber = $"{Utility.WebFileGroupID.Module.OtherFiles}{Model.webLevelData.Lang}",
+                    needCopy = true,
+                    FileType = Utility.EnumTpye.GetEnumNumberToSting(EnumFileType.ScriptCss),
+                    title = "司首頁專用css/js",
+                    fth = "Level",
+                    lan = Model.webLevelData.Lang
+                };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="otherFile" />
+            }
+        </div>
+    }
+    <!--靜態資料-->
+    <div class="form-group row">
+        @if (Model.webLevelData.Module == Utility.EnumTpye.GetEnumName(Utility.EnumWebLevelModuleLevel2.CP))
+        {
+            <label class="col-sm-2 col-form-label text-sm-right">靜態化資訊</label>
+            <label class="col-sm-10 col-form-label text-sm-left">#靜態網頁 請至內容編輯 - 查看</label>
+        }
+        else
+        {
+            var StaticLinkModel = new StaticLink()
+                {
+                    MainSN = Model.mainWebLevel.MainSN,
+                    Lang = Model.webLevelData.Lang,
+                    WebSiteID = Model.webLevelData.WebSiteID,
+                    SourseTable = "weblevel"
+                };
+            <partial name="~/Views/Common/StaticLink/Detail.cshtml" model="StaticLinkModel" />
+        }
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+        <div class="col-sm-10">
+            <div>
+                @{
+                    var selectIds = new List<string>();
+                    var DepID = string.IsNullOrWhiteSpace(Model.webLevelData?.DepartmentID) ? Model.sysUserSysDepartmentID : Model.webLevelData?.DepartmentID;
+                    selectIds.Add(DepID);
+                    var depControl = new definitionModel()
+            {
+                IdName = $"dep{Model.webLevelData.Lang}",
+                selectIds = selectIds,
+            };
+                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center uBtnList">
+        @{
+            var backKey = CommonUtility.GetUrlAesEncrypt((Model?.webLevelData?.ParentSN == 0 ? Model?.webLevelData?.WebLevelSN.ToString() : Model?.webLevelData?.ParentSN.ToString()));
+            var btns = new List<btnModel>() {
+        new btnModel(){  Btntype = btnModel.btntype.儲存, jsUseClassName="editModule" ,  attr_data_type=Model.webLevelData.Lang  , attr_data_id=Model.webLevelData.WebLevelSN.ToString() },
+        new btnModel(){  Btntype = btnModel.btntype.取消 , jsUseClassName=$"back2NodeList" ,attr_data_id=backKey },
+        };
+        }
+        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+    </div>
+    <!-- <div class="form-group row" @(canChangeTree ? "" : "style=display:none")> -->
+    <div class="form-group row" style=display:none )>
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red"></span>移動節點</label>
+        <div class="col-sm-9">
+            @{
+                var webLevelTree = new SelectorWebLevelTreeModel();
+                webLevelTree.MainSN = Model.mainWebLevel.MainSN.Value;
+                webLevelTree.WebSiteID = Model.mainWebLevel.WebSiteID;
+                webLevelTree.ParentSN = Model.mainWebLevel.ParentSN;
+                webLevelTree.IdName = $"Tree{Model.webLevelData.Lang}";
+                webLevelTree.EnumWebLevelModuleLevel = EnumWebLevelModuleLevel2.PAGELIST;
+                <partial name="~/Views/Common/Selector/SelectorWebLevelTree.cshtml" model="webLevelTree" />
+            }
+        </div>
+        <div class="col-sm-1">
+            @{
+                var Treebtns = new List<btnModel>() {
+            new btnModel(){  Btntype = btnModel.btntype.儲存  , onclickFunction=$"ChangeTree('{Model.webLevelData.Lang}')" },
+            };
+                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="Treebtns" />
+            }
+        </div>
+    </div>
+</div>
+<script>
+
+    CKEDITOR.replace("@($"ContentHeader{Model.webLevelData.Lang.Replace("-", "")}")", {
+        customConfig: '/ckeditor/CMS1_config.js'
+    });
+    CKEDITOR.replace("@($"ContentFooter{Model.webLevelData.Lang.Replace("-", "")}")", {
+        customConfig: '/ckeditor/CMS1_config.js'
+    });
+
+    CKEDITOR.replace("@($"AdditionalCSS{Model.webLevelData.Lang.Replace("-", "")}")", {
+        customConfig: '/ckeditor/CMS1_config.js'
+    });
+    CKEDITOR.replace("@($"AdditionalScript{Model.webLevelData.Lang.Replace("-", "")}")", {
+        customConfig: '/ckeditor/CMS1_config.js'
+    });
+
+    $("#txtcustom@(Model.webLevelData.Lang)").keyup(function () {
+        var txt = $(this).val();
+        $.each($(".classcustom@(Model.webLevelData.Lang)"), function () {
+            if (txt.toLowerCase().trim() != "" && $(this).attr("data-txt").toLowerCase().trim() == txt.toLowerCase().trim()) {
+                $('.addcustom@(Model.webLevelData.Lang)').attr('disabled', 'true');
+                Swal.fire({
+                    icon: "warning",
+                    title: "有相同名稱！"
+                });
+                return false;
+            }
+            else {
+                $('.addcustom@(Model.webLevelData.Lang)').removeAttr('disabled');
+            }
+        });
+    });
+</script>

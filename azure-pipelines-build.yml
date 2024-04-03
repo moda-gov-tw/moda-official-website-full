@@ -1,0 +1,211 @@
+parameters:
+- name: gcp_secret
+  default: ''
+  
+jobs:
+- job: BuildManagement
+  variables:
+    build_folder: Management
+    image: $(image_management)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildFileServices
+  variables:
+    build_folder: FileServices
+    image: $(image_fileservices)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildMailBox
+  variables:
+    build_folder: ModaMailBox
+    image: $(image_mailbox)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildWebsite
+  variables:
+    build_folder: WebSite
+    image: $(image_website)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildWebAPI
+  variables:
+    build_folder: WebAPI
+    image: $(image_webapi)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildStatic
+  variables:
+    build_folder: ConsoleApp-Static
+    image: $(image_static)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildYoutube
+  variables:
+    build_folder: ConsoleApp-Youtube
+    image: $(image_youtube)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildCreate
+  variables:
+    build_folder: ConsoleApp-Create
+    image: $(image_create)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)
+
+- job: BuildSearch
+  variables:
+    build_folder: ConsoleApp-Search
+    image: $(image_search)
+  steps:
+  - task: DownloadSecureFile@1
+    name: GCPsecret
+    inputs:
+      secureFile: ${{ parameters.gcp_secret }}
+  - script: |
+      gcloud auth login --cred-file $(GCPsecret.secureFilePath)
+      gcloud auth configure-docker --quiet $(image_registry)
+    displayName: Gcloud login
+  - task: Docker@2
+    displayName: Build & Push Image
+    inputs:
+      command: buildAndPush
+      buildContext: $(Build.SourcesDirectory)
+      dockerfile: $(Build.SourcesDirectory)/$(build_folder)/Dockerfile
+      repository: $(image)
+      useDefaultContext: false
+      tags: $(image_tag)

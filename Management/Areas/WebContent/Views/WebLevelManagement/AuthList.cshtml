@@ -1,0 +1,57 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.AuthListModel
+@{
+    var md = Model;
+}
+@if (md.sysGroups != null)
+{
+    <div class="bootstrap-table">
+        <div class="row hidden">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6">
+                <div class="text-right pb-4">
+                    <select class="form-control" data-id="@CommonUtility.GetUrlAesEncrypt(md.webLevelSN)" onchange="ChangeAuth($(this))">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="uTable3">
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th align="left" scope="col">群組名稱</th>
+                            <th scope="col">節點維護</th>
+                            <th scope="col">內容編修</th>
+                            <th scope="col">內容覆核</th>
+                            <th scope="col">權限設定</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var group in md.sysGroups)
+                        {
+                            <tr>
+                                <td>@group.GroupName @((group.IsEnable == "0")?"(停用)":"")</td>
+                                <td>
+                                    <input type="checkbox" onclick="changePower($(this))" data-gid="@group.SysGroupSN.ToString()" data-type="Module" class="checkbox changePower" @(md.authSysGroupWebLevels.Any(x => x.AuthType == "Module" && x.SysGroupSN == group.SysGroupSN) ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <input type="checkbox" onclick="changePower($(this))" data-gid="@(group.SysGroupSN.ToString())" data-type="Article" class="checkbox changePower" @(md.authSysGroupWebLevels.Any(x => x.AuthType == "Article" && x.SysGroupSN == group.SysGroupSN) ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <input type="checkbox" onclick="changePower($(this))" data-gid="@(group.SysGroupSN.ToString())" data-type="Reviewer" class="checkbox changePower" @(md.authSysGroupWebLevels.Any(x => x.AuthType == "Reviewer" && x.SysGroupSN == group.SysGroupSN) ? "checked" : "") />
+                                </td>
+                                <td>
+                                    <input type="checkbox" onclick="changePower($(this))" data-gid="@(group.SysGroupSN.ToString())" data-type="Auth" class="checkbox changePower" @(md.authSysGroupWebLevels.Any(x => x.AuthType == "Auth" && x.SysGroupSN == group.SysGroupSN) ? "checked" : "") />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div id="pager">
+                    <partial name="~/Views/Common/Pagination.cshtml" model="@md.defaultPager" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

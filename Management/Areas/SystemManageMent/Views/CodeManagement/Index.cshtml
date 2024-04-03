@@ -1,0 +1,183 @@
+﻿@model Management.Areas.SystemManageMent.Models.CodeManagement.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row bg-gray1">
+    <div class="uCol4-1-l">
+        <div class="treeWrap">
+            <div id="" class="simpleTree-mainContainer staticTree">
+                <partial name="~/Areas/SystemManageMent/Views/CodeManagement/SysCategoryTree.cshtml" model="Model" />
+            </div>
+            <input type="button" value="刷新" style="display:none;" onclick="btnBinding()" />
+        </div>
+    </div>
+    <div class="uCol4-1-r">
+        <input type="hidden" id="ParentLevel" />
+        <div class="white-box" id="fox_box">
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var backperPageShow = 0;
+        $(function() {
+            $(".simpleTree-toggle").click(function() {
+                if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+                    $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+                } else {
+                    $(this).parents(".simpleTree-nodeContainer").addClass("on");
+                }
+            });
+            $(".btnOp").click(function() {
+                $("#QryKeyword").val("");
+                var data_id = $(this).data("id");
+                var m_id = getObjAtr($(this), "m_id");
+                var m_id2 = getObjAtr($(this), "m_id2");
+                $("#ParentLevel").data("id", data_id);
+                $("#ParentLevel").data("id2", m_id2);
+                console.log(data_id, m_id);
+                switch ($(this).attr("data-type")) {
+                    case "List":
+                        SetCookie("SysObj",);
+                        searchFunction(data_id, m_id2, 1);
+                        break;
+                    case "Edit":
+                        $("#ParentLevel").data("id", m_id);
+                        EditFun('', data_id, m_id2, m_id);
+                        break;
+                }
+            });
+        });
+
+        $(document).on("click", ".page_a", function() {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction($("#ParentLevel").data("id"), $("#ParentLevel").data("id2"), p);
+        });
+        function searchFunction(id, id2, p) {
+            $('.preloader').show();
+            var href = "@Url.Action("List", "CodeManagement", new { area = "SystemManageMent" })";
+            var key3 = MODAhtmlEncode($("#QryKeyword"), "val");
+
+            var objstr = getCookie("SysObj");
+            if (objstr != "undefined") {
+                var obj = JSON.parse(objstr);
+                $('#perPageShow').val(obj.displayCount);
+                backperPageShow = obj.displayCount;
+                key3 = obj.keyword == "undefined" ? MODAhtmlEncode($("#QryKeyword"), "val") == obj.keyword ? obj.keyword : MODAhtmlEncode($("#QryKeyword"), "val") : MODAhtmlEncode($("#QryKeyword"), "val");
+                id = obj.id;
+                id2 = obj.id2;
+            }
+
+            var getUrl = "?key=" + id + "&key2=" + id2 + "&key3=" + key3 + "&p=" + p;
+            var pageUrl = href + getUrl;
+            Setcookie(id, id2, key3, p);
+            $("#fox_box").load(pageUrl, function() { $('.preloader').hide(); });
+        }
+        function ListFun(id, id2) {
+            $('.preloader').show();
+            id = id.replace('&#x2B;', '+').replace('&#x2B;', '+');
+            var key3 = MODAhtmlEncode($("#QryKeyword"), "val");
+            Setcookie(id, id2, key3, 1);
+            var href = "@Url.Action("List", "CodeManagement", new { area = "SystemManageMent" })?key=" + id + "&key2=" + id2;
+            $("#fox_box").load(href, function() { $('.preloader').hide(); });
+        }
+        function EditFun(sn, id, id2, id3) {
+            $('.preloader').show();
+            var href = "@Url.Action("Edit", "CodeManagement", new { area = "SystemManageMent" })?sn=" + sn + "&key=" + id + "&key2=" + id2 + "&key3=" + id3;
+            $("#fox_box").load(href, function() { $('.preloader').hide(); });
+        }
+        var _lan = "zh-tw";
+        function linkclicked(e) {
+            var lan = e.getAttribute("href").replace('#', '');
+            _lan = lan;
+        }
+        function DelFun(ck)
+        {
+             Swal.fire({
+            title: '確定要刪除?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '確定',
+            denyButtonText: '取消',
+        }).then((result) => {
+         if (result.isConfirmed) 
+         {
+            var saveHref = '@Url.Action("DeleteCategory", "CodeManagement", new { area = "SystemManageMent" })';
+              $.ajax({
+                    url: saveHref,
+                    type: 'post',
+                    data: {ck:ck},
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                      $('.preloader').hide();
+                        if (data.statusCode == 200) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "刪除成功"
+                            }).then(result => {
+                               location.reload();
+                            });
+                        }else{
+                         Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    }});
+         }
+         else if (result.isDenied) 
+         {
+            Swal.fire('已取消!', '', 'info')
+         }
+        });
+        }
+        function btnBinding()
+        {
+            //BindingNoLang
+            var saveHref = '@Url.Action("BindingNoLang", "CodeManagement", new { area = "SystemManageMent" })';
+            $.ajax({
+                url: saveHref,
+                type: 'post',
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "重新綁定成功"
+                        }).then(result => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function Setcookie(id, id2, key3, p) {
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "id": id,
+                "id2": id2,
+                "keyword": key3
+            };
+            SetCookie("SysObj", selectobj);
+        }
+    </script>
+}

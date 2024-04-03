@@ -1,0 +1,196 @@
+﻿@model ModaMailBox.SurveyModel
+@{
+    var md = Model;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+
+}
+@Html.AntiForgeryToken()
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">滿意度調查</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@{
+    if (md.Msg == "")
+    {
+        <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 bg-white rounded-4 mb-5">
+            <!-- 內容主標 -->
+        <div class="row wrap5 ">
+                <h2 class="title3 position-relative text-center pb-3 mb-md-5">滿意度調查</h2>
+                <div class="my-2">
+                    <div>
+                        <div class="px-4 rounded-4">
+
+                            <ol class=" mb-4">
+                                <li class="mb-4">
+                                    <label for="CaseSatisfy" class="form-label">
+                                        請問您對於機關答覆的內容滿意嗎？<span class="text-danger fs16">*</span>
+                                    </label>
+                                    <div class="range"
+                                     style="--min:1; --max:10; --value:5; --text-value:&quot;5&quot;; --thumb-size: 20px; --track-height: calc(var(--thumb-size)/2);">
+                                        <input type="range" min="1" max="10" value="5" id="CaseSatisfy" name="CaseSatisfy"
+                                           oninput="this.parentNode.style.setProperty('--value',this.value); this.parentNode.style.setProperty('--text-value', JSON.stringify(this.value))">
+                                        <output><span></span></output>
+                                        <div class="range__progress"></div>
+                                    </div>
+                                </li>
+                                <li class="mb-4 radio_style1">
+                                    <label for="FormControlTextarea" class="form-label">
+                                        請問您的問題解決了嗎？<span class="text-danger fs16">*</span>
+                                    </label>
+                                    <div class="mb-2 form-check">
+                                        <input type="radio" class="form-check-input" id="radio1" name="CaseSolved" value="A">
+                                        <label class="form-check-label" for="radio1">完全解決 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="radio" class="form-check-input" id="radio2" name="CaseSolved" value="B">
+                                        <label class="form-check-label" for="radio2">部分解決</label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="radio" class="form-check-input" id="radio3" name="CaseSolved" value="C">
+                                        <label class="form-check-label" for="radio3">完全沒有解決</label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="radio" class="form-check-input" id="radio4" name="CaseSolved" value="D">
+                                        <label class="form-check-label" for="radio4">只是提出建議供參考</label>
+                                    </div>
+                                </li>
+                                <li class="mb-4 Check_style1">
+                                    <label for="FormControlTextarea" class="form-label">
+                                        請問有無讓您不滿意的地方？（可複選）<span class="text-danger fs16">*</span>
+                                    </label>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check1" name="CaseDefect" value="A">
+                                        <label class="form-check-label" for="Check1">無 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check2" name="CaseDefect" value="B">
+                                        <label class="form-check-label" for="Check2">問題未解決 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check3" name="CaseDefect" value="C">
+                                        <label class="form-check-label" for="Check3">處理態度不佳 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check4" name="CaseDefect" value="D">
+                                        <label class="form-check-label" for="Check4">處理時間太慢 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check5" name="CaseDefect" value="E">
+                                        <label class="form-check-label" for="Check5">內容係例稿，欠缺誠意 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check6" name="CaseDefect" value="F">
+                                        <label class="form-check-label" for="Check6">曲解法令或引用錯誤 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check7" name="CaseDefect" value="G">
+                                        <label class="form-check-label" for="Check7">機關推諉責任 </label>
+                                    </div>
+                                    <div class="mb-2 form-check">
+                                        <input type="checkbox" class="form-check-input" id="Check8" name="CaseDefect" value="H">
+                                        <label class="form-check-label" for="Check8">答覆內容與實際情形不符 </label>
+                                    </div>
+                                </li>
+                                <li class="mb-4">
+                                    <div class="row my-2">
+                                        <div class="mb-3">
+                                            <label for="FormControlTextarea" class="form-label">
+                                                若還有其他建議事項，請於下方描述：
+                                            </label>
+                                            <textarea name="CaseProposal" class="form-control" id="FormControlTextarea"  rows="6" placeholder="請輸入純文字內容，勿輸入 HTML 或其他網頁語法"></textarea>
+                                            <span class="blockquote-footer">請輸入 2,000 個字元以內之純文字，勿使用 HTML 或其他網頁與程式語法（如：<> 等）。</span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-2">
+                                        <div class="mb-3">
+                                            <label for="input_name" class="form-label">驗證</label>
+                                            <div class="row g-3  flex-nowrap">
+                                                <div class="col">
+                                                    <div id="myWidget"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ol>
+                            <P>謝謝您的回饋，您的建言將做為我們改進之參考依據。 </P>
+                            <P>數位發展部民意信箱小組</P>
+                            <div class="text-center mt-5 ">
+                                <button type="submit" name="submit" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" onclick="ConfimSubmit();"
+                                    data-poptitle="送出" role="button">
+                                    送出
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+}
+<script>
+    var msg = "@Html.Raw(md.Msg)";
+    if(msg != ''){
+        SetMsgShowAlertRedirect(2,"",msg,"/");
+    }
+    function SubmitSurvey(obj) {
+        var saveHref = '@Url.Action("SaveSurvey", "Home")';
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val()
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    SetMsgShowAlertRedirect(0, "", "已收到滿意度調查回覆，感謝您撥冗填寫", "/");
+                } else {
+                    var content = data.content;
+                    var focusOn = MODAhtmlEncode(content.focusOn);
+                    if (focusOn != '') { FocusOnByName(focusOn)}
+                    SetMsgShowAlert(2, "", content.errormsg);
+                    FECommon.basicLoadingOff();
+                    turnstile.reset("#myWidget");
+                }
+            }
+        });
+    }
+    function ConfimSubmit() {
+        var obj = {
+            "CaseSatisfy" : $("[name=CaseSatisfy]").val(),
+            "CaseSolved" : $("[name=CaseSolved]:checked").val(),
+            "CaseDefect" : $.map($("[name=CaseDefect]:checked"),function(n,i){return n.value;}).join(','),
+            "CaseProposal" : $("[name=CaseProposal]").val(),
+            "cftoken": cftoken
+        };
+
+        var msg = {
+            Status: 3,
+            Title: '',
+            Text: '確認送出',
+            confirmButtonText: '確認',
+            cancelButtonText: '取消',
+            confirmFunc: function () {
+                SubmitSurvey(obj);
+            },
+            cancelFunc: function () {
+                Swal.fire('', '已取消', 'info');
+            },
+        };
+        ShowMsgAlert(msg);
+    }
+</script>

@@ -1,0 +1,141 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility;
+@{
+	var md = Model;
+	var qSort = (md.pager.p - 1) * md.pager.DisplayCount;
+	var lang = md.WebLevel.Lang;
+	var titleText = "雙語詞彙";
+	var noText = "序號";
+	var chineseText = "詞彙";
+	var englishText = "英譯文";
+	if (lang?.ToUpper() == "EN")
+	{
+		titleText = "Bilingual";
+		noText = "No.";
+		chineseText = "Chinese";
+		englishText = "English";
+	}
+	var Category = md.langCategory;
+}
+<!-- 列表樣式四 -->
+<div class="list7 mb-5 vocabularyList">
+	<div class="tbl" role="table" aria-labelledby="vocabulary">
+		<div id="vocabulary" class="visually-hidden">@titleText</div>
+		<div role="rowgroup" class="tblHdGroup">
+			<div role="Group" class="tblRoW">
+				<div role="columnheader" class="tblTh listThW-vocabulary1">@noText</div>
+				@if (lang?.ToUpper() == "EN")
+				{
+					<div role="columnheader" class="tblTh listThW-vocabulary3">@englishText</div>
+					<div role="columnheader" class="tblTh listThW-vocabulary2">@chineseText</div>
+				}
+				else
+				{
+					<div role="columnheader" class="tblTh listThW-vocabulary2">@chineseText</div>
+					<div role="columnheader" class="tblTh listThW-vocabulary3">@englishText</div>
+				}
+				
+
+			</div>
+		</div>
+		<div role="rowgroup" class="tblRowGroup" id="ListTable">
+			@foreach (var item in md.list)
+			{
+				qSort++;
+				<div role="row" class="tblRoW">
+					<div role="cell" class="tblTd" data-title="@noText"><div class="tblTdM">@(qSort)</div></div>
+                    @switch (lang?.ToUpper())
+                    {
+                        case "EN":
+                        <div role="cell" class="tblTd text-start" data-title="@englishText">
+                            <div class="tblTdM" >
+                                @item.en
+                                @if (!string.IsNullOrWhiteSpace(item.enURL))
+                                {
+                                    <a href="@item.enURL" class="moreBtn" @Html.Raw(CommFun.getattr(item.entarget,item.en, Category.FirstOrDefault(x=>x.SysCategoryKey==md.WebLevel.WebSiteID +"-7-33")?.Value, item.enfiletype, item.en))>
+                                        <i class="ci ci-plus"></i>
+                                        <span class="visually-hidden">@item.en</span>
+
+                                    </a>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.enregulationsURL))
+                                {
+                                    <a href="@item.enregulationsURL" class="lawBtn" rel="noreferrer noopener" title="@($@"{item.enregulationsTitle}（open in new windows）")" target="_blank">
+                                        <i class="ci ci-law"></i>
+                                        <span class="visually-hidden">@item.enregulationsTitle</span>
+
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div role="cell" class="tblTd text-start" data-title="@chineseText">
+                            <div class="tblTdM" lang="zh-tw">
+                                @item.zhtw
+                                @if (!string.IsNullOrWhiteSpace(item.zhtwURL))
+                                {
+                                    <a href="@item.zhtwURL" class="moreBtn" @Html.Raw(CommFun.getattr(item.zhtwtarget,item.zhtw, Category.FirstOrDefault(x=>x.SysCategoryKey==md.WebLevel.WebSiteID +"-7-33")?.Value, item.zhtwfiletype, item.zhtw))>
+                                        <i class="ci ci-plus"></i>
+                                        <span class="visually-hidden">@item.zhtw</span>
+
+                                    </a>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.zhtwregulationsURL))
+                                {
+                                    <a href="@item.zhtwregulationsURL" class="lawBtn" rel="noreferrer noopener" title="@($@"{item.zhtwregulationsTitle}（open in new windows）")" target="_blank">
+                                        <i class="ci ci-law"></i>
+                                        <span class="visually-hidden">@item.zhtwregulationsTitle</span>
+
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        break;
+                        default:
+                        <div role="cell" class="tblTd text-start" data-title="@chineseText">
+                            <div class="tblTdM" >
+                                @item.zhtw
+                                @if (!string.IsNullOrWhiteSpace(item.zhtwURL))
+                                {
+                                    <a href="@item.zhtwURL" class="moreBtn" @Html.Raw(CommFun.getattr(item.zhtwtarget,item.zhtw, Category.FirstOrDefault(x=>x.SysCategoryKey==md.WebLevel.WebSiteID +"-7-33")?.Value, item.zhtwfiletype, item.zhtw))>
+                                        <i class="ci ci-plus"></i>
+                                        <span class="visually-hidden">@item.zhtw</span>
+
+                                    </a>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.zhtwregulationsURL))
+                                {
+                                    <a href="@item.zhtwregulationsURL" class="lawBtn" rel="noreferrer noopener" title="@($@"{item.zhtwregulationsTitle}（另開新視窗）")" target="_blank">
+                                        <i class="ci ci-law"></i>
+                                        <span class="visually-hidden">@item.zhtwregulationsTitle</span>
+
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div role="cell" class="tblTd text-start" data-title="@englishText">
+                            <div class="tblTdM" lang="en">
+                                @item.en
+                                @if (!string.IsNullOrWhiteSpace(item.enURL))
+                                {
+                                    <a href="@item.enURL" class="moreBtn" @Html.Raw(CommFun.getattr(item.entarget,item.en, Category.FirstOrDefault(x=>x.SysCategoryKey==md.WebLevel.WebSiteID +"-7-33")?.Value, item.enfiletype, item.en))>
+                                        <i class="ci ci-plus"></i>
+                                        <span class="visually-hidden">@item.en</span>
+                                    </a>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(item.enregulationsURL))
+                                {
+                                    <a href="@item.enregulationsURL" class="lawBtn" rel="noreferrer noopener" title="@($@"{item.enregulationsTitle}（另開新視窗）")" target="_blank">
+                                        <i class="ci ci-law"></i>
+                                        <span class="visually-hidden">@item.enregulationsTitle</span>
+
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        break;
+                    }
+				</div>
+			}
+		</div>
+	</div>
+</div>

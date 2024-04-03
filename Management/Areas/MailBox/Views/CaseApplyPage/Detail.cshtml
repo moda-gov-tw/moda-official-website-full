@@ -1,0 +1,174 @@
+﻿@model Management.Areas.MailBox.Models.CaseApplyPage.DetailModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+
+            <div class="bootstrap-table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="font-weight-bold my-0">民意信箱頁面</h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-right pb-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal tab-content">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            頁面名稱
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="PageName" type="text" value="@md?.Page?.PageName" id="PageName" class="form-control" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            <span style="color:red">*</span>頁面標題
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="PageTitle" type="text" value="@md?.Page?.PageTitle" id="PageTitle" class="form-control" placeholder="頁面標題" maxlength=20>
+                        </div>
+                    </div>
+                    @if (md?.Page?.ContentEnaled != null && md.Page.ContentEnaled)
+                    {
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                <span style="color:red">*</span>頁面內容
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea name="editor">@Model.Page?.PageContent</textarea>
+                            </div>
+                        </div>
+                        @if (md.Page.PageType == "1")
+                        {
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group row">
+                                        @{
+                                            var logo = new Management.Models.Common.LoadUploadModel()
+                                            {
+                                                commonFileModels = Model.PageImgs,
+                                                fileGroup = Utility.WebFileGroupID.MailBox.PageImg,
+                                                file_trNumber = $"{Utility.WebFileGroupID.MailBox.PageImg}zh-tw",
+                                                title = "內嵌圖片",
+                                                FileType = "1",
+                                                fth = "MailBox",
+                                                lan = "zh-tw"
+                                            };
+                                            <partial name="~/Views/Common/LoadUpload.cshtml" model="logo" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (md?.PageExtends != null && md.PageExtends.Count() > 0)
+                    {
+                        var i = 1;
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                <span style="color:red">*</span>隱私權說明
+                            </label>
+                            <div class="col-sm-10">
+                                <table class="table table-striped mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="colW1">序號</th>
+                                            <th>說明文字</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var extend in md.PageExtends)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>
+                                                    <input type="text" name="extend" id=@($"extend{extend.CaseApplyPageExtendSn}") data-sn="@extend.CaseApplyPageExtendSn" class="col-sm-8 form-control text-sm-left" value="@extend.ExtendContent" />
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group text-center uBtnList">
+                        @{
+                            var btns = new List<btnModel>() {
+                        new btnModel() {  Btntype = btnModel.btntype.儲存, onclickFunction = "saveFun()"},
+                        new btnModel(){   Btntype = btnModel.btntype.取消 , onclickFunction="back()" }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var hasCKeditor = @((md?.Page?.ContentEnaled != null && md.Page.ContentEnaled) ? "true" : "false")
+                    if (hasCKeditor) {
+            CKEDITOR.replace("editor", {
+                customConfig: '/ckeditor/CMS1_config.js'
+            });
+        }
+        function saveFun() {
+            var list = [];
+            $("input[name='extend']").each(function (index, obj) {
+                var extend = {
+                    CaseApplyPageExtendSn: obj.dataset.sn,
+                    ExtendContent: obj.value
+                }
+                list.push(extend);
+            });
+
+            var obj = {
+                CaseApplyPageSn: @(md.Page.CaseApplyPageSn),
+                PageTitle: $("input[name='PageTitle']").val(),
+                PageContent: hasCKeditor ? CKEDITOR.instances.editor.getData() : "",
+                extends: list
+            };
+            $.ajax({
+                url: '@Url.Action("Save", "CaseApplyPage", new { area = "MailBox" })',
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        }).then(function () {
+                            back();
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function back() {
+            SetCookie("back", 1);
+            location.href = '@Url.Action("Index", "CaseApplyPage", new { area = "MailBox" })';
+        }
+    </script>
+}
+

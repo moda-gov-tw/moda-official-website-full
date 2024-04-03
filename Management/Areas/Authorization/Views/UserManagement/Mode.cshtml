@@ -1,0 +1,531 @@
+﻿@model Management.Areas.Authorization.Models.UserManagement.ModeModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Auth = Services.Authorization.GroupManagementService.GetSysUserGroup(Model.UserID, 1);
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab">
+                <li class="nav-item"><a class="nav-link active" href="javascript:;" onclick="changeTab($(this))" data-type="tab1">帳號基本資料</a></li>
+                @if (Model.sysUser != null)
+                {
+                    <li class="nav-item"><a class="nav-link" href="javascript:;" onclick="changeTab($(this))" data-type="tab2">功能群組</a></li>
+                }
+                <li class="nav-item ml-auto">
+                    <input type="reset" value="回帳號列表" class="ubtn-back-list" onclick="back()">
+                </li>
+            </ul>
+            <div class="bootstrap-table">
+                <div class="form-horizontal tabDiv" id="tab1_div">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>帳號
+                                </label>
+                                <div class="col-md-8">
+                                    @if (Model.sysUser != null)
+                                    {
+                                        <span></span>
+
+                                        <div class="pt-3">@Model.sysUser?.UserID</div>
+                                    }
+                                    else
+                                    {
+                                        <input type="text" value="" id="UserID" class="form-control" placeholder="帳號">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>使用者
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser?.UserName" id="UserName" class="form-control" placeholder="使用者">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-md-6">
+                        <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>英文名稱
+                        </label>
+                        <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser?.EngName" id="EngName" class="form-control" placeholder="英文名稱">
+                        </div>
+                        </div>
+                        </div>*@
+                        @*<div class="col-md-6">
+                        <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>暱稱
+                        </label>
+                        <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser?.NickName" id="NickName" class="form-control" placeholder="暱稱">
+                        </div>
+                        </div>
+                        </div>*@
+                    </div>
+
+                    @*<div class="row">
+                    <div class="col-md-6">
+                    <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                    <span></span>連絡電話(Home)
+                    </label>
+                    <div class="col-md-8">
+                    <input type="text" value="@Model.sysUser?.Tel" id="Tel" class="form-control" placeholder="連絡電話(Home)">
+                    </div>
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                    <span></span>連絡電話(Mobile)
+                    </label>
+                    <div class="col-md-8">
+                    <input type="text" value="@Model.sysUser?.Mobile" id="Mobile" class="form-control" placeholder="連絡電話(Mobile)">
+                    </div>
+                    </div>
+                    </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>E-mail
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser?.Email" id="Email" class="form-control" placeholder="E-mail">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>單位
+                                </label>
+                                <div class="col-md-8">
+                                    @{
+                                        var DepModel = new definitionModel() { IdName = "DepartmentID", selectIds = new List<string>() { Model.sysUser?.DepartmentID } };
+                                        <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@DepModel />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<div class="col-md-6">
+                        <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>員工編號
+                        </label>
+                        <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser?.EmpID" id="EmpID" class="form-control" placeholder="員工編號">
+                        </div>
+                        </div>
+                        </div>*@
+                        @*<div class="col-md-6">
+                        <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>職稱
+                        </label>
+                        <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser?.JobTitle" id="JobTitle" class="form-control" placeholder="職稱">
+                        </div>
+                        </div>
+                        </div>*@
+                    </div>
+                    <div class="row">
+                        @*<div class="col-md-6">
+                        <div class="form-group row">
+                        <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>辦公室電話
+                        </label>
+                        <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser?.OfficePhone" id="OfficePhone" class="form-control" placeholder="辦公室電話">
+                        </div>
+                        </div>
+                        </div>*@
+                    </div>
+                    <!--這邊是修改才會有的資料 start-->
+                    @if (Model.sysUser != null)
+                    {
+                        <div class="row" style="@(Auth != null ? "":"display:none")">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>重設密碼
+                                    </label>
+                                    <div class="col-md-8">
+                                        <input type="button" class="ubtn-resend ml-0" onclick="buttonFunction($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(Model.sysUser?.UserID)" data-type="reset" disabled="@(Model.sysUser?.DisableDate != null && Model.sysUser?.DisableDate < DateTime.UtcNow.AddHours(8))" value="發送重設密碼信" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>管理員設定密碼
+                                    </label>
+                                    <div class="col-md-8">
+                                        <div class="mb-4"><input class="form-control" type="password" id="p_w_d_1" placeholder="新密碼" /></div>
+                                        <div class="mb-4"><input class="form-control" type="password" id="p_w_d_2" placeholder="確認新密碼" /></div>
+                                        <div><input type="button" class="btn ml-0" id="resetp_w_d" value="強制設定密碼" /></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>停用日期
+                                    </label>
+                                    <div class="col-md-8">
+                                        <input type="date" value="@(Model.sysUser.DisableDate.HasValue ? Model.sysUser?.DisableDate.Value.ToString("yyyy-MM-dd") : ""  )" id="DisableDate" class="form-control" placeholder="停用日期">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>帳號狀態
+                                    </label>
+                                    <div class="col-md-8 pt-3">
+                                        <input value="1" type="radio" name="UserSatus" @(Model.sysUser?.UserSatus == "1" ? "checked" : "" ) checked class=" radio-inline radio" />啟用
+                                        <input value="0" type="radio" name="UserSatus" @(Model.sysUser?.UserSatus == "0" ? "checked" : "" ) class="radio-inline radio" />停用
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>最後登入日期
+                                    </label>
+                                    <div class="col-md-8 pt-3">
+                                        <span></span>@(Model.sysUser.LastLoginDate.HasValue ? Model.sysUser?.LastLoginDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "尚未有登入紀錄"  )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>最後修改密碼日期
+                                    </label>
+                                    <div class="col-md-8 pt-3">
+                                        <span></span>@(Model.sysUser.PwdLastUpdate.HasValue ? Model.sysUser?.PwdLastUpdate.Value.ToString("yyyy-MM-dd HH:mm:ss") : "尚未有修改紀錄"  )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>最後處理人員
+                                    </label>
+                                    <div class="col-md-8 pt-3">
+                                        <span></span>@(Model.sysUser?.ProcessUserID  )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span></span>最後處理時間
+                                    </label>
+                                    <div class="col-md-8 pt-3">
+                                        <span></span>@(Model.sysUser.ProcessDate.HasValue ? Model.sysUser?.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : ""  )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!--這邊是修改才會有的資料 end-->
+                    <div class="form-group text-center uBtnList">
+                        <input type="button" value="儲存" onclick="checkedFun()" class="ubtn-save">
+                        <input type="reset" value="取消" onclick="back()" class="ubtn-cancel">
+                    </div>
+                </div>
+                <div class="tabDiv" id="tab2_div" style="display:none">
+                    <table class="table table-striped mb-5">
+                        <thead>
+                            <tr>
+                                <th>勾選</th>
+                                @*<th scope="col" style="white-space:nowrap;">序號</th>*@
+                                <th scope="col">群組名稱</th>
+                                <th scope="col">說明</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int row = 1;
+                                if (Model.sysGroupToUserModels != null)
+                                {
+                                    foreach (var data in Model?.sysGroupToUserModels)
+                                    {
+                                        <tr>
+                                            <td><input type="checkbox" class="checkbox isSelect" data-groupsn="@data.SysGroupSN" data-userid="@(CommonUtility.GetUrlAesEncrypt(Model.sysUser?.UserID))" @(data.IsSelect.Value ? "checked" : "" ) /></td>
+                                            @*<td>@row</td>*@
+                                            <td>@data.GroupName</td>
+                                            <td>@data.Description</td>
+                                        </tr>
+                                        row++;
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-group text-center uBtnList">
+                        <input type="button" value="儲存" onclick="GroupFun()" class="ubtn-save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="UserID" value="@CommonUtility.GetUrlAesEncrypt(Model.sysUser?.UserID)" />
+<input type="hidden" id="SysUserSN" value="@Model.sysUser?.SysUserSN" />
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        $("#resetp_w_d").click(function() {
+            var error = false;
+            var p1 = $("#p_w_d_1").val();
+            var p2 = $("#p_w_d_2").val();
+            if (p1 == "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入新密碼"
+                });
+            }
+            else if (p1 != p2) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "新密碼與確認新密碼不一致"
+                });
+            } else {
+                var obj = {
+                    userID: '@Model.sysUser?.UserID',
+                    SysUserSN: '@Model.sysUser?.SysUserSN',
+                    p_w_d: p1
+                };
+
+                $.ajax({
+                    url: "@Url.Action("ChangeUserPwd", "UserManagement", new { area = "Authorization" } )",
+                    data: obj,
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    type: 'post',
+                    dataType: "json",
+                    success: function(data) {
+                        $('.preloader').hide();
+                        if (data.statusCode == 200) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "儲存成功"
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    }
+
+                });
+            }
+        });
+
+        function changeTab(e) {
+            $(".tabDiv").hide();
+            $("#" + e.attr("data-type") + "_div").show();
+            $('.nav-tabs .nav-link').removeClass('active');
+            e.addClass('active');
+        }
+        function checkedFun() {
+            var error = "";
+            var UserID = $("#UserID").val();
+            var UserName = $("#UserName").val();
+            var Email = $("#Email").val();
+            var DepartmentID = $("#DepartmentID").val();
+            if ('@(Model.sysUser == null)' == true) {
+                if (strIsNull(UserID)) error += "[帳號]空白 \n";
+            }
+            if (strIsNull(UserName)) error += "[使用者名稱]空白 \n";
+            if (strIsNull(Email)) error += "[聯絡信箱]空白 \n";
+            if (strIsNull(DepartmentID)) error += "[單位]空白 \n";
+            if (error != "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: error
+                });
+            } else {
+                var model = {
+                    userID: UserID,
+                    userName: UserName,
+                    sysusersn: $("#SysUserSN").val(),
+                    engName: $("#EngName").val(),
+                    nickName: $("#NickName").val(),
+                    gender: $("[name=Gender]:checked").val(),
+                    userSatus: $("[name=UserSatus]:checked").val(),
+                    tel: $("#Tel").val(),
+                    mobile: $("#Mobile").val(),
+                    email: $("#Email").val(),
+                    empID: $("#EmpID").val(),
+                    jobTitle: $("#JobTitle").val(),
+                    officePhone: $("#OfficePhone").val(),
+                    departmentID: $("#DepartmentID").val(),
+                    disableDate: $("#DisableDate").val(),
+                };
+                Swal.fire({
+                    title: '確定要儲存?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        saveFun(model);
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        function saveFun(obj) {
+            $('.preloader').show();
+            $.ajax({
+                url: "@Url.Action("SaveUser", "UserManagement", new { area = "Authorization" } )",
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "儲存成功" + data.content
+                        }).then((result) => {
+                            back();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "success",
+                            title: data.content
+                        });
+                    }
+                }
+
+            });
+        }
+        function GroupFun() {
+            var obj = [];
+            Swal.fire({
+                icon: "info",
+                title: "確定修改群組嗎??",
+                showCancelButton: true,
+                closeOnConfirm: false,
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $('.preloader').show();
+                    $(".isSelect").each(function() {
+                        obj.push({
+                            groupsn: $(this).attr("data-groupsn"),
+                            isselect: $(this).prop("checked"),
+                            userid: $(this).attr("data-userid")
+                        });
+                    });
+                    GroupSave(obj);
+                }
+            })
+        }
+        function GroupSave(obj) {
+            $.ajax({
+                url: "@Url.Action("EditSysUserGroup", "UserManagement", new { area = "Authorization" } )",
+                data: {
+                    editSysUserGroupModels: obj
+                },
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "群組修改成功"
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }, complete: function() {
+                    $('.preloader').hide();
+                }
+            });
+        }
+        function back(obj) {
+            SetCookie('back', 1);
+            location.href = '@Url.Action("Index", "UserManagement", new { area = "Authorization" })'
+        }
+        function buttonFunction(e) {
+            var id = e.attr("data-id");
+            var Url = "@Url.Action("SendResetPwd", "UserManagement", new {area= "Authorization" })";
+
+            $.ajax({
+                url: Url,
+                data: { key: id },
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: data.content
+                        }).then(result => {
+                            location.reload();
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+
+        $('input[type=radio][name=UserSatus]').change(function() {
+            if (this.value == '1' && $('#DisableDate').val() != '') {
+                $('#DisableDate').val('')
+            }
+        });
+    </script>
+}

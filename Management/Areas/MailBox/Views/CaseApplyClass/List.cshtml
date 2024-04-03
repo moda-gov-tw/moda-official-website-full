@@ -1,0 +1,77 @@
+﻿@model ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            @if (Model.ParentClass != null)
+            {
+                <th scope="col" class="colW6">網頁意見-大分類</th>
+            }
+            <th scope="col" class="colW2">分類代碼</th>
+            @if (Model.ParentClass != null)
+            {
+                <th scope="col">網頁意見-小分類</th>
+            }
+            else
+            {           
+                <th scope="col">網頁意見分類</th>
+            }
+            <th scope="col" class="colW3">承辦單位</th>
+           @* <th scope="col" class="colW2">公文子分類</th>
+            <th scope="col" class="colW2">辦理天數</th>*@
+            <th scope="col" class="colW3">承辦人員</th>
+            <th scope="col" class="colW2">狀態</th>
+            <th scope="col" class="colW3">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.caseApplyClassModel?.Count > 0)
+        {
+            @foreach (var data in Model.caseApplyClassModel)
+            {
+
+                <tr>
+                    <td>@row</td>
+                    @if (Model.ParentClass != null)
+                    {
+                        <td class="text-start">@(Model.sysCategories.FirstOrDefault(x => x.SysCategoryKey == data.SysCategoryKey)?.Value ?? "")</td>
+                    }
+                    <td>@data.CaseNo</td>
+                    <td class="text-start">@data.CaseName</td>
+                    <td>@data.depName</td>
+@*                  <td>@data.CaseType</td>
+                    <td>@data.HandleDate</td>*@
+                    <td class="text-break">@data.CaseTo</td>
+                    <td>@(data.IsEnable == "1" ? "啟用" : "關閉")</td>
+                    <td>
+                        @{
+                            var btns0 = new List<btnModel>()
+                            {
+                            new btnModel(){ Btntype = btnModel.btntype.編修 , onclickFunction="Detail("+data.CaseApplyClassSN+")" }
+                            };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns0" />
+                        }
+                    </td>
+
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="@(Model.ParentClass != null ? "10" : "9")">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model.caseApplyClassModel.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

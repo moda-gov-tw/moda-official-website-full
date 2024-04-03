@@ -1,0 +1,55 @@
+﻿
+@model Management.Areas.MailBox.Models.Report.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW4">意見分類</th>
+            <th scope="col" class="colW3">機關信箱-單位</th>
+            <th scope="col" class="colW3">承辦機關-單位</th>
+            <th scope="col" class="">主旨</th>
+            <th scope="col" class="colW3">成立時間</th>
+            <th scope="col" class="colW4">狀態</th>
+            <th scope="col" class="colW3">回覆時間</th>
+            <th scope="col" class="colW3">回覆來源</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.ReportModel?.Count > 0)
+        {
+            @foreach (var data in Model?.ReportModel)
+            {
+
+                <tr>
+                    <td>@row</td>
+                    <td align="left">@data.ClassName</td>
+                    <td>@data.OriginalDeptName</td>
+                    <td>@data.depName</td>
+                    <td class="text-break text-start">@data.Subject</td>
+                    <td>@data.AcceptDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td align="left">@(Utility.EnumTpye.GetEnumDescription(Utility.EnumTpye.GetEnum<Utility.MailBox.EnumCassApplyStatus>(data.Status)))</td>
+                    <td>@data.ReplyDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@(Utility.EnumTpye.GetEnumDescription(Utility.EnumTpye.GetEnum<Utility.MailBox.EnumReplySource>(data.ReplySource ?? "0")))</td>
+                    
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model?.ReportModel.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

@@ -1,0 +1,131 @@
+﻿@model Management.Areas.WebContent.Models.OpenModel
+@{
+    var data = Model;
+}
+<div class="bootstrap-table">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+    @if (Model.newCommonModels.Count() > 0)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist" style="display:none">
+            @foreach (var lan in Model.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"")" id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang =="zh-tw"?"中文":"英文")</a>
+                </li>
+            }
+        </ul>
+    }
+
+    <hr />
+    <div class="form-horizontal tab-content">
+        @if (Model.newCommonModels.Count() == 0)
+        {
+            var newCommonModel = new NewCommonModel() { webNews = new WEBNews() { Lang = "zh-tw" } };
+            <partial name="~/Areas/WebContent/Views/OpendataNews/ModeView.cshtml" model="newCommonModel" />
+        }
+        else
+        {
+            foreach (var lan in Model.newCommonModels)
+            {
+                <partial name="~/Areas/WebContent/Views/OpendataNews/ModeView.cshtml" model="lan" />
+            }
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function Save(IsEnable, lan) {
+        var saveHref = '@Url.Action("WEBNewsSave", "NEWS", new { area = "WebContent" })';
+        var isEnable = MODAhtmlEncode($('input[name=IsEnable' + lan + ']:checked'), "val");
+        var error = "";
+        if (MODAhtmlEncode($("#Title" + lan), "val") == "") {
+            error += "標題未輸入\n";
+        }
+        if ($(".file_tr" + lan).length == 0) {
+            error += "檔案未上傳\n";
+        }
+        if (MODAhtmlEncode($("#StartDate" + lan), "val") == "") {
+            error += "發布日期未輸入\n";
+        }
+        else if (MODAhtmlEncode($("#StartDate" + lan), "val") >= MODAhtmlEncode($("#EndDate" + lan), "val") && MODAhtmlEncode($("#EndDate" + lan), "val") != "") {
+            error += "發布日期大於下架日期\n";
+        }
+
+        if (error != "") {
+            Swal.fire({
+                icon: "warning",
+                title: error
+            });
+            return false;
+        }
+        var obj = {
+            webNewssn: '@(Model.wEBNews == null? 0 : Model.wEBNews.WEBNewsSN)',
+            weblevelsn: '@Model.webLevel.WebLevelSN',
+            module: '@Model.webLevel.Module',
+            articletype: 4,
+            title: MODAhtmlEncode($("#Title" + lan), "val"),
+            subtitle: "",
+            description: "",
+            isenable: isEnable,
+            startdate: MODAhtmlEncode($("#StartDate" + lan), "val"),
+            enddate: MODAhtmlEncode($("#EndDate" + lan), "val"),
+            fileinfo: fileinfo(lan),
+            lang: lan
+        };
+        if (IsEnable == "1") {
+            Swal.fire({
+                title: '確定要儲存?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SaveNews(obj, saveHref, IsEnable);
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        } else {
+            SaveNews(obj, saveHref, IsEnable)
+        }
+    }
+    function SaveNews(obj, saveHref, IsEnable) {
+        $('.preloader').show();
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    if (IsEnable == -1) {
+                        window.open("@Url.Action("BannerPageView", "WebLevelManagement", new { area = "WebContent" })", "temp", config = 'height=800,width=1204');
+                    } else {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        });
+                        backward();
+                    }
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + ArticleID;
+        $("#fox_box").load(href, function() { });
+    }
+</script>

@@ -1,0 +1,67 @@
+﻿@model NewCommonModel
+
+@{
+    var weblevel = Services.Authorization.WebLevelManagementService.GetWebLevel(Model.webNews.WebLevelSN);
+}
+<div class="tab-pane fade @(Model.webNews.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" id="@($"Title{Model.webNews.Lang}")" class="form-control" placeholder="標題">
+            <div style="color:red" class="pt-3">*如需提供檔案連結供人下載，請在標題標註"檔案格式" EX: 申請表.pdf</div>
+        </div>
+    </div>
+    <div class="form-group row" style="@(weblevel.WeblevelType == "2" ? "" : "display:none")">
+        <label class="col-sm-2 col-form-label text-sm-right">連結</label>
+        <div class="col-sm-10">
+            <input name="@($"URL{Model.webNews.Lang}")" type="text" value="@Model.webNews?.URL" id="@($"URL{Model.webNews.Lang}")" class="form-control" placeholder="連結">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1" class="radio radio-inline " @( Model.webNews.IsEnable == "1" ? "checked" : "" ) /> 發布
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0" class="radio radio-inline " @( Model.webNews.IsEnable == null ? "checked" : (Model.webNews.IsEnable == "0" ? "checked" : "") ) />不公開
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">發布日期</label>
+        <div class="col-sm-10">
+            <input name="StartDate" type="datetime-local" step="1" value="@( Model.webNews == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"StartDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+        <div class="col-sm-10">
+            <input name="EndDate" type="datetime-local" step="1" value="@( Model.webNews == null?"":Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"EndDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+        <div class="col-sm-10">
+            <div>
+                @{
+                    var selectIds = new List<string>();
+                    var DepID = string.IsNullOrWhiteSpace(Model.webNews?.DepartmentID) ? Model.sysUserSysDepartmentID : Model.webNews?.DepartmentID;
+                    selectIds.Add(DepID);
+                    var depControl = new definitionModel()
+            {
+                IdName = $"dep{Model.webNews.Lang}",
+                selectIds = selectIds,
+            };
+                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>() {
+        new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save('{Model.webNews.Lang}')" },
+        new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction="backward(0)" },
+        };
+            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+</div>

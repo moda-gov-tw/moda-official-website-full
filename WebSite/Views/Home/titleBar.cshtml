@@ -1,0 +1,32 @@
+﻿@model Services.Models.WebSite.TitleBarModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<div class="titleBar2 row">
+    <div class="col">
+        <h2 class="title3 mb-0 fw-normal"><span class="titleTxt">@Model.Title</span></h2>
+    </div>
+    <div class="col-auto text-end d-flex">
+        <ul class="shareBar list-unstyled list-inline mb-0">
+            <!-- 分享 -->
+            <li class="list-inline-item">
+                <a href="javascript:;" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-51")?.Value"><i class="ci ci-share"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-51")?.Value</span></a>
+                <ul class="shareBarMenu list-unstyled">
+                    <li><a class="fbShareBtn fbShareJs" href="javascript:;" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-52")?.Value"><i class="bi bi-facebook"></i><span class="visually-hidden">Facebook</span></a></li>
+                    <li><a class="ttShareBtn ttShareJs" href="javascript:;" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-53")?.Value"><i class="bi bi-twitter"></i><span class="visually-hidden">Twitter</span></a></li>
+                    <li><a class="lineShareBtn lineShareJs" href="javascript:;" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-54")?.Value"><i class="bi bi-line"></i><span class="visually-hidden">LINE</span></a></li>
+                </ul>
+            </li>
+            <li class="list-inline-item d-none d-md-inline-block">
+                <a class="printBtn printJs" href="javascript:;" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-55")?.Value"><i class="ci ci-print"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-56")?.Value</span></a>
+            </li>
+            @if (Model.needSearch)
+            {
+                <li class="list-inline-item">
+                    <a href="javascript:;" class="searchSwitch searchSwitchJs" data-opentitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-62")?.Value" data-closetitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-63")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-62")?.Value"><i class="ci ci-open"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-62")?.Value</span></a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

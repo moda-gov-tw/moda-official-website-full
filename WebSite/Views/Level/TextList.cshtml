@@ -1,0 +1,22 @@
+﻿@model List<WebSiteWebLevelPageListModel>
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!-- 列表樣式三 -->
+<ul class="list4-2 list-group divider mb-5">
+    @{
+        foreach (var item in Model)
+        {
+            <li class="list-group-item d-block bg-transparent px-0">
+                <a href="@item.url" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" data-filetype="item.webFile?.FileType" @Html.Raw(CommFun.getattr(item.target, item.webLevel.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value, item.webFile?.FileType, item.webFile?.FileTitle))>
+                    <div class="col mb-0 listIcon1">
+                        <b class="title5 fw-normal">@(item.webLevel.Title)
+                            @if (item.webFile?.FileType != null) { <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>}
+                        </b>
+                    </div>
+                </a>
+            </li>
+        }
+    }
+</ul>

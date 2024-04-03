@@ -1,0 +1,25 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var Category = Model.langCategory;
+}
+<div class="list8 row imgCover mb-5 g-3" id="ListTable">
+    @{
+        foreach (var item in Model.list)
+        {
+            var newItem = item.webNews;
+            var c33 = Category.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value;
+            var _Fun = CommFun.getattr(newItem.target, newItem.Title, c33);
+            <div class="col-12 col-sm-6 col-md-4 position-relative">
+                <a href="@item.webUrl" class="card h-100 d-block rounded-4 border-0" @Html.Raw(_Fun)>
+                    <div class="pic position-relative overflow-hidden rounded-4">
+                        <img src="@item.webLogo?.FilePath" alt="@item.webLogo?.FileTitle">
+                    </div>
+                    <div class="card-body">
+                        <b class="card-title fw-normal">@item.webNews.Title</b>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+</div>

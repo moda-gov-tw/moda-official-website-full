@@ -1,0 +1,228 @@
+﻿@model Management.Areas.WebContent.Models.ScheduleModel
+@{
+    var md = Model;
+}
+<div class="bootstrap-table">
+ <partial name="~/Views/Common/Breadcrumb.cshtml" model=md.LevelBreadcrumb />
+    <hr />
+    <br />
+    @if (md.newCommonModels.Count() > 0)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+            @foreach (var lan in md.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"") " id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw" ? "中文":"英文")</a>
+                </li>
+            }
+        </ul>
+    }
+    <div class="form-horizontal tab-content">
+        @if (md.newCommonModels.Count() == 0)
+        {
+            var newCommonModel = new NewCommonModel() { webNews = new WEBNews() { Lang = "zh-tw" ,WebSiteID = md.WebSiteId, WebLevelSN = md.webLevel.WebLevelSN },AuthSysGroupWebLevels = md.AuthSysGroupWebLevels , sysUserSysDepartmentID = Model.sysUserSysDepartmentID };
+            <partial name="~/Areas/WebContent/Views/Schedule/ModeView.cshtml" model="newCommonModel" />
+        }
+        else
+        {
+            @foreach (var lang in md.sysWebSiteLangs)
+            {
+                var news = md.newCommonModels.FirstOrDefault(x => x.webNews.Lang == lang.Lang);
+                if(news == null)
+                {
+                    news = new NewCommonModel() { webNews = new WEBNews() { Lang = lang.Lang } };
+                }
+                <partial name="~/Areas/WebContent/Views/Schedule/ModeView.cshtml" model="news" />
+            }
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    var json = '@Html.Raw(JsonConvert.SerializeObject(md.News))';//新聞資料
+    var NewsJ = JSON.parse(json);
+    SetCookie("sysChk", "");
+    function NewsSelector(obj,lan) {
+     $("#newtable" + lan).empty();
+     var chk = JSON.parse(obj);//選擇的新聞
+     var items = "";
+     $.each(NewsJ, function(index, item) {
+         $.each(chk, function(iindex, iitem) {
+             if (item.WEBNewsSN == iitem) {
+                 items += "<tr>";
+                 items += "<td hidden><input type='text'  class = 'col-sm-8 form-control text-sm-left' value=" + item.WEBNewsSN + "></td>";
+                 items += "<td>" + (item.Title == null ? "": item.Title) + "</td>";
+                 items += "<td>" + new Date(item.StartDate).toLocaleString() + "</td>";
+                 items += "<td>" + (item.EndDate == null ? "":new Date(item.EndDate).toLocaleString()) + "</td>";
+                 items += "<td><input type='button' class='ubtn-delete delnew' value='刪除'></td>";
+                 items += "</tr>";
+             }
+         });
+     });
+     $("#newtable"+lan).append(items);
+ }
+
+    function schedulepup(lan) {
+    var websiteid =  MODAhtmlEncode($("#drlWebSite"),"val");
+    var _sn = new Array();
+    $("#newtable"+lan+ "> tr").each(function() {
+        _sn.push($(this).find("td").eq(0).find('input').val());
+    });
+    SetCookie("sysChk", _sn);
+    SetCookie("NewsObj", "");
+
+    var obj = {
+        popUrl: "@Url.Action("CommonSchedule", "Common",new  {area =""})?websiteid=" + websiteid + "&lan=" + lan
+    };
+    pop(obj);
+}
+    function Save(IsEnable, lan) {
+    var saveHref = '@Url.Action("ScheduleSave", "Schedule", new { area = "WebContent" })';
+    var relatedlink = []; //URL
+    var webnwsSn = new Array();
+    var error = "";
+    var isEnable = "";
+    var chief = $("#chief" + lan).val();
+    
+    if (IsEnable == "4" || IsEnable == "-2" || IsEnable == "-1") {
+        isEnable = IsEnable;
+    }
+    else{
+        isEnable = MODAhtmlEncode($('input[name=IsEnable' + lan + ']:checked'), "val");
+    }
+    $("#newtable"+lan+" > tr").each(function() {
+        webnwsSn.push($(this).find("td").eq(0).find('input').val());
+    });
+     relatedlink =  txtAreaObj("link" + lan);
+    
+     var obj = {
+         webNewssn: '@(md.wEBNews == null? 0 : md.wEBNews.WEBNewsSN)',
+         weblevelsn: '@(md.webLevel.WebLevelSN)',
+         module: '@(md.webLevel.Module)',
+         title: $("#Title" + lan).val(),
+         subtitle: $("#SubTitle" + lan).val(),
+         contenttext :$("#ContentText" + lan).val(),
+         description: $("#Description" + lan).val(),
+         lang: lan,
+         isenable: isEnable,
+         publishdate:$("#PublishDate" + lan).val(),
+         startdate: $("#StartDate" + lan).val(),
+         endDate: $("#EndDate" + lan).val(),
+         zipcodesn : $('select[name=ZipCode' + lan + '] option:selected').val(),
+         processuserid : '@(md.wEBNews == null ? null : md.wEBNews.ProcessUserID)' ,
+         DepartmentID: $('#dep' + lan).val() ,
+         chief :   JSON.parse(chief)  ,
+     };
+     if(isEnable =="1" || isEnable == "0"){
+        Swal.fire({
+        title: '確定要儲存?',
+        icon: 'warning',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: '確定',
+        denyButtonText: '取消',
+    }).then((result) => {
+         if (result.isConfirmed) {
+             SaveNews(obj,webnwsSn,relatedlink,saveHref,IsEnable,lan);
+         }else if (result.isDenied) {
+            Swal.fire('已取消!', '', 'info')
+        }
+     })
+     }
+     else if (isEnable == "4" || isEnable == "3") {
+         var content = IsEnable == "4" ? "送審確定送出?" : "確定要送審?"
+          Swal.fire({
+                title: content,
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SaveNews(obj,webnwsSn,relatedlink,saveHref,IsEnable,lan);
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+     }
+     else{
+        SaveNews(obj,webnwsSn,relatedlink,saveHref,IsEnable,lan);
+     }
+   } 
+
+     function SaveNews(obj,sn,relatedlink, saveHref, IsEnable,lan) {
+         $('.preloader').show();
+         $.ajax({
+             url: saveHref,
+             type: 'post',
+             data: { wEBNews :obj,
+                     wEBNewsSN: sn ,
+                     fileinfo : fileinfo(lan),
+                     relatedlink : relatedlink,
+                     chief : obj.chief
+             },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+             dataType: "json",
+             success: function(data) {
+                 $('.preloader').hide();
+                 if (data.statusCode == 200) {
+                     Swal.fire({
+                         icon: "success",
+                         title: "更新成功"
+                     });
+                     backward();
+                 }
+                 else {
+                     Swal.fire({
+                         icon: "warning",
+                         title: data.content
+                     });
+     
+                 }
+             }
+         })
+     }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" ,  key= CommonUtility.GetUrlAesEncrypt(md.webLevel.WebLevelSN.ToString()) }   )";
+        $("#fox_box").load(href, function() { });
+    }
+
+    function fileinfo(lan) {
+        var filesort = 1;
+        var fileinfo = [];
+        $(".file_tr" + lan).each(function () {
+        fileinfo.push(
+            {
+                filenewname: $(this).find(".filetitle").attr("data-name"),
+                filetitle: $(this).find(".filetitle").val(),
+                filesort: filesort,
+                groupid: $(this).attr("data-gid"),
+                lan: lan
+            });
+        filesort++;
+        });
+        return fileinfo;
+    }
+    $(document).off("click", ".delnew").on("click", ".delnew", function() {
+        $(this).parent().parent().remove();
+    });
+
+    function DeleteLink(e) {
+        var tr = e.closest("tr");
+        tr.remove();
+    }
+
+    function txtAreaObj(Name) {
+        var array = [];
+        $.each($(".class" + Name), function() {
+            var val = $(this).find(".classval" + Name).val() == undefined ? null : $(this).find(".classval" + Name).val();
+            var txt = $(this).find(".classtxt" + Name).val();
+            array.push({ val: val, txt: txt });
+        });
+        return array;
+    }
+</Script>

@@ -1,0 +1,47 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews?.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@if (Model != null)
+{
+    <section class="idxVideo" data-aos="fade">
+    <div class="w-100 overflow-hidden">
+        <!-- title -->
+@*        <div class="titleBar1 text-center">
+            <h2 class="title1 mb-4 mb-md-5">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+        </div>*@
+        <!-- content -->
+        <div class="listWrap1 position-relative">
+            <div class="idxList4 position-relative px-3 px-lg-0">
+                <button type="button" class="swiper-button-prev idxList4SwiperPrevBtn border-0 rounded-circle idxList4SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-34")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-34")?.Value</span></button>
+                <div class="swiper idxList4Swiper idxList4SwiperJs">
+                    <div class="swiper-wrapper">
+                        @if(item?.TabNewsView != null)
+                        {
+                            foreach (var news in item.TabNewsView)
+                            {
+                                if(!string.IsNullOrEmpty(news.MediaKey))
+                                {
+                                    <div class="swiper-slide">
+                                        <div class="ytWrap">
+                                            <div class="ytPlayer rounded-4" data-id="@news.MediaKey" data-title="@news.TabNews?.Title"></div>
+                                        </div>
+                                        <b class="title">@Html.Raw(news.TabNews?.Title)</b>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <button type="button" class="swiper-button-next idxList4SwiperNextBtn border-0 rounded-circle idxList4SwiperNextBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-35")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-35")?.Value</span></button>
+                <div class="idxList4SwiperNav swiper-pagination idxList4SwiperPageJs"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+}

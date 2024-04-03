@@ -1,0 +1,79 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="font-weight-bold mt-0">權限表</h2>
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        帳號：
+                    </label>
+                    <input type="text" id="userid" class="form-control" placeholder="帳號">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        單位：
+                    </label>
+                    @{
+                        var DepModel = new definitionModel() { IdName = "DepartmentID" };
+                        <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@DepModel />
+                    }
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        群組：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var selectorModel = new definitionModel() { IdName = "GroupSN" };
+                                <partial name="~/Views/Common/Selector/SelectorSysGroup.cshtml" model=selectorModel />
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>() {
+                                new btnModel() { Btntype = btnModel.btntype.查詢, jsUseClassName = "search"},
+                                new btnModel() { Btntype = btnModel.btntype.匯出, jsUseClassName = "output"}
+                                };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bootstrap-table">
+                <div id="tableList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+    $(".output").click(function () {
+        var userid = MODAhtmlEncode( $("#userid"),"val");
+        var groupsn = MODAhtmlEncode( $("#GroupSN"),"val");
+        var departmentid = MODAhtmlEncode( $("#DepartmentID"),"val");
+        location.href = '@Url.Action("ExcelReport", "AccessManagment", new {area= "Authorization" })?userid=' + userid + '&groupsn=' + groupsn + '&departmentid=' + departmentid;
+    });
+    $(".search").click(function () {
+        $('.preloader').show();
+        var userid = MODAhtmlEncode($("#userid"),"val");
+        var groupsn = MODAhtmlEncode($("#GroupSN"),"val");
+        var departmentid = MODAhtmlEncode($("#DepartmentID"),"val");
+        href = '@Url.Action("List", "AccessManagment", new { area = "Authorization" })?userid=' + userid + '&groupsn=' + groupsn + '&departmentid=' + departmentid;
+        reloadDataTable(href);
+    });
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function () {
+            $('.preloader').hide();
+
+        });
+    }
+</script>
+}

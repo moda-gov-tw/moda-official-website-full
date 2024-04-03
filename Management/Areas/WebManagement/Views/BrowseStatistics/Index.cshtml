@@ -1,0 +1,87 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        語系：
+                    </label>
+                    <select id="language" name="language" class="form-control">
+                        <option value="zh-tw" selected>中文</option>
+                        <option value="en">英文</option>
+                    </select>
+                </div>
+                <div class="col col-dateToDate">
+                    <label class="col-form-label">
+                        日期區間：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="date" id="sddate" class="form-control" placeholder="" value="">
+                        </div>
+                        <div class="col">~</div>
+                        <div class="col">
+                            <input type="date" id="eddate" class="form-control" placeholder="" value="">
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>()
+                            {
+                            new btnModel(){   Btntype = btnModel.btntype.查詢, onclickFunction="search()",jsUseClassName="search"  }
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tableList"></div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var href = "@Url.Action("ListG", "BrowseStatistics", new { area = "WebManagement" })";
+    function search() {
+        $('.preloader').show();
+        var sd = MODAhtmlEncode($("#sddate"), "val");
+        var ed = MODAhtmlEncode($("#eddate"), "val");
+        var lang = MODASelectVal("language");
+        var website = MODAhtmlEncode($("#drlWebSite"), "val");
+        if (sd != "" && ed != "") {
+            if (ed < sd) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入開始日期大於結束日期"
+                });
+            }
+            else {
+                var getUrl = "?sd=" + sd + "&ed=" + ed + "&website=" + website + "&lan=" + lang;
+                var pageUrl = href + getUrl;
+                reloadDataTable(pageUrl);
+            }
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function() {
+        $('.preloader').hide();
+        });
+    }
+
+    $("#language").change(function() {
+        lan = $("#language option:selected").val();
+    });
+
+</script>
+

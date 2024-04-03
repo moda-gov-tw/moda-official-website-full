@@ -1,0 +1,84 @@
+﻿@model Management.Models.Home.ADLoginModel
+@{
+    var md = Model;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ADLogin</title>
+
+
+    <!--sweetalert2-->
+    <link href="@Url.Content("~/sweetalert2/sweetalert2.min.css")" rel="stylesheet" />
+    <!-- Js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sidebar-nav/metismenu.js"></script>
+    <script src="/js/jquery.slimscroll.min.js"></script>
+    <script src="/js/waves.js"></script>
+    <script src="/styleswitcher/jQuery.style.switcher.js"></script>
+    <script src="/js/custom.min.js"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.min.js")"></script>
+
+    <!--sweetalert2-->
+    @*<script src="@Url.Content("~/sweetalert2/sweetalert2.all.min.js")"></script>*@
+    <script src="@Url.Content("~/sweetalert2/sweetalert2.min.js")"></script>
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    <script>
+        if ('@md.Uid' == '') {
+            Swal.fire({
+                icon: "warning",
+                title: "AzureAD查無此資料"
+            }).then(result => {
+                location.href = "/";
+            });
+        } else {
+            $.ajax({
+                url: '@Url.Action("AADLogin", "Home")',
+                data: { uid: '@md.Uid' },
+                type: 'post',
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        location.href = "@Url.Action("Index", "WebLevelManagement", new {area= "WebContent" })"
+                    } else {
+                        $('.preloader').hide();
+                        var info = data.content;
+                        console.log(info);
+                        if (info.isOver90days == true) {
+                            Swal.fire({
+                                icon: "warning",
+                                title: info.message
+                            }).then(result => {
+                                location.href = "/";
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: info.message
+                            }).then(result => {
+                                location.href = "/";
+                            });
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+
+    </script>
+</body>
+</html>

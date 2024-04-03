@@ -1,0 +1,11 @@
+﻿@model NewsModel
+
+@if (Model.Detail.BasicData.ArticleType == "10")
+{
+    <partial name="~/Views/News/Transcript.cshtml" model=Model />
+}
+else
+{
+    <partial name="~/Views/News/Detail.cshtml" model=Model />
+}
+

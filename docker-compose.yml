@@ -1,0 +1,121 @@
+# Init shell:
+# docker-compose up -d 
+# docker-compose exec mssql-tools bash
+# > sqlcmd -S mssql -U sa -P P@ssword1234 -i /srv/db/DEMO_MODA.sql -x
+
+version: "3.9"
+services:
+  # Microsoft SQL Server 資料庫
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_SA_PASSWORD=P@ssword1234"
+    expose:
+      - 1433
+
+  # 資料庫CLI，若要使用mssql-tools匯入資料庫用
+  # sqlcmd -e -S mssql -U sa -P P@ssword1234 -i /srv/db/DEMO_MODA.sql -x
+  mssql-tools:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - mssql
+    command: "tail -f /dev/null"
+    volumes:
+      - ./user-sql:/srv/db
+
+  # 資料庫後台
+  adminer:
+    image: adminer:4.8.1
+    depends_on:
+      - mssql
+    ports:
+      - 8080:8080
+
+  # Email測試站，SMTP用1025 port
+  maildev:
+    image: maildev/maildev:latest
+    ports:
+      - 1080:1080
+    expose:
+      - 1025
+
+  # 檔案系統
+  fileservices:
+    build:
+      context: .
+      dockerfile: FileServices/Dockerfile
+      args:
+        APP_NAME: FileServices
+    env_file:
+      - .env
+    volumes:
+      - ./volumes:/app/files
+    expose:
+      - 80
+
+  # 官網前台
+  website:
+    build:
+      context: .
+      dockerfile: WebSite/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./volumes:/app/files
+    ports:
+      - 8000:80
+
+  # 官網前台API
+  webapi:
+    build:
+      context: .
+      dockerfile: WebAPI/Dockerfile
+      args:
+        APP_NAME: WebAPI
+    env_file:
+      - .env
+    ports:
+      - 8001:80
+
+  # 官網後台
+  management:
+    build:
+      context: .
+      dockerfile: Management/Dockerfile
+      args:
+        APP_NAME: Management
+    depends_on:
+      - mssql
+      - fileservices
+    env_file:
+      - .env
+    volumes:
+      - ./volumes/wwwroot:/app/files/wwwroot
+    ports:
+      - 8002:80
+
+  # 民意信箱
+  mailbox:
+    build:
+      context: .
+      dockerfile: ModaMailBox/Dockerfile
+      args:
+        APP_NAME: ModaMailBox
+    depends_on:
+      - mssql
+    env_file:
+      - .env
+    ports:
+      - 8003:80
+
+  consoleapp-static:
+    build:
+      context: .
+      dockerfile: ConsoleApp-Static/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8004:80
+    volumes:
+      - ./volumes:/app/files

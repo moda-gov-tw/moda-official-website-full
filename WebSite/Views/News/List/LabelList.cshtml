@@ -1,0 +1,18 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var Category = Model.langCategory;
+}
+<div class="list1 row mb-5 g-3" id="ListTable">
+    @foreach (var item in Model.list)
+    {
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 shadow-md">
+                <a href="@item.webUrl" class="card-body text-decoration-none" @Html.Raw(CommFun.getattr(item.webNews.target, item.webNews.Title, Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                    <b class="card-title title5">@item.webNews.Title</b>
+                    <p class="card-text">@item.webNews.SubTitle</p>
+                </a>
+            </div>
+        </div>
+    }
+</div>

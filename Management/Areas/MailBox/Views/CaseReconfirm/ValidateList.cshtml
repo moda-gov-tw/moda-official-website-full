@@ -1,0 +1,45 @@
+﻿@model Management.Areas.MailBox.Models.CaseReconfirm.ValidateListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" class="colW1">序號</th>
+            <th scope="col">Email</th>
+            <th scope="col" class="colW4">建立時間</th>
+            <th scope="col" class="colW4">有效期限</th>
+            <th scope="col" class="colW6">狀態</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.CaseValidateList?.Count > 0)
+        {
+            @foreach (var data in Model?.CaseValidateList)
+            {
+
+                <tr>
+                    <td>@row</td>
+                    <td class="text-break text-start">@data.Email</td>
+                    <td>@data.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@data.EffectiveDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@(Utility.EnumTpye.GetEnumDescription(Utility.EnumTpye.GetEnum<Utility.MailBox.EnumCassApplyStatus>(data.Status)))
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model?.CaseValidateList.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

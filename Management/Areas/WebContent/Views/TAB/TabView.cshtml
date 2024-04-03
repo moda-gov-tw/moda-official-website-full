@@ -1,0 +1,47 @@
+﻿@model NewCommonModel
+<div class="tab-pane fade @(Model.webNews.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" id="@($"Title{Model.webNews.Lang}")" class="form-control" placeholder="標題">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">關聯頁</label>
+        <div class="col-sm-10">
+            <p>
+                <input type="button" value="請選擇" class="ubtn-choose test_btn" onclick="Newspup('@(Model.webNews.Lang)')" />
+                <span id="@($"SP{Model.webNews.Lang}")">@Model.wEBNewsExtends[0].Column_1</span>
+            </p>
+            <input name="URL" type="hidden" value="@Model.webNews?.URL" id="@($"URL{Model.webNews.Lang}")" class="form-control" placeholder="關聯頁">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1"  class="radio radio-inline " @( Model.webNews.IsEnable == "1" ? "checked" : "" ) /> 發布
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0"  class="radio radio-inline " @( Model.webNews.IsEnable == null ? "checked" : (Model.webNews.IsEnable == "0" ? "checked" : "") ) />不公開
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">發布日期</label>
+        <div class="col-sm-10">
+            <input name="StartDate" type="datetime-local" step="1" value="@( Model.webNews == null?"": Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"StartDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+        <div class="col-sm-10">
+            <input name="EndDate" type="datetime-local" step="1" value="@( Model.webNews == null?"":Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"EndDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>() {
+        new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save(1,'{Model.webNews.Lang}')" },
+        new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction="backward(0)" },
+        };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+</div>

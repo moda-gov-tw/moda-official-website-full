@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html lang="zh-tw">
+@{
+    var SYSUser = ViewData["SYSUser"] as Services.Models.sysUserModel;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>全球資訊網後端管理系統</title>
+    <link rel="shortcut icon" type="image/png" href="@Url.Content("~/images/favicon.ico")">
+    <link href="@Url.Content("~/bootstrap/css/bootstrap.min.css")" rel="stylesheet" asp-append-version="true">
+    <link href="@Url.Content("~/bootstrap/css/bootstrap-extension.css")" rel="stylesheet" asp-append-version="true">
+    <link href="@Url.Content("~/sidebar-nav/metisMenu.min.css")" rel="stylesheet" asp-append-version="true">
+    <link href="@Url.Content("~/jquery-ui/jquery-ui.css")" rel="stylesheet" asp-append-version="true">
+    <link href="@Url.Content("~/css/simpleTree.css")" rel="stylesheet" asp-append-version="true">
+    <link href="@Url.Content("~/css/style.css")" rel="stylesheet" asp-append-version="true">
+    <link id="theme" href="@Url.Content("~/css/colors/megna-dark.css")" rel="stylesheet" asp-append-version="true">
+    <!--for Ckeditor css-->
+    <link href="@Url.Content("~/ckeditor/skins/moono-lisa/editor.css?t=H8DA")" rel="stylesheet" />
+    <link href="@Url.Content("~/ckeditor/plugins/scayt/skins/moono-lisa/scayt.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/ckeditor/plugins/scayt/dialogs/dialog.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/ckeditor/plugins/tableselection/styles/tableselection.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/ckeditor/plugins/copyformatting/styles/copyformatting.css")" rel="stylesheet" />
+    <!--sweetalert2-->
+    <link href="@Url.Content("~/sweetalert2/sweetalert2.min.css")" rel="stylesheet" />
+    @RenderSection("head", false)
+    <script src="@Url.Content("~/js/jquery.min.js")"></script>
+    <script src="@Url.Content("~/js/custom.js")" asp-append-version="true"></script>
+</head>
+<body class="fix-header fix-sidebar" id="form1">
+    <div class="preloader">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+    <div id="wrapper">
+        @if (SYSUser != null)
+        {
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-default navbar-static-top m-b-0">
+                <div class="navbar-header">
+                    <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)"
+                   data-toggle="collapse" data-target=".navbar-collapse"><i class="ti-menu"></i></a>
+                    <div class="top-left-part">
+                        <a href="@Url.Content("~/WebContent/WebLevelManagement/Index")" id="logo" class="logo">
+                            <span>
+                                <img src="@Url.Content("~/images/MODAadmin-logo.svg")" alt="moda" class="dark-logo">
+                            </span>
+                            <b class="hidden-xs"><img src="@Url.Content("~/images/MODAadmin-text.svg")" alt="數位發展部" class="dark-logo"></b>
+                        </a>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-left hidden-xs">
+                        <li>
+                            <a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light">
+                                <i class="icon-arrow-left-circle ti-menu"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <div>
+                                <select id="drlWebSite" class="form-control" onchange="changeWebSite($(this))">
+                                    @foreach (var website in SYSUser.sysWebSites)
+                                    {
+                                        if (website.WebSiteID == SYSUser.WebSiteID)
+                                        {
+                                            <option value="@website.WebSiteID" selected>@website.Title || @website.Description</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@website.WebSiteID">@website.Title || @website.Description</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                    <!--<ul class="nav navbar-top-links navbar-right pull-right">
+                        <li class="right-side-toggle">
+                            <a class="waves-effect waves-light" href="javascript:void(0)">
+                                <i class="ti-settings"></i>
+                            </a>
+                        </li>-->
+                    <!-- /.dropdown -->
+                    <!--</ul>-->
+            </div>
+                <!-- /.navbar-header -->
+                <!-- /.navbar-top-links -->
+                <!-- /.navbar-static-side -->
+        </nav>
+            <!-- End Top Navigation -->
+            <!-- Left navbar-header -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse slimscrollsidebar">
+                    <div class="user-profile">
+                        <div class="dropdown user-pro-body">
+                            <div>
+                                <img src="@Url.Content("~/images/users/default.svg")" alt="user-img" class="img-circle">
+                            </div>
+                            <a href="#" class="dropdown-toggle u-dropdown" data-bs-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false" data-bs-display="static">@SYSUser.sysUser.UserID<span class="caret"></span></a>
+                            <ul class="dropdown-menu animated flipInY">
+                                <li style="display:none">
+                                    <a href="@Url.Action("EditMode", "UserManagement", new { area = "Authorization" , key  = CommonUtility.GetUrlAesEncrypt(SYSUser.sysUser.UserID) } )"><i class="ti-user"></i> 個人資料</a>
+                                </li>
+                                <!-- <li role="separator" class="divider"></li> -->
+                            <li role="separator" class="divider" style="display:none"></li>
+                                <li><a href="@Url.Action("logout","Home", new { area=""})"><i class="fa fa-power-off"></i> 登出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul class="nav" id="side-menu">
+                        <!-- <li class="sidebar-search hidden-sm hidden-md hidden-lg">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </li> -->
+                        @{
+                            if (SYSUser.check)
+                            {
+                                var menuList = SYSUser.menu;
+                                foreach (var menu_a in menuList.Where(x => x.ParentSN == null).OrderBy(x => x.SortOrderC))
+                                {
+                                    <li class="nav-small-cap m-t-10">--- @menu_a.Title </li>
+                                    var menu_bData = menuList.Where(x => x.ParentSN == menu_a.SysSectionSN).ToList();
+                                    if (menu_bData.Count() > 0)
+                                    {
+                                        <li>
+                                            @foreach (var menu_b in menu_bData.OrderBy(x => x.SortOrderC))
+                                            {
+                                                <a href="@(Url.Content(menu_b.ActionPath))" class="waves-effect @(string.IsNullOrWhiteSpace(menu_b.ActionPath) ?"notfinish":""  )">
+                                                    <i data-icon="@menu_b.Icon" class="linea-icon linea-basic fa-fw"></i><span class="hide-menu">@menu_b.Title<span class="fa arrow"></span></span>
+                                                </a>
+                                            }
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <!-- Left navbar-header end -->
+            <!-- Page Content -->
+            <div id="page-wrapper">
+                <div id="ContentPlaceHolder1_ProgramContent" class="container-fluid">
+                    <div class="row bg-title">@ViewData["Breadcrumb"]</div>
+                    @RenderBody()
+                </div>
+                <input type="hidden" name="ctl00$ContentPlaceHolder1$ctl00$hfFontColor" id="hfFontColor"
+                   value="{&quot;hex&quot;:&quot;#000000&quot;,&quot;rgba&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;hsl&quot;:&quot;hsla(0, 0%, 95%, 0.77)&quot;}">
+                <input type="hidden" name="ctl00$ContentPlaceHolder1$ctl00$hfFontColor2" id="hfFontColor2"
+                   value="{&quot;hex&quot;:&quot;#000000&quot;,&quot;rgba&quot;:&quot;rgb(0, 0, 0)&quot;,&quot;hsl&quot;:&quot;hsla(0, 0%, 95%, 0.77)&quot;}">
+
+                <!-- .right-sidebar -->
+            <div class="right-sidebar">
+                    <div class="slimscrollright">
+                        <div class="rpanel-title">服務面板 <span><i class="ti-close right-side-toggle"></i></span></div>
+                        <div class="r-panel-body">
+                            <ul>
+                                <li><b>佈局選項</b></li>
+                                <li>
+                                    <div class="checkbox checkbox-info">
+                                        <input id="checkbox1" type="checkbox" class="fxhdr">
+                                        <label for="checkbox1">固定頁首</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="checkbox checkbox-warning">
+                                        <input id="checkbox2" type="checkbox" checked="" class="fxsdr">
+                                        <label for="checkbox2">固定側邊選單</label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="checkbox checkbox-success">
+                                        <input id="checkbox4" type="checkbox" class="open-close">
+                                        <label for="checkbox4">側邊選單切換</label>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul id="themecolors" class="m-t-20">
+                                <li><b>側邊選單樣式</b></li>
+                                <li><a href="javascript:void(0)" theme="default" class="default-theme">1</a></li>
+                                <li><a href="javascript:void(0)" theme="green" class="green-theme">2</a></li>
+                                <li><a href="javascript:void(0)" theme="gray" class="yellow-theme">3</a></li>
+                                <li><a href="javascript:void(0)" theme="blue" class="blue-theme">4</a></li>
+                                <li><a href="javascript:void(0)" theme="purple" class="purple-theme">5</a></li>
+                                <li><a href="javascript:void(0)" theme="megna" class="megna-theme">6</a></li>
+                                <li class="d-block"><b>側邊選單樣式(暗黑)</b></li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="default-dark" class="default-dark-theme">7</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="green-dark" class="green-dark-theme">8</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="gray-dark" class="yellow-dark-theme">9</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="blue-dark" class="blue-dark-theme">10</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="purple-dark" class="purple-dark-theme">11</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)" theme="megna-dark" class="megna-dark-theme working">12</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.right-sidebar -->
+                <!-- /.modal -->
+        </div>
+        }
+        <!-- /.container-fluid -->
+        <footer class="footer text-center">© 2022   數位發展部全球資訊網 後端管理系統 </footer>
+        <div id="divShowbox" style="display:none"></div>
+    </div>
+    <script>
+        //取的隨機安全碼必須在最前面
+        function cryptoRand() {
+            const randomBuffer = new Uint32Array(1);
+            (window.crypto || window.msCrypto).getRandomValues(randomBuffer);
+            return (randomBuffer[0] / (0xffffffff + 1));
+        }
+    </script>
+    <script src="@Url.Content("~/jquery-ui/jquery-ui.min.js")"></script>
+    <script src="@Url.Content("~/bootstrap/js/bootstrap.bundle.min.js")"></script>
+    <script src="@Url.Content("~/sidebar-nav/metismenu.js")"></script>
+    <script src="@Url.Content("~/js/jquery.slimscroll.min.js")"></script>
+    <script src="@Url.Content("~/js/waves.js")"></script>
+    <script src="@Url.Content("~/styleswitcher/jQuery.style.switcher.js")"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.min.js")"></script>
+    <script src="@Url.Content("~/chart/chart.js")" asp-append-version="true"></script>
+  @*  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.umd.js"></script>*@
+    <script src="@Url.Content("~/chart/chartjs-plugin-datalabels.js")"></script>
+    @*for Ckeditor js*@
+    <script type="text/javascript" src="@Url.Content("~/ckeditor/ckeditor.js?t=C6HH5UF")"></script>
+    <script type="text/javascript" src="@Url.Content("~/ckeditor/lang/zh.js?t=H8DA")"></script>
+    <script type="text/javascript" src="@Url.Content("~/ckeditor/styles.js?t=H8DA")"></script>
+    <script type="text/javascript" src="@Url.Content("~/js/common.js")" ></script>
+    <script type="text/javascript" src="@Url.Content("~/bootstrap-fileinput/js/upload.main.js")"></script>
+    <!--sweetalert2-->
+    <script type="text/javascript" src="@Url.Content("~/sweetalert2/sweetalert2.all.min.js")"></script>
+    <script>
+        function stopPopstate(event) {
+            history.pushState(null, document.title, location.href);
+        };
+
+        window.addEventListener('popstate', stopPopstate);
+
+        $(".notfinish").click(function () {
+            Swal.fire({
+                icon: "info",
+                title: "敬請期待！"
+            });
+
+        });
+        function deleteSessionFile(e) {
+             Swal.fire({
+                title: '確定要刪除？',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                $.ajax({
+                url: "@Url.Action("ReMoreSessionFile", "Common", new { area = "" } )",
+                data: { filenewname: e.attr("data-name") },
+                type: 'get',
+                dataType:"json",
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        e.parent().parent().remove();
+                        }
+                    }
+                });
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+
+
+        }
+        function changeWebSite(e) {
+            $.ajax({
+                url: "@Url.Action("ChengeWebSite", "Home", new { area = "" } )",
+                data: { websiteid: e.val() },
+                type: 'get',
+                dataType:"json",
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                    } else {
+                        location.href="@Url.Content("~/Home/TimeOut")";
+                    }
+                }
+
+            });
+        }
+        copyurl = '@AppSettingHelper.GetAppsetting("WebSiteUrl")';
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

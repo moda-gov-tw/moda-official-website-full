@@ -1,0 +1,36 @@
+﻿@model Management.Areas.Authorization.Models.AccessManagment.ListModel
+@{
+    var Model1 = Model;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW4">帳號/名稱</th>
+            <th scope="col" style="white-space:nowrap;" class="colW2">狀態</th>
+            <th scope="col" class="colW7">程式名稱</th>
+            <th scope="col">單位名稱</th>
+            <th scope="col" class="colW7">權限區分</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model1.userGroupSysSectionModels.Count > 0)
+        {
+            @foreach (var data in Model1.userGroupSysSectionModels)
+            {
+                <tr>
+                    <td>@data.UserID</td>
+                    <td>@(data.IsEnable=="1" ? "啟用" : (data.IsEnable == "0" ?  "停用":"刪除")　)</td>
+                    <td>@data.SectionTitle</td>
+                    <td>@data.DepartmentName</td>
+                    <td>@(data.GroupIsEnable=="1"? data.GroupName: data.GroupName.ToString()+ "(停用)")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>

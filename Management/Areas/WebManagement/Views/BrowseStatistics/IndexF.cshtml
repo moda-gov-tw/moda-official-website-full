@@ -1,0 +1,207 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var website = Services.WebSite.HomeService.GetSysWebSite();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="font-weight-bold mt-0">檔案下載統計</h2>
+
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        關鍵字：
+                    </label>
+                    <input type="text" id="keyword" class="form-control" placeholder="關鍵字">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        站台：
+                    </label>
+                    <select class="form-control" name="websiteid">
+                        <option value="">--請選擇--</option>
+                        @foreach (var data in website)
+                        {
+                            <option value="@data.WebSiteID">@data.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="col col-dateToDate">
+                    <label class="col-form-label">
+                        日期區間：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="date" id="sddate" class="form-control" placeholder="" value="" min="2022-12-01">
+                        </div>
+                        <div class="col">~</div>
+                        <div class="col">
+                            <input type="date" id="eddate" class="form-control" placeholder="" value="" disabled>
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>()
+                            {
+                            new btnModel(){   Btntype = btnModel.btntype.查詢, onclickFunction="searchFunction(1)",jsUseClassName="search"  },
+                            new btnModel(){   Btntype = btnModel.btntype.匯出, onclickFunction="Export()", jsUseClassName="output"  }
+                            };
+                                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bootstrap-table">
+                <div id="tableList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var href = "@Url.Action("List", "BrowseStatistics", new { area = "WebManagement" })";
+
+    function searchFunction(p) {
+        var sd = MODAhtmlEncode($("#sddate"), "val");
+        var ed = MODAhtmlEncode($("#eddate"), "val");
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+
+        var Diff = DateDiff(sd, ed);
+
+        if (sd != "" && ed != "") {
+            if (ed < sd) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入開始日期大於結束日期"
+                });
+            }
+            else if (Diff > 183) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "查詢區間限制為六個月內，請重新選擇起迄日。"
+                });
+            }
+            else {
+                var getUrl = "?sd=" + sd + "&ed=" + ed + "&websiteid=" + websiteid + "&key=" + keyword + "&p=" + p;
+                var pageUrl = href + getUrl;
+                reloadDataTable(pageUrl);
+            }
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function() {
+            $(document).off('click', '.page_a');
+            $(document).on("click", ".page_a", function() {
+                var p = getObjAtr($(this), "data-page");
+                searchFunction(p);
+            });
+        });
+    }
+
+    function chkwebsiteid(txt) {
+        switch (txt) {
+            case "MODA": return txt; break;
+            case "ACS": return txt; break;
+            case "ADI": return txt; break;
+            default: return ""; break;
+        }
+    }
+
+    function Export() {
+        var sd = MODAhtmlEncode($("#sddate"), "val");
+        var ed = MODAhtmlEncode($("#eddate"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+
+        var Diff = DateDiff(sd, ed);
+
+        if (sd != "" && ed != "") {
+            if (ed < sd) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入開始日期大於結束日期"
+                });
+            }
+            else if (Diff > 183) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "查詢區間限制為六個月內，請重新選擇起迄日。"
+                });
+            }
+            else {
+                var href = '@Url.Action("Export", "BrowseStatistics", new {area= "WebManagement" })';
+                Swal.fire({
+                    title: '報表產生中 請耐心等待',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: href,
+                            type: 'POST',
+                            data: {
+                                sd: sd,
+                                ed: ed,
+                                websiteid: websiteid,
+                                key: keyword,
+                            },
+                            beforeSend: function() {
+                                $('.preloader').show();
+                            },
+                            success: function(data) {
+                                location.href = '@Url.Action("Download", "BrowseStatistics", new {area= "WebManagement" })';
+                            },
+                            complete: function() {
+                                $('.preloader').hide();
+                            }
+                        });
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+
+    $('#sddate').change(function() {
+        var sd = $("#sddate").val();       
+        $("#eddate").val('');
+        $("#eddate").val(sd);
+        var ed = new Date(sd);
+        ed.setDate(ed.getDate() + 183);
+        if (sd == "") {
+            $("#eddate").prop('disabled', true);
+        }
+        else {
+            $("#eddate").prop('disabled', false);
+            $("#eddate").attr('max', ed.toISOString().split("T")[0]);
+        }
+    })
+
+    var DateDiff = function(SD, ED) {
+        var oDate1 = new Date(SD);
+        var oDate2 = new Date(ED);
+        var iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);
+        return iDays;
+    };
+
+</script>

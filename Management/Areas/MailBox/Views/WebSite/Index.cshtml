@@ -1,0 +1,166 @@
+﻿@model Management.Areas.MailBox.Models.WebSite.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+
+            <div class="bootstrap-table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="font-weight-bold my-0">民意信箱站台維護</h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-right pb-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal tab-content">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            網站標題
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="Title" type="text" value="@(md.caseApplyWeb.Title)" id="Title" class="form-control" placeholder="網站標題" maxlength=500>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label pt-0 d-flex justify-content-sm-end align-items-center flex-wrap text-break">
+                            SEO Description
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="SEODescription" type="text" value="@md.caseApplyWeb.SEODescription" id="SEODescription" class="form-control" placeholder="SEO Description" maxlength=500>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label pt-0 d-flex justify-content-sm-end align-items-center flex-wrap text-break">
+                            SEO Keywords
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="SEOKeywords" type="text" value="@md.caseApplyWeb.SEOKeywords" id="SEOKeywords" class="form-control" placeholder="SEO Keywords" maxlength=500>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            GA Code
+                        </label>
+                        <div class="col-sm-10">
+                            <textarea name="GACode" id="GACode" class="form-control">@md.caseApplyWeb.GACode</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label col-sm-2 col-form-label pt-0 d-flex justify-content-sm-end align-items-center flex-wrap text-break">
+                            滿意度調查
+                        </label>
+                        <div class="col-sm-10">
+                            @{
+                                var radios = new Management.Models.Common.definitionModel()
+            {
+                NeedNull = false,
+                IdName = "Satisfaction",
+                HtmlType = Management.Models.Common.definitionModel.htmlType.radion,
+                selectIds = new List<string> { md.caseApplyWeb.Satisfaction ? "1" : "0" }
+            };
+                                <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model="radios" />
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @{
+                            var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.MailBox.Logo,
+                file_trNumber = $"{Utility.WebFileGroupID.MailBox.Logo}zh-tw",
+                needCopy = false,
+                title = "Logo",
+                FileType = "1",
+                fth = "News",
+                lan = "zh-tw",
+            };
+                            <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+                        }
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            頁尾設計
+                        </label>
+                        <div class="col-sm-10">
+                            <textarea name="Footer" id="Footer" class="form-control">@md.caseApplyWeb.Footer</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @{
+                            var f2 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.MailBox.Imgs,
+                file_trNumber = $"{Utility.WebFileGroupID.MailBox.Imgs}zh-tw",
+                needCopy = true,
+                title = "相關圖片",
+                FileType = "1",
+                fth = "News",
+                lan = "zh-tw",
+            };
+                            <partial name="~/Views/Common/LoadUpload.cshtml" model="f2" />
+                        }
+                    </div>
+                    <div class="form-group text-center uBtnList">
+                        @{
+                            var btns = new List<btnModel>() {
+                        new btnModel() {  Btntype = btnModel.btntype.儲存, onclickFunction = "saveFun()"}  };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        CKEDITOR.replace("@($"GACode")", { customConfig: '/ckeditor/CMS1_config.js', });
+        CKEDITOR.replace("@($"Footer")", { customConfig: '/ckeditor/CMS1_config.js', });
+        function saveFun() {
+            var saveHref = '@Url.Action("Save", "WebSite", new { area = "MailBox" })';
+            var obj = {
+                CaseApplyWebSN: '@md.caseApplyWeb.CaseApplyWebSN',
+                Title: MODAhtmlEncode($('#Title'), "val"),
+                SEODescription: MODAhtmlEncode($('#SEODescription'), "val"),
+                SEOKeywords: MODAhtmlEncode($('#SEOKeywords'), "val"),
+                GaCode: CKEDITOR.instances.GACode.getData(),
+                Satisfaction: (MODAhtmlEncode($('[name=Satisfaction]:checked'), "val") == "1"),
+                Footer: CKEDITOR.instances.Footer.getData(),
+                fileinfo: fileinfo('zh-tw')
+            };
+            $.ajax({
+                url: saveHref,
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        }).then(result => { });
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+
+        }
+    </script>
+    }

@@ -1,0 +1,56 @@
+﻿@model StaticLink
+@{
+    var _model = Model;
+    var StaticData = Services.Static.StaticLinkService.GetStaticLink(_model); 
+}
+<label class="col-sm-2 col-form-label text-sm-right">靜態化資訊</label>
+<div class="col-sm-10">
+    <div>
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th class="colW7"></th>
+                    <th></th>
+                    <th class="colW5"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (StaticData == null)
+                {
+                    <tr>
+                        <td colspan=3>尚未有資料</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>靜態化檔案路徑</td>
+                        <td class="text-breakall">@StaticData.StaticUrl</td>
+                        <td>
+                            @{
+                              var btns = new List<btnModel>()
+                                {
+                                new btnModel(){   onclickFunction=$"txtCopy('','{StaticData.StaticUrl}')" , Btntype = btnModel.btntype.複製 }
+                                };
+                                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                                }
+                    </tr>
+                    <tr>
+                        <td>目前靜態化檔案狀態</td>
+                        <td>@(StaticData.IsLive == "1" ?"已更新":"未更新")</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>前次完成靜態化時間</td>
+                        <td>@(StaticData.staticDate == null ? "未更新":String.Format("{0:yyyy/MM/dd HH:mm}",StaticData.staticDate))</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan=3>更新頻率約5~10分鐘</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

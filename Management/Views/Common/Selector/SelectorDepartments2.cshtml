@@ -1,0 +1,28 @@
+﻿@model definitionModel
+@{
+    var UserData = BaseController.UserData as Services.Models.sysUserModel ;
+    var list = new List<SysDepartment>();
+    if (Model.AllWebsite)
+        list = Services.CommonService.GetAllDepartments();
+    else
+        list = Services.CommonService.GetDepartments(UserData.WebSiteID);
+}
+<select id="@Model.IdName" name="@Model.IdName" class="form-control">
+    <option value="">--請選擇--</option>
+    @foreach (var dep in list.Where(x => x.ParentID == 0).OrderBy(x => x.SortOrder))
+    {
+        <option value="@dep.SysDepartmentSN" selected="@(Model.selectIds.Any(x=>x== dep.SysDepartmentSN.ToString()))" disabled=@(Model.IdName == "DepartmentID" && dep.DepartmentID == "000")>@dep.DepartmentName</option>
+        foreach (var dep2 in list.Where(x => x.ParentID == dep.SysDepartmentSN).OrderBy(x => x.SortOrder))
+        {
+            <option value="@dep2.SysDepartmentSN" selected="@(Model.selectIds.Any(x=>x== dep2.SysDepartmentSN.ToString()))">@("　"+dep.DepartmentName+"-"+ dep2.DepartmentName)</option>
+            foreach (var dep3 in list.Where(x => x.ParentID == dep2.SysDepartmentSN).OrderBy(x => x.SortOrder))
+            {
+                <option value="@dep3.SysDepartmentSN" selected="@(Model.selectIds.Any(x=>x== dep3.SysDepartmentSN.ToString()))">@("　"+dep.DepartmentName+"-"+ dep2.DepartmentName+"-"+ dep3.DepartmentName)</option>
+                foreach (var dep4 in list.Where(x => x.ParentID == dep3.SysDepartmentSN).OrderBy(x => x.SortOrder))
+                {
+                    <option value="@dep4.SysDepartmentSN" selected="@(Model.selectIds.Any(x=>x== dep4.SysDepartmentSN.ToString()))">@("　　"+dep.DepartmentName+"-"+ dep2.DepartmentName+"-"+ dep3.DepartmentName+"-"+ dep4.DepartmentName)</option>
+                }
+            }
+        }
+    }
+</select>

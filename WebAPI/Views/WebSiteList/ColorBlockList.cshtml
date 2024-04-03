@@ -1,0 +1,17 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+}
+<div class="list5-2 row mb-5 g-3" id="ListTable">
+    @{
+        foreach (var item in md.list)
+        {
+            <div class="col-12 col-sm-6 col-md-4">
+                <a href="@item.webUrl" class="d-block px-5 py-4 text-center d-flex justify-content-center align-items-center" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+                    <b class="mb-0 fw-normal">@item.webNews.Title</b>
+                </a>
+            </div>
+        }
+    }
+</div>

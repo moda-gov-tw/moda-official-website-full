@@ -1,0 +1,42 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="idxQa" data-aos="fade-up">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <div class="wrap7">
+            <!-- title -->
+            <div class="titleBar1 text-center">
+                <h2 class="title1 pb-3 pb-md-4"><span>@Html.Raw(Model?.LevelView.BasicLevel.Title)</span></h2>
+            </div>
+
+            <!-- content -->
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <div class="list3-2 row gy-3 gx-4">
+                        @if (item != null)
+                        {
+                            foreach (var news in item.TabNewsView.Take(8))
+                            {
+                                  var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value);
+                                <div class="col-12 col-sm-6">
+                                    <div class="card h-100 rounded-0">
+                                        <div class="card-body p-0">
+                                            <div class="d-flex h-100">
+                                                <a href="@news.DynamicURL" class="cardT col-12 py-3" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                                                    <b class="card-title title5">@Html.Raw(news.TabNews.Title)</b>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

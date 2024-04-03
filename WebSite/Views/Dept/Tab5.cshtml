@@ -1,0 +1,28 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{    
+    var item = Model?.NewsViews.FirstOrDefault();
+	var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!--色塊列表(橢圓)-->
+<section class="deptOffice">
+	<div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+		<!-- 次標 -->
+		<h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+
+		<div class="list5 row g-3 pb-4">
+			@if (item != null)
+            {
+				foreach (var news in item.TabNewsView)
+				{
+					  var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value);
+					<div class="col-12 col-sm-6 col-lg-4">
+						<a href="@Url.Content(@news.DynamicURL)" class="d-block px-5 py-4 text-center d-flex justify-content-center align-items-center" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+							<h4 class="mb-0 title5">@news.TabNews.Title</h4>
+						</a>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</section>

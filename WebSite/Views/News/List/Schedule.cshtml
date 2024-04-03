@@ -1,0 +1,166 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using System.Net;
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var Category = Model.langCategory;
+    var txtYear = Model.WebLevel.Lang.ToLower() == "en" ? "-" : "年";
+    var txtMorth = Model.WebLevel.Lang.ToLower() == "en" ? "-" : "月";
+    var txtDate = Model.WebLevel.Lang.ToLower() == "en" ? "" : "日";
+}
+<div class="scheduleWrap" id="ListTable">
+    <div class="dayList">
+        @{
+            var Dates = Model.list.OrderByDescending(x => x.webNews.PublishDate).GroupBy(x => x.schedule.scheduledate).Select(g => new { g.Key }).ToList();
+            foreach (var date in Dates)
+            {
+                var dt = $"{DateTime.Parse(date.Key).ToString("yyyy")}{txtYear}{DateTime.Parse(date.Key).ToString("MM")}{txtMorth}{DateTime.Parse(date.Key).ToString("dd")}{txtDate}";
+                var userData = Model.list.Where(x => x.schedule.scheduledate == date.Key.ToString()).GroupBy(x => x.scheduletTitle).Select(g => new { key = g.Key, data = g }).ToList();
+                <div class="dayI">
+                    <div class="date">
+                        <b>@dt</b>
+                    </div>
+                    <div class="timeList">
+                        @foreach (var sn in userData.OrderBy(x => x.data.First().scheduletChiefSort))
+                        {
+                            <div class="timeI">
+                                <div class="name"><b>@sn.key</b></div>
+                                <div class="con overflow-hidden">
+                                    <div class="v2TimeI">
+                                        @foreach (var detail in sn.data.OrderBy(x => x.scheduletChiefSort).ThenBy(x => x.schedule.scheduletime))
+                                        {
+                                            <div class="title"><b><span class="v2TimePoint">@detail.schedule.scheduletime</span> @detail.webNews.Title</b></div>
+                                            if (!string.IsNullOrWhiteSpace(detail.webNews.SubTitle))
+                                            {
+                                                <div class="site">@($"{Category.FirstOrDefault(x => x.SysCategoryKey == masterModel.SysWebSiteLang.WebSiteID + "-7-74")?.Value}{detail.webNews.SubTitle}")</div>
+                                            }
+                                            if (!string.IsNullOrWhiteSpace(detail.webNews.ContentText))
+                                            {
+                                                <div class="site">@($"{Category.FirstOrDefault(x => x.SysCategoryKey == masterModel.SysWebSiteLang.WebSiteID + "-7-79")?.Value}{detail.webNews.ContentText}")</div>
+                                            }
+                                            if (!string.IsNullOrWhiteSpace(detail.webNews.Description))
+                                            {
+                                                <div class="note">@detail.webNews.Description</div>
+                                            }
+                                            if (detail.schedule.schedulelinkdisplay != "none" || detail.schedule.schedulefiledisplay != "none")
+                                            {
+                                                <div>
+                                                    <ul class="list4-3 list-group">
+                                                        @if (detail.schedule.schedulefiledisplay != "none")
+                                                        {
+                                                            foreach (var file in detail.schedule.schedulefile)
+                                                            {
+                                                                <li class="list-group-item d-block bg-transparent">
+                                                                    <a href="@file.url" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" rel="noreferrer noopener" title="@($"{file.title}{Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value}")">
+                                                                        <div class="col mb-0 listIcon1">
+                                                                            <b class="title5 fw-normal">@file.filename<span class="fileTypeI">@file.filetype</span></b>
+                                                                        </div>
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                        @if (detail.schedule.schedulelinkdisplay != "none")
+                                                        {
+                                                            foreach (var link in detail.schedule.schedulelink)
+                                                            {
+                                                                <li class="list-group-item d-block bg-transparent">
+                                                                    <a href="@link.column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="@($"{link.column_2}{Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value}")">
+                                                                        <div class="col mb-0 listIcon1">
+                                                                            <b class="title5 fw-normal">
+                                                                                @link.column_2
+                                                                                @if (link.isLocal)
+                                                                                {
+                                                                                    <i class="bi bi-link-45deg"></i>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <i class="bi bi-box-arrow-up-right"></i>
+                                                                                }
+                                                                            </b>
+                                                                        </div>
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            }
+                                            @if (detail.schedule.schedulenewsdisplay != "none")
+                                            {
+                                                <div class="eventI row">
+                                                    @foreach (var news in detail.schedule.schedulenews)
+                                                    {
+                                                        <div class="eventTxt col-12">
+                                                            <a href="@news.newsurl">
+                                                                <div class="eventTitle">@news.newstitle</div>
+                                                                <div class="eventIntro">
+                                                                    @news.newscontext<span class="fileTypeI">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-73")?.Value</span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        if (news.imagedisplay != "none" || news.videodisplay != "none")
+                                                        {
+                                                            <div class="col-12">
+                                                                <div class="row">
+                                                                    @if (news.imagedisplay != "none")
+                                                                    {
+                                                                        <div class="eventPic col-md-6">
+                                                                            <div class="imgCover picZoomJs" data-mctxtclose="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-69")?.Value"
+                                                                                 data-mctxtprev="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-70")?.Value" data-mctxtnext="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-71")?.Value"
+                                                                                 data-mctxtnum="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-72")?.Value">
+                                                                                <div class="position-relative">
+                                                                                    @{
+                                                                                        bool first = true;
+                                                                                        foreach (var img in news.newsimage)
+                                                                                        {
+                                                                                            <a class="card @(first ? "d-block" : "d-none") border-0" href="@img.url">
+                                                                                                <div class="pic position-relative overflow-hidden">
+                                                                                                    <img src="@img.url" alt="">
+                                                                                                </div>
+                                                                                                <div class="card-body px-0 py-2 d-none">
+                                                                                                    <b class="card-title">@img.title</b>
+                                                                                                </div>
+                                                                                            </a>
+                                                                                            first = false;
+                                                                                        }
+                                                                                    }
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                    @if (news.videodisplay != "none")
+                                                                    {
+                                                                        foreach (var video in news.newsvideo)
+                                                                        {
+                                                                            <div class="eventVideo col-md-6">
+                                                                                <div class="imgCover">
+                                                                                    <a href="@($"https://youtu.be/{video.column_1}")" class="card h-100 d-block border-0" target="_blank" rel="noreferrer noopener" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value">
+                                                                                        <div class="pic position-relative overflow-hidden">
+                                                                                            <img src="@($"https://i.ytimg.com/vi/{video.column_1}/hqdefault.jpg")" alt="">
+                                                                                            <div class="play"></div>
+                                                                                        </div>
+                                                                                        <div class="card-body px-0 py-2 d-none">
+                                                                                            <b class="card-title">@video.column_2</b>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("mailtous", "Home")">寫信給我們</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+        <div class="step_main d-flex wrap5 flex-wrap">
+            <div class="step_list  d-flex align-items-center col-4 pb-md-5">
+                <div class="Step1 ">步驟一</div>
+                <div class="step fs-5 ps-3">認證電子信箱</div>
+            </div>
+            <div class="step_list not_yet d-flex align-items-center col-4 pb-md-5">
+                <div class="Step2 ">步驟二</div>
+                <div class="step fs-5 ps-3">填寫意見內容</div>
+            </div>
+            <div class="step_list not_yet d-flex align-items-center col-4 pb-md-5">
+                <div class="Step3 ">步驟三</div>
+                <div class="step fs-5 ps-3">案件成立</div>
+            </div>
+        </div>
+        @Html.Raw(page?.PageContent ?? "")
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        if(getCookie("certification") != "true"){
+            SetMsgShowAlertRedirect(2,"","頁面已失效，請重新操作","/");
+        }
+    </script>
+}

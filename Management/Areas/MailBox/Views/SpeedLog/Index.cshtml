@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        案件編號/公文文號：
+                    </label>
+                        <input type="text" id="caseno" class="form-control" placeholder="案件編號/公文文號">
+                    </div>
+                    <div class="col col-dateToDate dateW3">
+                        <label class="col-form-label">
+                            日期區間：
+                        </label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">  <input type="date" id="strDate" class="form-control" placeholder="開始時間"></div>
+                                    <div class="col">~</div>
+                                    <div class="col">  <input type="date" id="endDate" class="form-control" placeholder="結束時間"></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                @{
+                                    var btns = new List<btnModel>();
+                                    btns.Add(new btnModel() { Btntype = btnModel.btntype.查詢, onclickFunction = "searchFunction(1)", IdName = "searchBtn" });
+                                    btns.Add(new btnModel() { Btntype = btnModel.btntype.匯出, onclickFunction = "exportFun()", IdName = "exportBtn" });
+                                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uTable3">
+                    <div id="tableList"></div>
+                </div>
+            </div>
+            <div id="DepArea"></div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+    var href = "@Url.Action("List", "SpeedLog", new { area = "MailBox" })";
+    $(document).on("click", ".page_a", function () {
+        var p = getObjAtr($(this), "data-page");
+        searchFunction(p);
+    });
+
+    function objitem(){
+        var caseno = MODAhtmlEncode($("#caseno"),"val");
+        var strDate = MODAhtmlEncode($("#strDate"),"val");
+        var endDate = MODAhtmlEncode($("#endDate"),"val");
+        var DisplayCount = 15;
+        if( MODAhtmlEncode($('#perPageShow'),"val") != null) DisplayCount = MODAhtmlEncode($('#perPageShow'),"val");
+
+        var selectobj = {
+            "caseno":caseno,
+            "displayCount": DisplayCount,
+            "strDate": strDate,
+            "endDate": endDate
+        };
+        return selectobj ;
+    }
+    function searchFunction(p) {
+        $('.preloader').show();
+        var selectobj =objitem();
+        var getUrl = "?strDate="+selectobj.strDate+"&endDate=" + selectobj.endDate + "&p=" + p + "&displayCount=" + selectobj.displayCount+"&cn="+selectobj.caseno;
+        var pageUrl = href + getUrl;
+        reloadDataTable(pageUrl);
+    }
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function () {
+            $('.preloader').hide();
+        });
+    }
+    function exportFun()
+    {
+        var selectobj =objitem();
+        var _export = "@Url.Action("ExcelReport", "SpeedLog", new { area = "MailBox" })";
+        var getUrl = "?strDate="+selectobj.strDate+"&endDate=" + selectobj.endDate+"&cn="+selectobj.caseno;;
+        var exportUrl = _export + getUrl;
+        location.href = exportUrl;
+    }
+</script>
+}

@@ -1,0 +1,50 @@
+﻿@model Management.Areas.WebManagement.Models.OperationStatistics.ChartModel 
+@{
+    var md = Model;
+}
+<canvas id="@md.chartId"></canvas>
+<script>
+       var ctx = document.getElementById('@md.chartId');
+       var Cdata = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(md))' );
+       var options;
+       var chartType ='@(Utility.EnumTpye.GetEnumName(md.chartype))';
+       switch(chartType)
+       {
+           case 'bar':
+            options = {
+                indexAxis: 'y',
+                datalabels: chartLabel,
+                plugins:{
+                    title: {
+                        display: true,
+                        text: '@Html.Raw(md.chartName)',
+                    }
+                }
+           };
+           break;
+           case 'mixed':
+            options =   {
+                scales: { y: {beginAtZero: true }},
+                plugins :{
+                    title: {
+                    display: true,
+                    text: '@Html.Raw(md.chartName)',
+                    }
+                }
+            }
+           break;
+       }
+
+       hotChart = new Chart(ctx, {
+        type: chartType,
+        data: Cdata,
+        plugins: [ChartDataLabels], //增加這行
+        options: options
+        });
+        var obj = {
+         id :'@md.chartId',
+         chart : hotChart
+        };
+        ChartObject.push( obj);
+
+</script>

@@ -1,0 +1,306 @@
+﻿@model ManagementManagement.Areas.WebContent.Models.NewsModel ;
+@using System.Text.RegularExpressions;
+@{
+
+    Layout = "~/Views/Shared/_DemoLayout.cshtml";
+    var Mode = Model;
+}
+
+<main class="main">
+    <!-- 0.麵包屑 -->
+    <partial name="~/Areas/WebContent/Views/Demo/Breadcrumb.cshtml" model=Mode.webSiteBreadcrumbs />
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <div class="d-flex twoColConWrap">
+            <!-- 左側選單 start -->
+            <partial name="~/Areas/WebContent/Views/Demo/leftMenu.cshtml" model=Mode.webSiteBreadcrumbs />
+            <!-- 左側選單 end -->
+            <!-- 右半主內容 start -->
+            <div class="rightMain">
+
+                <div class="a11yBrickBar1">
+                    <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute" title="頁面中央內容區塊[快捷鍵Alt+C]">:::</a>
+                </div>
+
+                <!-- 標題 -->
+                <partial name="~/Areas/WebContent/Views/Demo/titleBar.cshtml" model=Mode.TitleBarModel />
+                <div class="listTag3 mb-2 mb-md-3">
+                    @{
+                        var tab = Mode.Detail.newsExtends.Where(x => x.GroupID == "tab").Select(x => x.SysCategoryKey).ToList();
+                        foreach (var itme in Mode.Detail.sysCategories.Where(x => tab.Contains(x.SysCategoryKey)))
+                        {
+                            <a class="btn" href="#" role="button">@itme.Value</a>
+                        }
+                    }
+                </div>
+                @if (Mode.Detail.BasicData.ArticleType == "10")
+                {
+                    var TranscriptDatas = Mode.WEBNewsTranscript;
+                    <div class="article1 cpArticle">
+                        <div class="speechWrap">
+                            <ul class="speechList list-unstyled">
+                                @for (int i = 1; i < TranscriptDatas.Count(); i++)
+                                {
+                                    var TranscriptData = TranscriptDatas[i];
+                                    var tagId = TranscriptDatas[i].Item;
+                                    var _dc = "連結此段落";
+                                    if (Model.Detail.BasicData.Lang != "zh-tw")
+                                    {
+                                        _dc = "Link in context";
+                                    }
+                                    if (TranscriptData.TranscriptForm == ">")
+                                    {
+                                        var hashref = TranscriptData.TranscriptContent.IndexOf("https://") > -1;
+                                        var href = "";
+                                        if (hashref)
+                                        {
+                                            href = TranscriptData.TranscriptContent.Split("'")[1];
+                                        }
+                                        var _atile = "另開新視窗";
+                                        if (Model.Detail.BasicData.Lang != "zh-tw")
+                                        {
+                                            _atile = "open in new window";
+                                        }
+                                        <li id="@tagId" class="speechI noPic">
+                                            <div class="speechCon">
+                                                <div class="txtBar">
+                                                    @if (hashref)
+                                                    {
+                                                        var hreftitle = TranscriptData.TranscriptContent.Split(">")[1].Split("<")[0];
+                                                        <div class="txt"><a href=@href target="_blank" title="@($"{hreftitle}({_atile})")" rel="noreferrer noopener">@hreftitle</a></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="txt">@TranscriptData.TranscriptContent</div>
+                                                    }
+                                                </div>
+                                                <div class="linkBar">
+                                                    <a href="#@tagId"><i class="ci ci-context"></i>@_dc</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        var icon = "/demo/assets/img/pic_speaker-default.png";
+                                        var otherclass = "speaker-default";
+                                        if (TranscriptData.TranscriptForm.Trim() == "唐鳳" || TranscriptData.TranscriptForm.Trim() == "Audrey Tang")
+                                        {
+                                            icon = "/demo/assets/img/pic_AudreyTang-small.jpg";
+                                            otherclass = "";
+                                        }
+                                        else if (TranscriptData.TranscriptForm.Trim() == "李懷仁" || TranscriptData.TranscriptForm.Trim() == "Huai-jen Lee")
+                                        {
+                                            icon = "/demo/assets/img/pic_Lee-small.jpg";
+                                            otherclass = "";
+                                        }
+                                        else if (TranscriptData.TranscriptForm.Trim() == "葉寧" || TranscriptData.TranscriptForm.Trim() == "Ning Yeh")
+                                        {
+                                            icon = "/demo/assets/img/pic_Yeh-small.jpg";
+                                            otherclass = "";
+                                        }
+                                        else if (TranscriptData.TranscriptForm.Trim() == "闕河鳴" || TranscriptData.TranscriptForm.Trim() == "Herming Chiueh")
+                                        {
+                                            icon = "/demo/assets/img/pic_Chiueh-small.jpg";
+                                            otherclass = "";
+                                        }
+                                        <li id="@tagId" class="speechI">
+                                            <div class="speaker @otherclass">
+                                                <div class="pic">
+                                                    <img src="@icon" alt="@TranscriptData.TranscriptForm">
+                                                </div>
+                                            </div>
+                                            <div class="speechCon">
+                                                <div class="info">
+                                                    <span class="name">@TranscriptData.TranscriptForm</span>
+                                                </div>
+                                                <div class="txtBar">
+                                                    <div class="txt">
+                                                        @Html.Raw(TranscriptData.TranscriptContent.Replace("\n\n","<br/>"))
+                                                    </div>
+                                                </div>
+                                                <div class="linkBar">
+                                                    <a href="#@tagId"><i class="ci ci-context"></i>@_dc</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="article1 cpArticle">
+                        @Html.Raw(Mode.Detail.BasicData.ContentText)
+                        @{
+                            var keyword = Mode.Detail.newsExtends.Where(x => x.GroupID == "keyword").Select(x => x.Column_1).ToList();
+                            if (keyword.Count() > 0)
+                            {
+                                <!-- 關鍵字 -->
+                                <div class="articleKeyword d-block d-sm-flex">
+                                    <b class="listTitle flex-shrink-0 me-4 fw-normal">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-7")?.Value</b>
+                                    <div class="listItem">
+                                        @{
+                                            foreach (var item in keyword)
+                                            {
+                                                <a href="javascript:;">@item</a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    var relatedlink = Mode.Detail.newsExtends.Where(x => x.GroupID == "relatedlink").ToList();
+                    var relatedmoj = Mode.Detail.newsExtends.Where(x => x.GroupID == "relatedmoj").ToList();
+                    var relatedvideo = Mode.Detail.newsExtends.Where(x => x.GroupID == "relatedvideo").ToList();
+                    if (Mode.Detail.Files.Count() > 0 || relatedlink.Count() > 0 || relatedmoj.Count() > 0 || Mode.Detail.Imgs.Count() > 0 || relatedvideo.Count() > 0)
+                    {
+                        <div class="articleOther">
+                            @{
+                                if (Mode.Detail.Files.Count() > 0)
+                                {
+                                    //相關檔案
+                                    <div class="otherI pb-4">
+                                        <div class="title7">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-5")?.Value</div>
+                                        <ul class="list4-3 list-group">
+                                            @foreach (var item in Mode.Detail.Files)
+                                            {
+                                                <li class="list-group-item d-block bg-transparent">
+                                                    <a href="@item.FilePath" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" @Html.Raw(CommFun.getattr("", item.FileTitle, Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID +"-7-33")?.Value, item.FileType, item.FileTitle))>
+                                                        <div class="col mb-0 listIcon1">
+                                                            <b class="title5 fw-normal">@item.FileTitle.Replace(item.FileType, "")<span class="fileTypeI">@item.FileType.ToUpper().Split('.')[1]</span></b>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            }
+                            @{
+                                //相關連結
+                                if (relatedlink.Count() > 0)
+                                {
+                                    <div class="otherI pb-4">
+                                        <div class="title7">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-1")?.Value</div>
+                                        <ul class="list4-3 list-group">
+                                            @{
+                                                foreach (var item in relatedlink)
+                                                {
+                                                    <li class="list-group-item d-block bg-transparent">
+                                                        <a href="@item.Column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="(另開新視窗)">
+                                                            <div class="col mb-0 listIcon1">
+
+                                                                <b class="title5 fw-normal">
+                                                                    @item.Column_2
+                                                                    <i class="bi bi-link-45deg"></i>
+                                                                </b>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            }
+                            @{
+                                //相關法規
+                                if (relatedmoj.Count() > 0)
+                                {
+                                    <div class="otherI pb-4">
+                                        <div class="title7">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-3")?.Value</div>
+                                        <ul class="list4-3 list-group">
+                                            @{
+
+                                                foreach (var item in relatedmoj)
+                                                {
+                                                    <li class="list-group-item d-block bg-transparent">
+                                                        <a href="@item.Column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="(另開新視窗)">
+                                                            <div class="col mb-0 listIcon1">
+                                                                <b class="title5 fw-normal">
+                                                                    @item.Column_2
+                                                                    <i class="bi bi-link-45deg"></i>
+                                                                </b>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                            }
+                            @{
+                                if (Mode.Detail.Imgs.Count() > 0)
+                                {
+                                    //相關圖片
+                                    <div class="otherI pb-4">
+                                        <div class="title7">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-6")?.Value</div>
+                                        <div class="list8-2 overflow-hidden">
+                                            <div class="row gx-4 gx-xl-5 gy-2 gy-md-3 imgCover picZoomJs" data-mctxtclose="關閉瀏覽圖片" data-mctxtprev="上一張圖片" data-mctxtnext="下一張圖片" data-mctxtnum="目前張數">
+                                                @foreach (var item in Mode.Detail.Imgs)
+                                                {
+                                                    <div class="col-12 col-sm-6 col-md-4 position-relative">
+
+                                                        <a href="@item.FilePath" class="card h-100 d-block border-0">
+                                                            <div class="pic position-relative overflow-hidden">
+                                                                <img src="@item.FilePath" alt="@item.FileTitle.Split('.')[0]">
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <b class="card-title fw-normal">@item.FileTitle.Split('.')[0]</b>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            @{
+                                //相關影片
+                                if (relatedvideo.Count() > 0)
+                                {
+                                    <div class="otherI pb-4">
+                                        <div class="title7">@Mode.Detail.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Mode.SysWebSiteLang.WebSiteID+"-1-2")?.Value</div>
+                                        <div class="list8-2 overflow-hidden">
+                                            <div class="row gx-4 gx-xl-5 gy-2 gy-md-3 imgCover">
+                                                @{
+                                                    foreach (var item in relatedvideo)
+                                                    {
+                                                        <div class="col-12 col-sm-6 col-md-4 position-relative">
+                                                            <a href="https://youtu.be/@item.Column_1" class="card h-100 d-block border-0" target="_blank" rel="noreferrer noopener" title="(另開新視窗)">
+                                                                <div class="pic position-relative overflow-hidden">
+                                                                    <img src="https://i.ytimg.com/vi/@item.Column_1/hqdefault.jpg" alt="@item.Column_2">
+                                                                    <div class="play"></div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <b class="card-title fw-normal">@item.Column_2</b>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                }
+                <div class="articleInfo">
+                    <div class="d-block d-md-inline-flex">
+                        <div class="infoUnit"><b>@(Mode.Detail.BasicData.Lang == "zh-tw" ? "發布單位：":"Data Source:") </b>@(Mode.Detail.DepartmentName ==""?"數位發展部":Mode.Detail.DepartmentName )</div>
+                        <div class="infoDate"><b>@(Mode.Detail.BasicData.Lang == "zh-tw" ? "發布日期：":"Publication date:")</b>@Convert.ToDateTime(Mode.Detail.BasicData.StartDate).ToString("yyyy-MM-dd") </div>
+                        <div class="infoTime"><b>@(Mode.Detail.BasicData.Lang == "zh-tw" ? "更新日期：":"Update Date:")</b>@Convert.ToDateTime(Mode.Detail.BasicData.ProcessDate).ToString("yyyy-MM-dd")</div>
+                    </div>
+                </div>
+            </div>
+            <!-- 右半主內容 end -->
+        </div>
+    </div>
+</main>

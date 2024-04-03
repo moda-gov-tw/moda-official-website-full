@@ -1,0 +1,592 @@
+﻿@model Management.Areas.MailBox.Models.CaseApply.DetailModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var finishType = new List<string>()
+    {
+        Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step12),
+        Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step13),
+        Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step14),
+        Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step15),
+        Utility.EnumTpye.GetEnumNumberToSting(Utility.MailBox.EnumCassApplyStatus.step16)
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab">
+                <li class="nav-item"><a class="nav-link active" href="javascript:;" onclick="changeTab($(this))" data-type="tab1">案件內容</a></li>
+                <li class="nav-item"><a class="nav-link" href="javascript:;" onclick="changeTab($(this))" data-type="tab2">公文系統回覆內容</a></li>
+                <!--以下是公文沒有回覆才可以-->
+                <li class="nav-item"><a class="nav-link" href="javascript:;" onclick="changeTab($(this))" data-type="tab3">民意信箱後台回覆</a></li>
+            </ul>
+            <div class="bootstrap-table">
+                <div class="form-horizontal tabDiv" id="tab1_div">
+                    <div class="h2 text-black mb-3">民眾申請內容</div>
+                    <div class="rowCon1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件編號
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.CaseNo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>姓名
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.ApplyUser
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>電子信箱
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.ContactEmail
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>連絡電話
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.TelAreacode} {md.caseApply.Tel} {md.caseApply.TelExtension}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>行動電話
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.Mobile
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>機關信箱-單位
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.OriginalDeptName}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>意見分類
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.OriginalClassName
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>主旨
+                                    </label>
+                                    <label class="col-md-10 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.Subject}")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>內文
+                                    </label>
+                                    <label class="col-md-10 col-form-label text-md-left">
+                                        @Html.Raw(md.caseApply.CaseContent)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件成立時間
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.AcceptDate}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件狀態
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>
+                                        @(Utility.EnumTpye.GetEnumDescription(Utility.EnumTpye.GetEnum<Utility.MailBox.EnumCassApplyStatus>(md.caseApply.Status)))
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>附件
+                                    </label>
+                                    <div class="col-md-10 col-form-label text-md-left">
+                                        <ul class="list-unstyled mb-0 uList2">
+                                            @foreach (var item in md?.wEBFiles)
+                                            {
+                                                <li><a href="@item.FilePath" target="_blank">@item.OriginalFileName</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (md.ResetLog.Count > 0)
+                    {
+                        <div class="h2 text-black mb-3 pt-5">官網後台改分歷程</div>
+                        <div class="uTable3">
+                            <table class="table table-striped uTableMobileOneCol1">
+                                <thead>
+                                    <tr class="titleTR">
+                                        <th scope="col" width="14.1%">改分來源</th>
+                                        <th scope="col">公文文號（已銷號）</th>
+                                        <th scope="col" width="14.1%">改分自</th>
+                                        <th scope="col" width="14.1%">改分前分類</th>
+                                        <th scope="col" width="14.1%">改分至</th>
+                                        <th scope="col" width="14.1%">改分後分類</th>
+                                        <th scope="col" class="colW4">改分時間</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var resetLog in md.ResetLog)
+                                        {
+                                            <tr>
+                                                <td data-th="改分來源">@(resetLog.ResetSourse)</td>
+                                                <td data-th="公文文號（已銷號）">@(resetLog.ReplyCaseNo)</td>
+                                                <td data-th="改分自" align="left">@(resetLog.ResetFrom)</td>
+                                                <td data-th="改分前分類" align="left">@(resetLog.ResetFromClassName)</td>
+                                                <td data-th="改分至" align="left">@(resetLog.ResetTo)</td>
+                                                <td data-th="改分後分類" align="left">@(resetLog.ResetToClassName)</td>
+                                                <td data-th="改分時間">@(resetLog.ResetDate)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if (md.ReplySource != null)
+                    {
+                        <div class="h2 text-black mb-3 pt-5">結案情形</div>
+                        <div class="uTable3">
+                            <table class="table table-striped uTableMobileOneCol1">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" width="14.1%">回覆來源</th>
+                                        <th scope="col" width="35.45%">承辦機關-單位</th>
+                                        <th scope="col">承辦人員</th>
+                                        <th scope="col" class="colW4">回覆案件時間</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-th="回覆來源">@(md.ReplySource.ReplySourceName)</td>
+                                        <td data-th="承辦單位" align="left">@(md.ReplySource.ReplyDocName)</td>
+                                        <td data-th="承辦人員">@(md.ReplySource.ReplyUser)</td>
+                                        <td data-th="回覆案件時間">@(md.ReplySource.ReplyDate)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                    <div class="form-group text-center pt-5 uBtnList">
+                        @{
+                            var btn1s = new List<btnModel>() {
+                        new btnModel(){   Btntype = btnModel.btntype.回列表 , onclickFunction="back()" }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn1s" />
+                        }
+                    </div>
+                </div>
+                <div class="form-horizontal tabDiv" id="tab2_div" style="display:none">
+                    <div class="rowCon1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>回覆案件編號
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.ReplyCaseNo}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>回覆案件時間
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.ReplyDate
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>回覆內容
+                                    </label>
+                                    <div class="col-md-10 col-form-label ">
+                                        @Html.Raw(md.caseApply.ReplyContent)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>回覆附件
+                                    </label>
+                                    <div class="col-md-10 col-form-label ">
+                                        <ul class="list-unstyled mb-0 uList2">
+                                            @foreach (var item in md.wEBFiles2)
+                                            {
+                                                <li><a href="@item.FilePath" target="_blank">@item.OriginalFileName</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>公文文號
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.DocNo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>公文機關
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.DocDept
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (md.ReturnLog.Count > 0)
+                    {
+                        <br />
+                        <table class="table table-striped uTableMobileOneCol1">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="16.6%">原處理機關</th>
+                                    <th scope="col" width="16.6%">公文文號（已銷號）</th>
+                                    <th scope="col">原因</th>
+                                    <th scope="col" class="colW5">銷案時間</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in md.ReturnLog.OrderByDescending(x => x.speedApiLogSn))
+                                {
+                                    <tr>
+                                        <td data-th="原處理機關">@item.DocDept</td>
+                                        <td data-th="公文文號（已銷號）">@item.returnCaseNo</td>
+                                        <td data-th="原因" class="text-start text-break">@item.returnMessage</td>
+                                        <td data-th="銷案時間">@item.closedat</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <div class="form-group text-center pt-5 uBtnList">
+                        @{
+                            var btn2s = new List<btnModel>() {
+                        new btnModel(){   Btntype = btnModel.btntype.回列表 , onclickFunction="back()" }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn2s" />
+                        }
+                    </div>
+                </div>
+                <div class="form-horizontal tabDiv" id="tab3_div" style="display:none">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-md-right">
+                                    <span style="color:red"></span>系統回覆內容
+                                </label>
+                                <div class="col-md-10">
+                                    <textarea class="p-3" id="ReplySource2" rows=10 style="width:100%" @(!string.IsNullOrWhiteSpace(md.caseApply.ReplySource2) ? "" : "")>@Html.Raw(md.caseApply.ReplySource2)</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                @{
+                                    var logo = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.wEBFiles3,
+                fileGroup = Utility.WebFileGroupID.MailBox.File,
+                file_trNumber = $"{Utility.WebFileGroupID.MailBox.File}zh-tw",
+                title = "系統回覆附檔",
+                FileType = "2",
+                fth = "MailBox",
+                lan = "zh-tw"
+            };
+                                    <partial name="~/Views/Common/LoadUpload.cshtml" model="logo" />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    @if (md.replyModels?.Count() > 0)
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>系統回覆紀錄
+                                    </label>
+                                    <div class="col-md-10">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+                                                    <th scope="col" class="text-break">系統回覆內容</th>
+                                                    <th scope="col" class="colW4">時間</th>
+                                                    <th scope="col" class="colW7">檔案</th>
+                                                    <th scope="col" class="colW4">修改者</th>
+                                                    <th scope="col" class="colW4">異動紀錄</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (md.replyModels?.Count() > 0)
+                                                {
+                                                    var row = 1;
+                                                    foreach (var data in md.replyModels)
+                                                    {
+                                                        <tr>
+                                                            <td>@row</td>
+                                                            <td class="text-break" align="left">@data.replySource2</td>
+                                                            <td>@data.dateTime.Value.ToString("yyyy-MM-dd hh:mm:ss")</td>
+                                                            <td>
+                                                                @if (data?.files?.Count() > 0)
+                                                                {
+                                                                    <ul class="list-unstyled mb-0 uList2">
+                                                                        @if (finishType.Contains(md.caseApply.Status) && row == 1)
+                                                                        {
+                                                                            foreach (var file in Model.wEBFiles3.Where(x => x.GroupID == "MBMF"))
+                                                                            {
+                                                                                <li><a href="javascript:;" onclick="mandatory('@file.webFileID')">@file.fileTitle </a></li>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            foreach (var file in data?.files)
+                                                                            {
+                                                                                <li><a href="javascript:;" onclick="mandatory('@file.webFileID')">@file.fileTitle</a></li>
+                                                                            }
+                                                                        }
+                                                                    </ul>
+                                                                }
+                                                            </td>
+                                                            <td>@data.UserID</td>
+                                                            <td>
+                                                                @if (finishType.Contains(md.caseApply.Status) && row == 1)
+                                                                {
+                                                                    <p>發信</p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p>暫存</p>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        row++;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td colspan="9">@Utility.SysConstTable.ListNotFound.TW</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="form-group text-center uBtnList">
+                            @{
+
+                                var btns = new List<btnModel>();
+                                if (!finishType.Contains(md.caseApply.Status))
+                                {
+                                    btns.Add(new btnModel() { Btntype = btnModel.btntype.暫存, onclickFunction = "saveFun()" });
+                                    btns.Add(new btnModel() { Btntype = btnModel.btntype.發信, onclickFunction = "checkSend()" });
+                                    btns.Add(new btnModel() { Btntype = btnModel.btntype.取消, onclickFunction = "back()" });
+                                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                                }
+                                else
+                                {
+                                    <span style="color:red">案件已結案</span>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        if ("@finishType.Contains(md.caseApply.Status)" == "True") {
+            $("#ReplySource2").attr("disabled", "disabled");
+            $(".filetitle").attr("disabled", "disabled");
+            $(".test_btn").hide();
+            $(".ubtn-delete").hide();
+        }
+        function changeTab(e) {
+            $(".tabDiv").hide();
+            var showdiv = getObjAtr(e, "data-type");
+            $("#" + showdiv + "_div").show();
+            $('.nav-tabs .nav-link').removeClass('active');
+            e.addClass('active');
+        }
+        function back() {
+            SetCookie("back", 1);
+            location.href = '@Url.Action("Index","CaseApply", new { area="MailBox"})';
+        }
+        function saveFun() {
+            var obj = {
+                CaseApplySN: '@md.caseApply.CaseApplySN',
+                ReplySource2: $("#ReplySource2").val(),
+            };
+            $.ajax({
+                url: '@Url.Action("SaveCaseApply", "CaseApply", new { area = "MailBox" })',
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "儲存成功。"
+                        }).then(function () {
+
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function checkSend() {
+            Swal.fire({
+                title: '發信後無法收回，請確認是否發回覆信給申請人。',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sendFun();
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+        function sendFun() {
+            var obj = {
+                CaseApplySN: '@md.caseApply.CaseApplySN',
+                ReplySource2: $("#ReplySource2").val(),
+            };
+            $.ajax({
+                url: '@Url.Action("SendMail", "CaseApply", new { area = "MailBox" })',
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "信件已寄送"
+                        }).then(function () {
+                            back();
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+}

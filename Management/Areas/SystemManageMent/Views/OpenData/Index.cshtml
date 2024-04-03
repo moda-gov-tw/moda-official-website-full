@@ -1,0 +1,131 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row mx-0 pb-5 ODSearchBar">
+                    <div class="col px-0">
+                        <label class="col-form-label py-3">
+                            關鍵字：
+                        </label>
+                        <div class="uRow2">
+                            <div class="uRow2-Col2-1 pr-3">
+                                <input type="text" id="QryKeyword" class="form-control" placeholder="關鍵字">
+                            </div>
+                            <div class="uRow2-Col2-2">
+                                <input type="button"
+                                       value="查詢" onclick="searchFunction(1)"
+                                       class="ubtn-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tableBox">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var href = "@Url.Action("List", "OpenData", new { area = "SystemManageMent" })";
+        var backperPageShow = 0;
+
+        var back = getCookie("back");
+        if (back == 1) {
+            var objstr = getCookie("NewsObj");
+            if (objstr != "") {
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $('#perPageShow').val(obj.displayCount);
+                    backperPageShow = obj.displayCount;
+                    $("#QryKeyword").val(obj.keyword);
+                    searchFunction(obj.p);
+                } else {
+                    searchFunction(1);
+                }
+            } else {
+                searchFunction(1);
+            }
+        } else {
+            searchFunction(1);
+        }
+        SetCookie("back", "");
+
+        $(document).on("click", ".page_a", function() {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+
+        function searchFunction(p) {
+            var key = $("#QryKeyword").val() != undefined ? MODAhtmlEncode($("#QryKeyword"), "val") : "";
+            var getUrl = "?keyword=" + key + "&p=" + p;
+            var pageUrl = href + getUrl;
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "keyword": key,
+            };
+            SetCookie("NewsObj", selectobj);
+            SetCookie("back", 1);
+            reloadDataTable(pageUrl);
+            $(".ODSearchBar").show();
+        }
+        function reloadDataTable(href) {
+            $("#tableBox").html("");
+            $("#tableBox").load(href, function() { });
+        }
+        function EditFun(id) {
+            href = "@Url.Action("Mode", "OpenData", new { area = "SystemManageMent" })?key=" + id;
+            $("#tableBox").html("");
+            $(".ODSearchBar").hide();
+            $("#tableBox").load(href, function() { });
+        }
+        function Delete(id) {
+            var saveHref = '@Url.Action("Delete", "OpenData", new { area = "SystemManageMent" })';
+            Swal.fire({
+                title: '確定要刪除?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '刪除',
+                denyButtonText: '不要刪除'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: saveHref,
+                        type: 'post',
+                        data: {
+                            key: id
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "刪除成功"
+                                }).then(result => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}

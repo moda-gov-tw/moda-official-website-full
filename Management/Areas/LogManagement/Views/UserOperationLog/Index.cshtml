@@ -1,0 +1,343 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var website = Services.WebSite.HomeService.GetSysWebSite();
+    var list = Services.CommonService.GetWEBLevel();
+    var dpets = Services.Authorization.DepartmentManagementService.GetDepartmentList().Where(x => x.Lang == "zh-tw" && x.IsEnable == "1").Select(x => new { WebSiteId = x.WebSiteId, SysDepartmentSN = x.SysDepartmentSN, DepartmentID = x.DepartmentID, ParentID = x.ParentID, DepartmentName = x.DepartmentName.Trim(), SortOrder = x.SortOrder });
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="font-weight-bold mt-0">網站稽核紀錄</h2>
+
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        帳號：
+                    </label>
+                    <input type="text" id="userid" class="form-control" placeholder="帳號">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        關鍵字：
+                    </label>
+                    <input type="text" id="keyword" class="form-control" placeholder="關鍵字">
+                </div>
+                <div class="col col-dateToDate">
+                    <label class="col-form-label">
+                        日期區間：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="date" id="sddate" class="form-control" placeholder="" value="">
+                        </div>
+                        <div class="col">~</div>
+                        <div class="col">
+                            <input type="date" id="eddate" class="form-control" placeholder="" value="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        IP：
+                    </label>
+                    <input type="text" id="ip" class="form-control" placeholder="IP">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        站台：
+                    </label>
+                    <select class="form-control" name="websiteid" onchange="changewebid($(this))">
+                        @foreach (var data in website)
+                        {
+                            <option value="@data.WebSiteID">@data.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        網站單元：
+                    </label>
+                    <select id="weblevel" name="weblevel" class="form-control">
+                        <option value="">--請選擇--</option>
+                        @foreach (var lv1 in list.Where(x => x.WebSiteID == "MODA" && x.ParentSN == 0).OrderBy(x => x.SortOrder))
+                        {
+                            <option value="@lv1.WebLevelSN" disabled=@(lv1.WebLevelSN == 1 || lv1.WebLevelSN == 2 || lv1.WebLevelSN == 3)>@lv1.Title</option>
+                            foreach (var lv2 in list.Where(x => x.ParentSN == lv1.WebLevelSN).OrderBy(x => x.SortOrder))
+                            {
+                                <option value="@lv2.WebLevelSN">@("  "+lv1.Title+"-"+lv2.Title)</option>
+                                foreach (var lv3 in list.Where(x => x.ParentSN == lv2.WebLevelSN).OrderBy(x => x.SortOrder))
+                                {
+                                    <option value="@lv3.WebLevelSN">@("  " + lv1.Title+"-"+lv2.Title +"-"+lv3.Title)</option>
+                                    foreach (var lv4 in list.Where(x => x.ParentSN == lv3.WebLevelSN).OrderBy(x => x.SortOrder))
+                                    {
+                                        <option value="@lv4.WebLevelSN">@("  " + lv1.Title+"-"+lv2.Title +"-"+lv3.Title + "-"+lv4.Title)</option>
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        發布單位：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <select id="depts" name="depts" class="form-control">
+                                <option value="">--請選擇--</option>
+                                @foreach (var dep in dpets.Where(x => x.WebSiteId == "MODA" && x.ParentID == 0).OrderBy(x => x.SortOrder))
+                                {
+                                    <option value="@dep.DepartmentID" disabled=@(dep.ParentID == 0)>@dep.DepartmentName</option>
+                                    foreach (var dep2 in dpets.Where(x => x.ParentID == dep.SysDepartmentSN).OrderBy(x => x.SortOrder))
+                                    {
+                                        <option value="@dep2.DepartmentID">@("　"+dep.DepartmentName+"-"+ dep2.DepartmentName)</option>
+                                        foreach (var dep3 in dpets.Where(x => x.ParentID == dep2.SysDepartmentSN).OrderBy(x => x.SortOrder))
+                                        {
+                                            <option value="@dep3.DepartmentID">@("　"+dep.DepartmentName+"-"+ dep2.DepartmentName+"-"+ dep3.DepartmentName)</option>
+                                            foreach (var dep4 in dpets.Where(x => x.ParentID == dep3.SysDepartmentSN).OrderBy(x => x.SortOrder))
+                                            {
+                                                <option value="@dep4.DepartmentID">@("　　"+dep.DepartmentName+"-"+ dep2.DepartmentName+"-"+ dep3.DepartmentName+"-"+ dep4.DepartmentName)</option>
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>()
+                            {
+                            new btnModel(){   Btntype = btnModel.btntype.查詢, onclickFunction="searchFunction(1)",jsUseClassName="search"  },
+                            new btnModel(){   Btntype = btnModel.btntype.匯出, onclickFunction="Export()", jsUseClassName="output"  }
+                            };
+                                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uTable3">
+                <div id="tableList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    var href = "@Url.Action("List", "UserOperationLog", new { area = "LogManagement" })";
+    var level = '@Html.Raw(JsonConvert.SerializeObject(list))';
+    var deps = '@Html.Raw(JsonConvert.SerializeObject(dpets))';
+    function firstFunction() {
+        var getUrl = "?mon='@DateTime.UtcNow.AddHours(8).AddMonths(-1).ToString("yyyy-MM")'";
+        var pageUrl = href + getUrl;
+        reloadDataTable(pageUrl);
+    }
+    function searchFunction(p) {
+        var userid = MODAhtmlEncode($("#userid"), "val");
+        var ip = MODAhtmlEncode($("#ip"), "val");
+        var sd = MODAhtmlEncode($("#sddate"), "val");
+        var ed = MODAhtmlEncode($("#eddate"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var sn = MODASelectVal("weblevel");
+        var departmentID = MODASelectVal("depts");
+        var Diff = DateDiff(sd, ed);
+
+        if (sd != "" && ed != "") {
+            if (ed < sd) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入開始日期大於結束日期"
+                });
+            }
+            else if (Diff > 183) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "查詢區間限制為六個月內，請重新選擇起迄日。"
+                });
+            }
+            else {
+                var getUrl = "?sd=" + sd + "&ed=" + ed + "&userid=" + userid + "&ip=" + ip + "&websiteid=" + websiteid + "&key=" + keyword + "&sn=" + sn + "&departmentID=" + departmentID + "&p=" + p;
+                var pageUrl = href + getUrl;
+                reloadDataTable(pageUrl);
+            }
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function() {
+            $(document).off('click', '.page_a');
+            $(document).on("click", ".page_a", function() {
+                var p = getObjAtr($(this), "data-page");
+                searchFunction(p);
+            });
+
+        });
+    }
+
+
+    function Export() {
+        var userid = MODAhtmlEncode($("#userid"), "val");
+        var ip = MODAhtmlEncode($("#ip"), "val");
+        var sd = MODAhtmlEncode($("#sddate"), "val");
+        var ed = MODAhtmlEncode($("#eddate"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var sn = MODASelectVal("weblevel");
+        var departmentID = MODASelectVal("depts");
+        var Diff = DateDiff(sd, ed);
+
+        if (sd != "" && ed != "") {
+            if (ed < sd) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入開始日期大於結束日期"
+                });
+            }
+            else if (Diff > 183) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "查詢區間限制為六個月內，請重新選擇起迄日。"
+                });
+            }
+            else {
+                var href = '@Url.Action("Export2", "UserOperationLog", new {area= "LogManagement" })';
+                Swal.fire({
+                    title: '報表產生中 請耐心等待',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: href,
+                            type: 'POST',
+                            data: {
+                                sd: sd,
+                                ed: ed,
+                                userid: userid,
+                                ip: ip,
+                                websiteid: websiteid,
+                                key: keyword,
+                                sn: sn,
+                                departmentID:departmentID,
+                            },
+                            beforeSend: function() {
+                                $('.preloader').show();
+                            },
+                            success: function(data) {
+                                location.href = '@Url.Action("Download", "UserOperationLog", new {area= "LogManagement" })';
+                            },
+                            complete: function() {
+                                $('.preloader').hide();
+                            }
+                        });
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+
+    function chkwebsiteid(txt) {
+        switch (txt) {
+            case "MODA": return txt; break;
+            case "ACS": return txt; break;
+            case "ADI": return txt; break;
+            default: return "MODA"; break;
+        }
+    }
+
+    function changewebid(e) {
+        var item = "";
+        $('#weblevel').empty();
+        var data = JSON.parse(level);
+        var lv1 = data.filter(x => x.WebSiteID == e.val() && x.ParentSN == 0);
+        item = "<option value=''>--請選擇--</option>";
+        for (var x = 0; x < lv1.length; x++) {
+            var lv2 = data.filter(u => u.ParentSN == lv1[x].WebLevelSN);
+            item += "<option value ='" + lv1[x].WebLevelSN + "' disabled>" + lv1[x].Title + "</option>";
+            for (var y = 0; y < lv2.length; y++) {
+                item += "<option value ='" + lv2[y].WebLevelSN + "'>" + lv1[x].Title + "-" + lv2[y].Title + "</option>";
+                var lv3 = data.filter(u => u.ParentSN == lv2[y].WebLevelSN);
+                for (var z = 0; z < lv3.length; z++) {
+                    item += "<option value ='" + lv3[z].WebLevelSN + "'>" + lv1[x].Title + "-" + lv2[y].Title + "-" + lv3[z].Title + "</option>";
+                    var lv4 = data.filter(u => u.ParentSN == lv3[z].WebLevelSN);
+                    for (var c = 0; c < lv4.length; c++) {
+                        item += "<option value ='" + lv4[c].WebLevelSN + "'>" + lv1[x].Title + "-" + lv2[y].Title + "-" + lv3[z].Title + "-" + lv4[c].Title + "</option>";
+                    }
+                }
+            }
+        }
+        $('#weblevel').append(item);
+        changedept(e.val());
+
+    }
+
+    $('#sddate').change(function() {
+        var sd = $("#sddate").val();
+        $("#eddate").val('');
+        $("#eddate").val(sd);
+        var ed = new Date(sd);
+        ed.setDate(ed.getDate() + 183);
+        if ($("#sddate").val() == "") {
+            $("#eddate").prop('disabled', true);
+        }
+        else {
+            $("#eddate").prop('disabled', false);
+            $("#eddate").attr('max', ed.toISOString().split("T")[0]);
+        }
+    })
+
+    var DateDiff = function(SD, ED) {
+        var oDate1 = new Date(SD);
+        var oDate2 = new Date(ED);
+        var iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);
+        return iDays;
+    };
+
+    function changedept(websiteid) {
+        var item = "";
+        $('#depts').empty();
+        var data = JSON.parse(deps);
+        var lv1 = data.filter(x => x.WebSiteId == websiteid && x.ParentID == 0);
+        item = "<option value=''>--請選擇--</option>";
+        for (var x = 0; x < lv1.length; x++) {
+            var lv2 = data.filter(u => u.ParentID == lv1[x].SysDepartmentSN);
+            item += "<option value ='" + lv1[x].DepartmentID + "' disabled >" + lv1[x].DepartmentName + "</option>";
+            for (var y = 0; y < lv2.length; y++) {
+                var lv3 = data.filter(u => u.ParentID == lv2[y].SysDepartmentSN);
+                item += "<option value ='" + lv2[x].DepartmentID + "'>" + lv1[x].DepartmentName + "-" + lv2[y].DepartmentName + "</option>";
+                for (var z = 0; z < lv3.length; z++) {
+                    var lv4 = data.filter(u => u.ParentID == lv3[z].SysDepartmentSN);
+                    item += "<option value ='" + lv3[z].DepartmentID + "'>" + lv1[x].DepartmentName + "-" + lv2[y].DepartmentName + "-" + lv3[z].DepartmentName + "</option>";
+                    for (var c = 0; c < lv4.length; c++) {
+                        item += "<option value ='" + lv4[c].DepartmentID + "'>" + lv1[x].DepartmentName + "-" + lv2[y].DepartmentName + "-" + lv3[z].DepartmentName + "-" + lv4[c].DepartmentName + "</option>";
+                    }
+                }
+            }
+        }
+        $('#depts').append(item);
+    }
+</script>
+

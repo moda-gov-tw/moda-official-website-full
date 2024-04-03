@@ -1,0 +1,70 @@
+﻿@model ConfirmationModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("mailtous", "Home")">寫信給我們</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@{
+    if (md.msg == "")
+    {
+        <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+            <!-- 內容主標 -->
+        <div class="row wrap5">
+                <div class="step_main d-flex wrap5 flex-wrap">
+                    <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                        <div class="Step1 ">步驟一</div>
+                        <div class="step fs-5 ps-3">認證電子信箱</div>
+                    </div>
+                    <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                        <div class="Step2 ">步驟二</div>
+                        <div class="step fs-5 ps-3">填寫意見內容</div>
+                    </div>
+                    <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                        <div class="Step3 ">步驟三</div>
+                        <div class="step fs-5 ps-3">案件成立</div>
+                    </div>
+
+                </div>
+                @Html.Raw(page?.PageContent == null ? "" : string.Format(page.PageContent,Url.Action("querycase","Home")))
+                <ul class="list-unstyled list-inline mb-0 justify-content-center">
+                    <!-- 分享 -->
+                    <li class="list-inline-item ">
+                        <a href="@Url.Action("querycase","Home")" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 me-sm-5 me-3 rounded-3 file_btn_color" role="button">案件進度查詢</a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="@Url.Content("/")" class="write_btn_bg d-inline-flex fs-6  px-4 py-2  rounded-3" role="button">民意信箱首頁</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    }
+}
+@section Scripts
+{
+<script>
+    window.history.replaceState({page: 0}, "confirmation", "/confirmation");
+
+    var msg = '@(Html.Raw(md.msg))'
+    if(msg != "")
+    {
+        SetMsgShowAlertRedirect(2,"",msg,"/");
+    }
+</script>
+}

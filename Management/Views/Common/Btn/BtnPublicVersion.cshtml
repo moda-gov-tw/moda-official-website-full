@@ -1,0 +1,76 @@
+﻿@model List<btnModel>
+@foreach (var btn in Model)
+{
+    var _class = "";
+    var _display = "";
+    switch (btn.Btntype)
+    {
+        case btnModel.btntype.AzureAD登入: _class = "ubtn-login waves-effect waves-light"; break;
+        case btnModel.btntype.登入: _class = "ubtn-login waves-effect waves-light"; break;
+        case btnModel.btntype.新增: _class = "ubtn-add"; break;
+        case btnModel.btntype.儲存: _class = "ubtn-save"; break;
+        case btnModel.btntype.暫存: _class = "ubtn-save"; break;
+        case btnModel.btntype.確認新增: _class = "ubtn-save"; break;
+        case btnModel.btntype.確認: _class = "ubtn-conform"; break;
+        case btnModel.btntype.編修: _class = "ubtn-edit"; break;
+        case btnModel.btntype.預覽: _class = "ubtn-preview"; break;
+        case btnModel.btntype.停用: _class = "ubtn-disabled"; break;
+        case btnModel.btntype.退回: _class = "ubtn-return"; break;
+        case btnModel.btntype.刪除: _class = "ubtn-delete"; break;
+        case btnModel.btntype.查詢: _class = "ubtn-search"; break;
+        case btnModel.btntype.送審: _class = "ubtn-submit"; break;
+        case btnModel.btntype.送審確認: _class = "ubtn-submit"; break;
+        case btnModel.btntype.送審退回: _class = "ubtn-return"; break;
+        case btnModel.btntype.發布: _class = "ubtn-publish"; break;
+        case btnModel.btntype.啟用: _class = "ubtn-enable"; break;
+        case btnModel.btntype.選擇: _class = "ubtn-choose"; break;
+        case btnModel.btntype.匯出: _class = "ubtn-export"; break;
+        case btnModel.btntype.回列表: _class = "ubtn-back-list"; break;
+        case btnModel.btntype.取消: _class = "ubtn-cancel"; break;
+        case btnModel.btntype.回上一頁: _class = "ubtn-back"; break;
+        case btnModel.btntype.關閉: _class = "ubtn-close"; break;
+        case btnModel.btntype.其他: _class = "btn"; break;
+        case btnModel.btntype.複製: _class = "ubtn-copy"; break;
+        case btnModel.btntype.展開: _class = "ubtn-choose"; break;
+        case btnModel.btntype.不可編輯: _class = "ubtn-delete disabled"; break;
+        case btnModel.btntype.改分: _class = "ubtn-edit"; break;
+        case btnModel.btntype.發信: _class = "ubtn-send"; break;
+        case btnModel.btntype.開始掃描: _class = "ubtn-save"; break;
+        case btnModel.btntype.發送API: _class = "ubtn-api"; break;
+        case btnModel.btntype.取API: _class = "ubtn-api"; break;
+        case btnModel.btntype.檢視: _class = "ubtn-view"; break;
+        case btnModel.btntype.下載 :  _class = "ubtn-download"; break;
+        default:
+            _class = "btn";
+            break;
+    }
+    var btnTxet = Enum.GetName(typeof(btnModel.btntype), btn.Btntype);
+    _class = $@"{_class} {btn.jsUseClassName}";
+    if (btn.module == "NEWS" || btn.module == "CP" || btn.module == "Schedule")
+    {
+        if(btn.Auth != null && btn.Auth.Where(x => x == "Reviewer").FirstOrDefault() != null && btn.isenable == "3" && btnTxet == "儲存")
+        {
+            _display = "display:none";
+        }   
+        else if (btn.Auth != null && btn.Auth.Where(x => x == "Reviewer").FirstOrDefault() != null && btnTxet == "送審" && btn.module == "Schedule")
+        {
+            _display = "display:none";
+        }
+        else if(btn.Auth != null && btn.Auth.Where(x => x == "Reviewer").FirstOrDefault() == null || (btn.isenable == "-2" || btn.isenable == "0" || btn.isenable == "" || btn.isenable == "1" || btn.isenable == null))
+        {
+            _display = $@"{((btnTxet == "送審確認" || btnTxet == "送審退回") ? "display:none" : "")}";
+        }       
+    }
+
+    if(btn.Auth != null && btn.Auth.Where(x => x == "Article").FirstOrDefault() != null && btn.isenable == "3" && btn.module == "CP")
+    {
+        _class = $@"{_class} {btn.jsUseClassName} disabled";
+    }
+
+    if (btn.disable)
+    {
+        _class = $@"{_class} disabled";
+    }
+
+    <input type="button" name="@btn.IdName" value="@btnTxet" id="@btn.IdName" class="@_class" data-id="@btn.attr_data_id" data-type="@btn.attr_data_type" onclick="@btn.onclickFunction" style="@_display">
+}

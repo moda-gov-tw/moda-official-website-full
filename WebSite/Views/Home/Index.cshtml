@@ -1,0 +1,48 @@
+﻿@model HomeModel.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var WebSiteUrl = WebSite.Controllers.BaseController.WebSiteUrl;
+    var ogImg = Model.SysWebSiteLang.WebSiteID == BaseController.MainWebSite ? "" : $"/{Model.SysWebSiteLang.WebSiteID}";
+    ogImg = $"{WebSiteUrl}{ogImg}/assets/img/fbshare2.jpg";
+}
+@section meta{
+<title>@Model.SysWebSiteLang.Title</title>
+<meta property="og:title" content="@Model.SysWebSiteLang.Title" />
+<meta property="og:image" content="@ogImg" />
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta property="og:description" content="@Model.SysWebSiteLang.Description" />
+<meta name="keywords" content="" />
+<meta name="description" content="@Model.SysWebSiteLang.Description" />
+}
+@section gacode{
+	 @if (!string.IsNullOrWhiteSpace(Model.SysWebSiteLang.GACode))
+    {
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.SysWebSiteLang.GACode));
+    }
+}
+<main class="main">
+
+    @switch (Model.SysWebSiteLang.WebSiteID)
+    {
+        case "MODA":
+            <partial name="~/Views/MODA/Index.cshtml" model=Model.modaIndexModel />
+            break;
+        case "ACS":
+            <partial name="~/Views/ACS/Index.cshtml" model=Model.acsIndexModel />
+            break;
+        case "ADI":
+            <partial name="~/Views/ADI/Index.cshtml" model=Model.adiIndexModel />
+            break;
+        default:
+            <partial name="~/Views/MODA/Index.cshtml" model=Model.modaIndexModel />
+            break;
+    }
+</main>
+@section Scripts
+{
+    
+     <script src="@Url.Content("~/js/index.js")" asp-append-version="true"></script>
+
+}

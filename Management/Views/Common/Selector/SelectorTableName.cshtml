@@ -1,0 +1,13 @@
+﻿@using Management.Models.Common
+@model OpenDataModel
+
+<label class="col-sm-2 col-form-label text-sm-right">@Model.title</label>
+<div class="col-sm-10">
+    <select class="form-control" id="TableName" name="TableName" onchange="removeselect()">
+        <option value="">--請選擇--</option>
+        @foreach (var item in Model.TableName)
+        {
+            <option value="@item">@item</option>
+        }
+    </select>
+</div>

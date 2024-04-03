@@ -1,0 +1,55 @@
+﻿@model Management.Areas.LogManagement.Models.UserOperationLog.ListModel
+
+@{
+    var Department = Services.Authorization.DepartmentManagementService.GetDepartmentList();
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW3">帳號</th>
+            <th scope="col" class="colW3">使用者名稱</th>
+            <th scope="col" class="colW3">部門</th>
+            <th scope="col" class="colW3">發布單位</th>
+            <th scope="col" class="colW3">IP</th>
+            <th scope="col" class="colW3">異動狀態</th>
+            <th scope="col" class="colW3">異動紀錄</th>
+            <th scope="col" class="">完整路徑</th>
+            <th scope="col" class="colW3">時間</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.operationStatisticsModels.Count > 0)
+        {
+            @foreach (var data in Model.operationStatisticsModels)
+            {
+                var DepartmentName = data.DepartmentID == null ? "" : Department.FirstOrDefault(x => x.DepartmentID == data.DepartmentID && x.Lang == "zh-tw")?.DepartmentName;
+                <tr>
+                    <td>@row</td>
+                    <td>@data.UserID</td>
+                    <td>@data.UserName</td>
+                    <td>@data.DepartmentName</td>
+                    <td>@DepartmentName</td>
+                    <td>@data.ProcessIPAddress</td>
+                    <td>@(data.Action2.ToUpper() == "UPDATE" ? "更新資料" : data.Action2.ToUpper() == "RETURNED" ? "送審退回" :data.Action2.ToUpper() == "DELETE" ? "刪除資料" : data.Action2.ToUpper() == "SELECT" ? "查詢資料" :"新增資料")</td>
+                    <td align="left" style="white-space:pre-line">@data.MessageInput</td>
+                    <td align="left">@data.WebPath</td>
+                    <td>@data.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>

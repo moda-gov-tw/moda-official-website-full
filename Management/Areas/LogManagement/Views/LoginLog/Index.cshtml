@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="font-weight-bold mt-0">帳號登入紀錄</h2>
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        帳號：
+                    </label>
+                    <input type="text" id="userid" class="form-control" placeholder="帳號">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        日期區間：
+                    </label>
+                    <input type="month" id="mon" class="form-control" placeholder="" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM")">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        IP：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" id="ip" class="form-control" placeholder="IP">
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>()
+                            {
+                            new btnModel(){   Btntype = btnModel.btntype.查詢, onclickFunction="searchFunction(1)",jsUseClassName="search"  },
+                            new btnModel(){   Btntype = btnModel.btntype.匯出, onclickFunction="Export()", jsUseClassName="output"  }
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="col pl-0 pr-0">
+                <label class="col-form-label py-3">
+                日期：
+                </label>
+                <div class="uRow3">
+                <div class="uRow3-Col2-1">
+                <div class="row mx-0">
+                <div class="uRow1-Col3-1">
+                <input type="date" id="str" class="form-control" placeholder="yyyy/MM/dd" value="@DateTime.UtcNow.AddHours(8).AddMonths(-1).ToString("yyyy-MM-dd")">
+                </div>
+                <div class="uRow1-Col3-2">~</div>
+                <div class="uRow1-Col3-1">
+                <input type="date" id="end" class="form-control" placeholder="yyyy/MM/dd" value="@DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd")">
+                </div>
+                </div>
+                </div>
+                <div class="uRow3-Col2-2">
+                <input type="button" value="查詢" class="ubtn-search search" onclick="searchFunction(1)">
+                <input type="button" value="匯出" class="ubtn-export output" onclick="Export()">
+                </div>
+                </div>
+                </div>*@
+
+            <div class="bootstrap-table">
+                <div class="uTable1">
+                    <div id="tableList">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+<script>
+    var href = "@Url.Action("List", "LoginLog", new { area = "LogManagement" })";
+    searchFunction(1);
+
+    $(document).on("click", ".page_a", function () {
+        var p = getObjAtr($(this), "data-page");
+        searchFunction(p);
+    });
+
+    function searchFunction(p) {
+        var mon = MODAhtmlEncode($("#mon"),"val");
+        var userid = MODAhtmlEncode($("#userid"),"val");
+        var ip = MODAhtmlEncode($("#ip"),"val");
+
+        if (mon == "" ) {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入查詢日期區間"
+            });
+        }
+        else {
+            var getUrl = "?mon=" + mon + "&userid=" + userid + "&ip=" + ip + "&p=" + p;
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl);
+        }
+
+    }
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function () {});
+        }
+        function Export() {
+            var mon = MODAhtmlEncode($("#mon"),"val");
+            var userid = MODAhtmlEncode($("#userid"),"val");
+            var ip = MODAhtmlEncode($("#ip"),"val");
+            if (mon == "" ) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請輸入查詢日期區間"
+                });
+            }
+            else {
+                location.href = '@Url.Action("ExcelReport", "LoginLog", new {area= "LogManagement" })?mon=' + mon + "&userid=" + userid + "&ip=" + ip;
+            }
+
+        }
+
+</script>
+}

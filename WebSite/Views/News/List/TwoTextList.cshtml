@@ -1,0 +1,52 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var Category = Model.langCategory;
+}
+<div class="list3-2 row gy-3 gx-sm-5 mb-5" id="ListTable">
+    @foreach (var item in Model.list)
+    {
+        <div class="col-12 col-sm-6 position-relative">
+            <div class="card h-100 rounded-0">
+                <div class="card-body ps-0 pb-0 pe-0">
+                    <div class="d-flex flex-wrap">
+                        <a href="@item.webUrl" class="cardT col-12" @Html.Raw(CommFun.getattr(item.webNews.target, item.webNews.Title, Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value, item.webFile?.FileType, item.webFile?.FileTitle))>
+                            <b class="card-title title5 fw-normal">
+                                @if (item.webNews.IsTop != null)
+                                {
+                                    <i class="ci ci-pushpin"></i>
+                                }
+                                @item.webNews.Title
+                                @if (item.webFile?.FileType != null)
+                                {
+                                    <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+                                }
+                                else
+                                {
+                                    if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+                                    {
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    }
+                                }
+                            </b>
+                            @if (!string.IsNullOrWhiteSpace(item.webNews.SubTitle))
+                            {
+                                <p class="card-text">@Html.Raw(item.webNews.SubTitle)</p>
+                            }
+                        </a>
+                        <div class="listDate me-auto pt-2"><span class="pe-2">@item.webNews.StartDate.Value.ToString("yyyy-MM-dd")</span></div>
+                        @if (item.sysCategories != null && item.sysCategories.Count() > 0)
+                        {
+                            <div class="listTag2 flex-fill pt-2 pe-4">
+                                @foreach (var item2 in item.sysCategories)
+                                {
+                                    <a href="javascript:;" class="btn" role="button">@item2.Value</a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

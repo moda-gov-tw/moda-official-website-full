@@ -1,0 +1,214 @@
+﻿@model NewCommonModel
+@{
+    var zipcode = Services.Authorization.WebLevelManagementService.GetCity();
+    var Module = Services.Authorization.WebLevelManagementService.GetWebLevel(Model.webNews.WebLevelSN)?.Module;
+}
+<div class="tab-pane fade @(Model?.webNews.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model?.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model?.webNews.Lang}-tab")">
+    <div class="form-group row" >
+        @{
+            <!--主題標籤 -->
+            var sysC1 = new SelectorSysCategoryModal()
+            {
+                IdName = $"chief{Model.webNews.Lang}",
+                parentKey = $"{Model.webNews.WebSiteID}-13",
+                Lang = Model.webNews.Lang,
+                WebSiteId = Model.webNews.WebSiteID,
+                multiple = false,
+                required = true,
+                sysCategoryKeys = Model.wEBNewsExtends.Where(x => x.GroupID == "chief").Select(x => x.SysCategoryKey).ToList()
+            };
+            <partial name="~/Views/Common/Selector/SelectorSysCategory.cshtml" model="sysC1" />
+        }
+    </div>
+
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>行程時間</label>
+        <div class="col-sm-10">
+            <input name="@($"PublishDate{Model.webNews.Lang}")" type="datetime-local" value="@( Model.webNews == null?"":Model.webNews.PublishDate == null ? "" : Model.webNews.PublishDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"PublishDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>行程標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" id="@($"Title{Model.webNews.Lang}")" class="form-control" placeholder="行程標題">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">縣市</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="@($"ZipCode{Model.webNews.Lang}")">
+                <option value="">請選擇</option>
+                @foreach (var city in zipcode)
+                {
+                    <option value="@city.ZipCodeSn" selected="@(city.ZipCodeSn == Model.webNews.ZipCodeSn)">@city.Title</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">地點</label>
+        <div class="col-sm-10">
+            <input name="@($"SubTitle{Model.webNews.Lang}")" type="text" value="@Model.webNews?.SubTitle" id="@($"SubTitle{Model.webNews.Lang}")" class="form-control" placeholder="地點">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">地址</label>
+        <div class="col-sm-10">
+            <input name="@($"ContentText{Model.webNews.Lang}")" type="text" value="@Model.webNews?.ContentText" id="@($"ContentText{Model.webNews.Lang}")" class="form-control" placeholder="地址">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">備註</label>
+        <div class="col-sm-10">
+            <input name="@($"Description{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Description" id="@($"Description{Model.webNews.Lang}")" class="form-control" placeholder="備註">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">相關新聞</label>
+        <div class="col-sm-10">
+            <p>
+                <input type="button" value="請選擇" class="ubtn-choose test_btn" onclick="schedulepup('@(Model.webNews.Lang)')" />
+            </p>
+        </div>
+        <label class="col-sm-2 col-form-label text-sm-right"></label>
+        <div class="col-sm-10">
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th hidden>編號</th>
+                        <th>標題</th>
+                        <th>發布日期</th>
+                        <th>下架日期</th>
+                        <th>刪除</th>
+                    </tr>
+                </thead>
+                <tbody id="@($"newtable{Model.webNews.Lang}")">
+                    @if (Model.webNewsSchedule != null && Model.webNewsSchedule.Count > 0)
+                    {
+                        foreach (var data in Model.webNewsSchedule.Where(x => x.Lang == Model.webNews.Lang))
+                        {
+                            <tr>
+                                <td hidden>
+                                    <input type="text" class="col-sm-8 form-control text-sm-left" value="@data.WEBNewsSN">
+                                </td>
+                                <td>@data.Title</td>
+                                <td>@data.StartDate</td>
+                                <td>@data.EndDate</td>
+                                <td>
+                                    @{
+                                        var Dbtn =
+                                        new List<btnModel>()
+                    {
+                            new btnModel() { jsUseClassName = "delnew", Btntype = btnModel.btntype.刪除 }
+                    };
+                                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="Dbtn" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        @{
+            var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.News.Files,
+                file_trNumber = $"{Utility.WebFileGroupID.News.Files}{Model.webNews.Lang}",
+                needCopy = false,
+                title = "相關檔案",
+                FileType = "2",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+            <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+        }
+    </div>
+
+    <div class="form-group row">
+        @{
+            var txtMoreModel = new SelectTextArrayModel()
+            {
+                IdName = $"link{Model.webNews.Lang}",
+                selectTextType = selectTextType.TwoControl,
+                txtName = "網址",
+                valName = "標題",
+                title = "相關連結",
+                SelectTxts = Model.wEBNewsExtends.Where(x => x.GroupID == "relatedlink").Select(x => new SelectTxt() { txt = x.Column_1, val = x.Column_2 }).ToList()
+            };
+            <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="txtMoreModel" />
+        }
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1" class="radio radio-inline " @(Model.webNews.IsEnable == "1" ? "checked" : "") @(Model.webNews.IsEnable == "3" ? "disabled" : "") /> <label for="1">發布</label>
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0" class="radio radio-inline " @((Model.webNews.IsEnable == null ? "checked" : Model.webNews.IsEnable == "0" ? "checked" : Model.webNews.IsEnable == "-2" ? "checked" : "")) @(Model.webNews.IsEnable == "3" ? "disabled" : "") /><label for="0">不公開</label>
+            @if (Model.webNews.IsEnable == "3" || Model.AuthSysGroupWebLevels.Where(x => x.AuthType == "Reviewer").FirstOrDefault() == null)
+            {
+                <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="3" class="radio radio-inline " @(Model.webNews.IsEnable == "3" ? "checked" : "") @((Model.webNews.IsEnable == "3" || Model.webNews.IsEnable == "1") ? "disabled" : "") />
+
+                <label for="3">送審</label>
+            }
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布日期</label>
+        <div class="col-sm-10">
+            <input name="@($"StartDate{Model.webNews.Lang}")" type="datetime-local" value="@( Model.webNews == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'):Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"StartDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+        <div class="col-sm-10">
+            <input name="@($"EndDate{Model.webNews.Lang}")" type="datetime-local" step="1" value="@( Model.webNews == null? "" : Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"EndDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+        <div class="col-sm-10">
+            <div>
+                @{
+                    var selectIds = new List<string>();
+                    var DepID = string.IsNullOrWhiteSpace(Model.webNews?.DepartmentID) ? Model.sysUserSysDepartmentID : Model.webNews?.DepartmentID;
+                    selectIds.Add(DepID);
+                    var depControl = new definitionModel()
+            {
+                IdName = $"dep{Model.webNews.Lang}",
+                selectIds = selectIds,
+
+            };
+                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>()
+        {
+        new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save(1,'{Model.webNews.Lang}')",module = Module,isenable = Model.webNews.IsEnable ,Auth = Model.AuthSysGroupWebLevels.Select(x => x.AuthType).ToList() },
+        new btnModel(){Btntype = btnModel.btntype.送審退回,onclickFunction=$"Save(-2,'{Model.webNews.Lang}')",module = Module,isenable = Model.webNews.IsEnable,Auth = Model.AuthSysGroupWebLevels.Select(x => x.AuthType).ToList()},
+        new btnModel(){Btntype = btnModel.btntype.送審確認,onclickFunction=$"Save(4,'{Model.webNews.Lang}')",module = Module,isenable = Model.webNews.IsEnable, Auth = Model.AuthSysGroupWebLevels.Select(x => x.AuthType).ToList()},
+        new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction=$"backward(0)" },
+        };
+            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+
+</div>
+

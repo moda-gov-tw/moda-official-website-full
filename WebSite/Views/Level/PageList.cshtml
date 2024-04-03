@@ -1,0 +1,80 @@
+﻿@model PageListModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section meta{
+<title>@Model.ogData.title</title>
+<meta property="og:title" content="@Model.ogData.title" />
+<meta property="og:image" content="@Model.ogData.image" />
+<meta property="og:image:type" content="@Model.ogData.image_type">
+<meta property="og:image:width" content="@Model.ogData.image_width">
+<meta property="og:image:height" content="@Model.ogData.image_height">
+<meta property="og:description" content="@(string.IsNullOrWhiteSpace( Model.webLevel.SEODescription) ?  Model.ogData.description : Model.webLevel.SEODescription )" />
+<meta name="keywords" content="@(  string.IsNullOrWhiteSpace( Model.webLevel.SEOKeywords) ?  Model.ogData.keyword  : Model.webLevel.SEOKeywords )" />
+<meta name="description" content="@(string.IsNullOrWhiteSpace( Model.webLevel.SEODescription) ?  Model.ogData.description : Model.webLevel.SEODescription )" />
+}
+@section gacode{
+	 @if (!string.IsNullOrWhiteSpace(Model.SysWebSiteLang.GACode))
+    {
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.SysWebSiteLang.GACode));
+    }
+}
+<main class="main">
+    <!-- 0.麵包屑 -->
+    <partial name="~/Views/Common/Breadcrumb.cshtml"  model =Model.webSiteBreadcrumbs />
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <div class="d-flex twoColConWrap">
+            <!-- 左側選單 start -->
+            <partial name="~/Views/Home/leftMenu.cshtml" model=Model.webSiteBreadcrumbs/>
+            <!-- 左側選單 end -->
+            <!-- 右半主內容 start -->
+            <div class="rightMain">
+
+                <div class="a11yBrickBar1">
+                    <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute"	title="頁面中央內容區塊[快捷鍵Alt+C]">:::</a>
+                </div>
+                
+                <!-- 標題 -->
+                <partial name="~/Views/Home/titleBar.cshtml" model=Model.titleBarMdel />
+                <!--Header-->
+                @if (!string.IsNullOrEmpty(Model.webLevel.ContentHeader))
+                {
+                    <div class="article1 mb-4">
+					    @Html.Raw(Model.webLevel.ContentHeader)
+				    </div>
+                }
+                <!-- 列表 -->
+                @{
+                    switch (Model.webLevel.ListType)
+                    {
+                        case "ColorBlockList":
+                            <partial name="~/Views/Level/ColorBlockList.cshtml" model="Model.webSiteWebLevelPageListModels" />
+                            break;
+                        case "TextList":
+                            <partial name="~/Views/Level/TextList.cshtml" model="Model.webSiteWebLevelPageListModels" />
+                            break;
+                        case "LabelList":
+                            <partial name="~/Views/Level/LabelList.cshtml" model="Model.webSiteWebLevelPageListModels" />
+                            break;
+                        case "IcoList":
+                            <partial name="~/Views/Level/IcoList.cshtml" model="Model.webSiteWebLevelPageListModels" />
+                            break;
+                    }
+                }
+                <!--Footer-->
+                @if (!string.IsNullOrEmpty(Model.webLevel.ContentFooter))
+                {
+                    <div class="article1 mb-4">
+					    @Html.Raw(Model.webLevel.ContentFooter)
+				    </div>
+                }
+            </div>
+            <!-- 右半主內容 end -->
+        </div>
+    </div>
+</main>
+@section Scripts{
+    <script>
+    LeftMenu('@Model.webLevel.WebLevelSN');
+    </script>
+}

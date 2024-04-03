@@ -1,0 +1,149 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var OverAll = new List<Services.Models.WebSite.TabNewsModel>();
+    if (Model?.NewsViews != null)
+    {
+        foreach (var item in Model.NewsViews)
+        {
+            OverAll.AddRange(
+                item.TabNewsView.Select(x => { x.Mark = item.BasicNews.Title; return x; })
+                .OrderBy(x => x.TabNews.SortOrder)
+                .Take(5)
+                .ToList());
+        }
+    }
+
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@if (Model != null)
+{
+    <section class="idxPlan" data-aos="fade-up">
+        <div class="w-100 overflow-hidden">
+            <!-- title -->
+        <div class="titleBar1 text-center">
+                <h2 class="title1 mb-2 mb-md-4">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+            </div>
+
+            <!-- content -->
+        <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <ul class="nav nav-tabs justify-content-center" id="idxPlanTab">
+                        <li class="nav-item px-1 px-md-3" role="presentation">
+                            <button class="nav-link fw-normal lh-1 active PlanTab" data-storage="0" data-bs-toggle="tab"
+                                aria-selected="true">
+                                @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-39")?.Value
+                            </button>
+                        </li>
+                        @if (Model?.NewsViews != null)
+                        {
+                            var i = 1;
+                            foreach (var item in Model.NewsViews)
+                            {
+                                <li class="nav-item px-1 px-md-3" role="presentation">
+                                    <button class="nav-link fw-normal lh-1 PlanTab" data-storage="@i" data-bs-toggle="tab"
+                                aria-selected="true">
+                                        @Html.Raw(item.BasicNews.Title)
+                                    </button>
+                                </li>
+                                i++;
+                            }
+                        }
+                    </ul>
+                    <div class="tab-content" id="idxPlanTabContent">
+                        <!-- 總覽 -->
+                    <div class="tab-pane active" id="idxNewsCon0">
+                            <div class="listWrap1 position-relative" id="MainPlanTab">
+                                <div class="idxList2 position-relative imgCover">
+                                    <button type="button" class="swiper-button-prev idxList2SwiperPrevBtn border-0 rounded-circle idxList2SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value</span></button>
+                                    <div class="swiper idxList2Swiper idxList2SwiperJs">
+                                        <div class="swiper-wrapper h-auto">
+                                            @foreach (var news in OverAll)
+                                            {
+                                                <div class="swiper-slide h-auto">
+                                                    <a href="@news.DynamicURL" class="card h-100 d-block rounded-4 border-0" @Html.Raw(CommFun.getattr(news.TabNews.target, news.TabNews.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                                        <div class="pic position-relative overflow-hidden rounded-4">
+                                                            <img src="@news.Logo.FilePath" alt="">
+                                                        </div>
+                                                        <div class="card-body shadow-md position-absolute start-0 end-0 bottom-0 mx-auto shadow-md">
+                                                            <span class="badge1 fw-lighter"><i class="bi bi-tag align-middle me-1 fs-5"></i>@Html.Raw(news.Mark)</span>
+                                                            <div class="card-title pt-md-2 pb-4">@Html.Raw(news.TabNews.Title)</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <button type="button" class="swiper-button-next idxList2SwiperNextBtn border-0 rounded-circle idxList2SwiperNextBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value</span></button>
+                                    <div class="idxList2SwiperNav swiper-pagination idxList2SwiperPageJs"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="StorageBox" style="display:none;">
+                            <div id="SB0">
+                                <div class="idxList2 position-relative imgCover">
+                                    <button type="button" class="swiper-button-prev idxList2SwiperPrevBtn border-0 rounded-circle idxList2SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value</span></button>
+                                    <div class="swiper idxList2Swiper idxList2SwiperJs">
+                                        <div class="swiper-wrapper h-auto">
+                                            @foreach (var news in OverAll)
+                                            {
+                                                <div class="swiper-slide h-auto">
+                                                    <a href="@news.DynamicURL" class="card h-100 d-block rounded-4 border-0" @Html.Raw(CommFun.getattr(news.TabNews.target, news.TabNews.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                                        <div class="pic position-relative overflow-hidden rounded-4">
+                                                            <img src="@news.Logo.FilePath" alt="">
+                                                        </div>
+                                                        <div class="card-body shadow-md position-absolute start-0 end-0 bottom-0 mx-auto shadow-md">
+                                                            <span class="badge1 fw-lighter"><i class="bi bi-tag align-middle me-1 fs-5"></i>@Html.Raw(news.Mark)</span>
+                                                            <div class="card-title pt-md-2 pb-4">@Html.Raw(news.TabNews.Title)</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <button type="button" class="swiper-button-next idxList2SwiperNextBtn border-0 rounded-circle idxList2SwiperNextBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value</span></button>
+                                    <div class="idxList2SwiperNav swiper-pagination idxList2SwiperPageJs"></div>
+                                </div>
+                            </div>
+                            @if (Model?.NewsViews != null)
+                            {
+                                var i = 1;
+                                foreach (var item in Model.NewsViews)
+                                {
+                                    <div id="@("SB" + i.ToString())">
+                                        <div class="idxList2 position-relative imgCover">
+                                            <button type="button" class="swiper-button-prev idxList2SwiperPrevBtn border-0 rounded-circle idxList2SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-40")?.Value</span></button>
+                                            <div class="swiper idxList2Swiper idxList2SwiperJs">
+                                                <div class="swiper-wrapper h-auto">
+                                                    @foreach (var news in item.TabNewsView)
+                                                    {
+                                                        <div class="swiper-slide h-auto">
+                                                            <a href="@news.DynamicURL" class="card h-100 d-block rounded-4 border-0" @Html.Raw(CommFun.getattr(news.TabNews.target, news.TabNews.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                                                <div class="pic position-relative overflow-hidden rounded-4">
+                                                                    <img src="@news.Logo.FilePath" alt="">
+                                                                </div>
+                                                                <div class="card-body shadow-md position-absolute start-0 end-0 bottom-0 mx-auto shadow-md">
+                                                                    <span class="badge1 fw-lighter"><i class="bi bi-tag align-middle me-1 fs-5"></i>@Html.Raw(item.BasicNews.Title)</span>
+                                                                    <div class="card-title pt-md-2 pb-4">@Html.Raw(news.TabNews.Title)</div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <button type="button" class="swiper-button-next idxList2SwiperNextBtn border-0 rounded-circle idxList2SwiperNextBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-41")?.Value</span></button>
+                                            <div class="idxList2SwiperNav swiper-pagination idxList2SwiperPageJs"></div>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+}

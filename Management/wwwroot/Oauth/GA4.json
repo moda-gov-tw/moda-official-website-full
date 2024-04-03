@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "WebSiteID": "MODA",
+      "Language": "ZH-TW",
+      "GA4": "${GA4_MODA_TW}"
+    },
+    {
+      "WebSiteID": "MODA",
+      "Language": "EN",
+      "GA4": "${GA4_MODA_EN}"
+    },
+    {
+      "WebSiteID": "ACS",
+      "Language": "ZH-TW",
+      "GA4": "${GA4_ACS_TW}"
+    },
+    {
+      "WebSiteID": "ACS",
+      "Language": "EN",
+      "GA4": "${GA4_ACS_EN}"
+    },
+    {
+      "WebSiteID": "ADI",
+      "Language": "ZH-TW",
+      "GA4": "${GA4_ADI_TW}"
+    },
+    {
+      "WebSiteID": "ADI",
+      "Language": "EN",
+      "GA4": "${GA4_ADI_EN}"
+    }
+  ]
+}

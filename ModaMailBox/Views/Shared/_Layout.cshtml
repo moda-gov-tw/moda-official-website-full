@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="zh-tw">
+@{
+    var LayoutData = ModaMailBox.Controllers.BaseController.caseApplyWeb;
+    var LogData  =  ModaMailBox.Controllers.BaseController.Logo;
+    var Official = AppSettingHelper.GetAppsetting("Official") == "1" ? true : false  ;
+}
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@(LayoutData?.Title == null ?  "數位發展部民意信箱": LayoutData.Title)</title>
+    <meta name="viewport" content="width=device-width,initial-scale = 1" />
+    <meta name="format-detection" content="telephone=no">
+    <meta property="og:title" content="@(LayoutData?.Title == null ?  "數位發展部民意信箱": LayoutData.Title)" />
+    <meta property="og:image" content="/assets/img/fbshare.jpg" />
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="628">
+    <meta property="og:description" content="@(LayoutData?.SEOKeywords == null ?  "數位發展部民意信箱": LayoutData.SEOKeywords)" />
+    <meta property="og:url" content="" />
+    <meta name="keywords" content="@(LayoutData?.SEOKeywords == null ?  "數位發展部民意信箱": LayoutData.SEOKeywords)" />
+    <meta name="description" content="@(LayoutData?.SEODescription == null ?  "數位發展部民意信箱": LayoutData.SEODescription)" />
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.ico">
+    <link rel="apple-touch-icon" sizes="192x192" href="/assets/img/touch-icon.jpg">
+
+    <!-- 套件css -->
+    <link rel="stylesheet" href="/vendor/css/allVendor.css" media="all" asp-append-version="true" />
+    <!-- 主要css -->
+    <link rel="stylesheet" href="/assets/css/layout.css" media="all" asp-append-version="true" />
+    <link rel="stylesheet" href="/assets/css/main.css" media="all" asp-append-version="true" />
+    <link rel="stylesheet" href="/css/sweetalert.css" media="all" asp-append-version="true" />
+    <!-- ======單獨這頁用的css end -->
+    @RenderSection("meta", required: false)
+    @Html.Raw(LayoutData.GACode)
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <noscript>
+        Your browser does not support JavaScript! 您的瀏覽器不支援JavaScript功能，若網頁功能無法正常使用時，請開啟瀏覽器JavaScript狀態。
+    </noscript>
+    <div class="loading" id="loading"><span class="loadingLogo"></span></div>
+
+    <a href="#AC" id="startBrick" class="visually-hidden-focusable" title="跳到主要內容">跳到主要內容</a>
+
+    <!-- heaer -->
+    <header class="header">
+        <div class="wrap1 mx-auto px-3 px-md-4 px-lg-5 position-relative">
+            <div class="a11yBrickBar1 position-relative">
+                <a href="#AU" id="AU" accesskey="U"
+                   class="a11yBrick position-absolute top-0 start-0" title="頁面頂端功能區塊[快捷鍵Alt+U]">:::</a>
+            </div>
+        </div>
+        <!-- logo+主選單-->
+        <nav class="navbar_mail navbar-light navbar-expand-lg align-items-center">
+            <div class="wrap1 mx-auto px-3 px-md-4 px-lg-5 d-flex justify-content-between align-items-center w-100">
+                <h1 class="navbar-brand col-md-3 col-lg-3 col-xl-4 col-xxl-auto mb-0">
+                    <!-- Logo -->
+                    <a class="d-block" href="@Url.Content("/")">
+                        <!-- 淺色版面的logo -->
+                        <img class="mw-100 lightShow" src="@((Official ? LogData?.FilePath ?? "/img/headLogo.svg" : "/img/headLogo.svg" ))" alt="數位發展部民意信箱:回首頁">
+                    </a>
+                    <b class="visually-hidden">數位發展部民意信箱</b>
+                </h1>
+                <a href="@Url.Action("sitemap","Home")" class="sitemap_icon sitemap_mo mo"><span class="visually-hidden">網站導覽</span></a>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu" title="展開選單"><span class="hamburger-icon">展開選單</span></button>
+                </div>
+                <div class="row menu" style="display: flex;">
+                    <div class="col">
+                        <ul class="list-unstyled list-inline mb-0">
+                            <!-- 分享 -->
+                            <li class="list-inline-item px-4">
+                                <a href="@Url.Action("mailtous","Home")" class="top_nav">
+                                    <div class="nav_icon"><img class="" src="/assets/img/mailbox/letter.svg" alt=""></div>
+                                    <div class="pt-md-2 text-center">寫信給我們</div>
+                                </a>
+                            </li>
+  @*                          <li class="list-inline-item px-4">
+                                <a href="@Url.Action("resendconfirm","Home")" class="top_nav">
+                                    <div class="nav_icon bs-blue2"><img class="" src="/assets/img/mailbox/Resend.svg" alt=""></div>
+                                    <div class="pt-md-2 text-center">重寄確認信</div>
+                                </a>
+                            </li>*@
+                            <li class="list-inline-item px-4">
+                                <a href="@Url.Action("querycase","Home")" class="top_nav">
+                                    <div class="nav_icon bs-blue"><img class="" src="/assets/img/mailbox/schedule.svg" alt=""></div>
+                                    <div class="pt-md-2 text-center">案件進度查詢</div>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-auto text-end d-flex align-self-center">
+                        <ul class="list-unstyled list-inline mb-0">
+                            <li class="list-inline-item">
+								<a href="@Url.Action("sitemap","Home")" class="sitemap_icon"><span  class="visually-hidden">網站導覽</span></a>
+							</li> 
+                            <!-- 分享 -->
+                            <li class="list-inline-item">
+                                <div class="dropdown fontSizeDd fontSizeDdJs">
+                                    <button class="fontSizeDdNow btn-dropdownNow dropdown-toggle text-white" type="button" id="fontSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-order="2" title="中字級">
+                                        <span>A</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="fontSizeDropdown">
+                                        <li>
+                                            <button class="dropdown-item" type="button" data-order="1" title="大字級">
+                                                A<sup>+</sup>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item" type="button" data-order="3" title="小字級">
+                                                A<sup>-</sup>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            @*            <li class="list-inline-item">
+                                <a href="" class="en_icon"><span>英文版</span></a>
+                                </li>*@
+                        </ul>
+                    </div>
+                </div>
+                <!-- Main navbar END -->
+            </div>
+        </nav>
+        <!-- 切換字體大小 -->
+        <!-- Logo Nav END -->
+    </header>
+    <main class="main mail_indexbg">
+        @RenderBody()
+        <div id="speakDiv" style="display:none"></div>
+    </main>
+</body>
+<footer class="ft mt-auto">
+    @Html.Raw(LayoutData.Footer)
+</footer>
+  <a href="#toTop" class="topBtn border border-2 border-white text-center rounded-circle on" id="topBtn" title="返回頁面頂端" style="bottom: 100px;"><i class="ci ci-top"></i><span class="visually-hidden">返回頁面頂端</span></a>
+<script src="/vendor/js/jquery-3.6.0.min.js" asp-append-version="true"></script>
+<script src="/vendor/js/jquery-ui.min.js" asp-append-version="true"></script>
+<script src="@Url.Content("~/js/jquery.unobtrusive-ajax.min.js")"></script>
+<script src="/vendor/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+<script src="/vendor/js/bootstrap-submenu.js" asp-append-version="true"></script>
+<script src="/vendor/js/swiper-bundle.min.js" asp-append-version="true"></script>
+<script src="/vendor/js/aos.js" asp-append-version="true"></script>
+<script src="/vendor/js/jquery.magnific-popup.min.js" asp-append-version="true"></script>
+<!-- main -->
+<script src="/assets/js/common.js" asp-append-version="true"> </script>
+<script src="/js/sweetalert.min.js" asp-append-version="true"> </script>
+<script src="/js/site.js" asp-append-version="true"> </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</html>

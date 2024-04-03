@@ -1,0 +1,63 @@
+﻿@model Management.Areas.MailBox.Models.CaseApplyPage.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab">
+                <li class="nav-item"><a class="nav-link active" href="javascript:;" onclick="changeTab($(this))" data-type="tab1">民意信箱頁面</a></li>
+                <li class="nav-item"><a class="nav-link" href="javascript:;" onclick="changeTab($(this))" data-type="tab2">回覆信件</a></li>
+            </ul>
+            <div class="bootstrap-table">
+                <div class="form-horizontal tabDiv" id="tab1_div">
+                    <div class="uTable3">
+                        <div id="tableList">
+                            <partial name="~/Areas/MailBox/Views/CaseApplyPage/List.cshtml" model=@Model.CaseApplyPages.Where(x => x.PageType == "1").ToList() />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal tabDiv" id="tab2_div" style="display:none">
+                    <div class="uTable3">
+                        <div id="tableList">
+                            <partial name="~/Areas/MailBox/Views/CaseApplyPage/List.cshtml" model=@Model.CaseApplyPages.Where(x => x.PageType == "2").ToList() />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        function Detail(p) {
+            location.href = '@Url.Action("Detail", "CaseApplyPage", new { area = "MailBox" })?sn=' + p;
+        }
+        function changeTab(e) {
+            $(".tabDiv").hide();
+            var showdiv = getObjAtr(e, "data-type");
+            $("#" + showdiv + "_div").show();
+            $('.nav-tabs .nav-link').removeClass('active');
+            e.addClass('active');
+            var obj = {
+                "tab" : showdiv
+            };
+            SetCookie("tab", obj);
+        }
+        var back = getCookie("back");
+        if(back == 1){
+            var objstr = getCookie("tab");
+            if (objstr != "") {
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $(".tabDiv").hide();
+                    $("#" + obj.tab + "_div").show();
+                    $('.nav-tabs .nav-link').removeClass('active');
+                    $("a[data-type=" + obj.tab + "]").addClass('active');
+                    SetCookie("tab", obj);
+                }
+            }
+            SetCookie("back", 0);
+        }
+    </script>
+}

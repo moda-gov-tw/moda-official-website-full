@@ -1,0 +1,60 @@
+﻿@model Management.Areas.MailBox.Models.CaseApply.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW3">案件編號</th>
+            <th scope="col" class="colW3">機關信箱</th>
+            <th scope="col" class="colW3">原處理機關</th>
+            <th scope="col" class="">主旨</th>
+            <th scope="col" width="12%">成立時間</th>
+            <th scope="col" width="12%">退回時間</th>
+            <th scope="col" class="colW3">狀態</th>
+            <th scope="col" class="colW3">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.GetCases?.Count > 0)
+        {
+            @foreach (var data in Model?.GetCases)
+            {
+
+                <tr>
+                    <td>@row</td>
+                    <td>@data.CaseNo</td>
+                    <td>@data.OriginalDeptName</td>
+                    <td>@data.depName</td>
+                    <td class="text-break text-start">@data.Subject</td>
+                    <td>@data.AcceptDate</td>
+                    <td>@(data.ReplyDate != null ? data.ReplyDate.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                    <td>@(Utility.EnumTpye.GetEnumDescription(Utility.MailBox.EnumCassApplyStatus.step11))</td>
+                    <td>
+                        @{
+                            var btns0 = new List<btnModel>();
+                            var detail = new btnModel() { Btntype = btnModel.btntype.改分, onclickFunction = "Detail(" + data.CaseNo + ")" };
+                            btns0.Add(detail);
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns0" />
+                        }
+                    </td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model?.GetCases.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

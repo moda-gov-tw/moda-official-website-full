@@ -1,0 +1,107 @@
+﻿@model Management.Areas.WebContent.Models.TEXTModel
+
+<div class="bootstrap-table">
+ <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+    @if (Model.newCommonModels.Count() > 0)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+            @foreach (var lan in Model.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"")" id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw"?"中文":"英文")</a>
+                </li>
+            }
+        </ul>
+    }
+    <hr />
+    <div class="form-horizontal tab-content">
+        @if (Model.newCommonModels.Count() == 0)
+        {
+            var newCommonModel = new NewCommonModel() { webNews = new WEBNews() { Lang = "zh-tw",WebLevelSN = Model.webLevel.WebLevelSN }, sysUserSysDepartmentID = Model.sysUserSysDepartmentID };
+            <partial name="~/Areas/WebContent/Views/TEXT/TextView.cshtml" model="newCommonModel" />
+        }
+        else
+        {
+            foreach (var lan in Model.newCommonModels)
+            {
+                <partial name="~/Areas/WebContent/Views/TEXT/TextView.cshtml" model="lan" />
+            }
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function Save(lan) {
+        var saveHref = '@Url.Action("WEBNewsSave", "NEWS", new { area = "WebContent" })';
+         var isEnable = MODAhtmlEncode($('input[name=IsEnable'+lan+']:checked'),"val");
+         var obj = {
+                webNewssn: '@(Model.wEBNews == null? 0 : Model.wEBNews.WEBNewsSN)',
+                weblevelsn: '@Model.webLevel.WebLevelSN',
+                module: '@Model.webLevel.Module',
+                articletype: "0",
+                title: MODAhtmlEncode($("#Title" + lan),"val"),
+                subtitle: "",
+                description: "",
+                contenttext: "",
+                url: MODAhtmlEncode($("#URL" + lan),"val"),
+                target: "",
+                youtubeid: "",
+                istop: "",
+                isenable: isEnable,
+                startdate: MODAhtmlEncode($("#StartDate" + lan),"val"),
+                enddate:MODAhtmlEncode($("#EndDate" + lan),"val"),
+                DepartmentID: $('#dep' + lan).val(),
+                lang:lan
+            };
+        Swal.fire({
+           title: '確定要儲存?',
+           icon: 'warning',
+           showDenyButton: true,
+           showCancelButton: false,
+           confirmButtonText: '確定',
+           denyButtonText: '取消',
+       }).then((result) => {
+            if (result.isConfirmed) {
+                SaveNews(obj,saveHref,isEnable);
+            }else if (result.isDenied) {
+               Swal.fire('已取消!', '', 'info')
+           }
+        })
+
+    }
+     function SaveNews(obj,saveHref,IsEnable){
+     $('.preloader').show();
+     $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                    backward();
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+     }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + ArticleID;
+        $("#fox_box").load(href, function() { });
+    }
+</script>
+
+

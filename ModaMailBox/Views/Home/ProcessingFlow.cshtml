@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5 ">
+        <h2 class="title3 position-relative text-center pb-3 mb-md-5">@(page?.PageTitle ?? "")</h2>
+        @Html.Raw(page?.PageContent ?? "")
+        <div>
+            <div class="text-center mt-5 "><a href="@Url.Action("mailtous","Home")" id="button" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button">開始寫信</a></div>
+        </div>
+    </div>
+</div>

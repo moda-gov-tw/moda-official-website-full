@@ -1,0 +1,144 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row mx-0 pb-5">
+
+                    <div class="col px-0">
+                        <label class="col-form-label py-3">
+                            網站編號：
+                        </label>
+                        <div class="uRow2">
+                            <div class="uRow2-Col2-1 pr-3">
+                                <input type="text" id="QryKeyword" class="form-control" placeholder="網站編號">
+                            </div>
+                            <div class="uRow2-Col2-2">
+                                <input type="button"
+                                       value="查詢" onclick="searchFunction(1)"
+                                       class="ubtn-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tableList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        var href = "@Url.Action("List", "WebsiteManagement", new { area = "WebManagement" })";
+        searchFunction(1);
+        $(document).on("click", ".page_a", function () {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+        function searchFunction(p) {
+            var key = MODAhtmlEncode($("#QryKeyword"), "val");
+            var getUrl = "?websiteid=" + key + "&p=" + p;
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function () {
+            });
+        }
+
+        function EditFun(id, websiteid) {
+            location.href = "@Url.Action("Mode", "WebsiteManagement", new { area = "WebManagement" })?key=" + id + "&websiteid=" + websiteid;
+        }
+        function RestFun(key) {
+            var saveHref = '@Url.Action("ResetStaticLink","WebsiteManagement",new {area ="WebManagement"  })';
+            Swal.fire({
+                title: '確定要重置靜態網址?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: saveHref,
+                        type: 'post',
+                        data: {
+                            key: key
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "重置成功"
+                                }).then(result => {
+                                    CancelFun();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+        }
+        function CancelFun() {
+            location.href = '@Url.Action("Index", "WebsiteManagement", new { area = "WebManagement" })';
+        }
+
+        function DeleteFun(id) {
+            var saveHref = '@Url.Action("Delete", "WebsiteManagement", new { area = "WebManagement" })';
+            Swal.fire({
+                title: '確定要刪除?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '刪除',
+                denyButtonText: '不要刪除'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: saveHref,
+                        type: 'post',
+                        data: {
+                            key: id
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "刪除成功"
+                                }).then(result => {
+                                    CancelFun();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}

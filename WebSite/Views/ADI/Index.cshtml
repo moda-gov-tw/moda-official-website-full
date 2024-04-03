@@ -1,0 +1,56 @@
+﻿@model HomeModel.ADIIndexModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@{
+	var S7 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 7);
+	if(S7 != null)
+	{
+		<!-- 0. hint -->
+		<partial name="~/Views/ADI/Hint7.cshtml" model=S7/>
+	}
+
+	var S1 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 1);
+	if(S1 != null)
+	{
+		<!-- 0. kv -->
+		<partial name="~/Views/ADI/Banner1.cshtml" model=S1/>
+		<div class="a11yBrickBar1 wrap5 mx-auto px-3 px-md-4 px-lg-5"><a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-30")?.Value">:::</a></div>
+	}
+
+	var S2 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 2);
+	if(S2 != null)
+	{
+		<!-- 1. idxTrending -->
+		<partial name="~/Views/ADI/News2.cshtml" model=S2/>
+	}
+
+	var S3 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 3);
+	if(S3 != null)
+	{
+		<!-- 2. idxServices -->
+		<partial name="~/Views/ADI/Tab3.cshtml" model=S3/>
+	}
+		
+	var S4 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 4);
+	if(S4 != null)
+	{
+		<!-- 3. idxFeatured -->
+		<partial name="~/Views/ADI/Link4.cshtml" model=S4/>
+	}
+	
+	var S5 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 5);
+	if(S5 != null)
+	{
+		<!-- 4. idxNews -->
+		<partial name="~/Views/ADI/PageList5.cshtml" model=S5/>
+	}
+
+	var S6 = Model.Children.FirstOrDefault(x => x.LevelView.BasicLevel.SortOrder == 6);
+	if(S6 != null)
+	{
+		<!-- 5. idxPartner -->
+		<partial name="~/Views/ADI/Link6.cshtml" model=S6/>
+	}
+}

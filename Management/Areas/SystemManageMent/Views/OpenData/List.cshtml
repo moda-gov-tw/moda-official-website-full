@@ -1,0 +1,145 @@
+﻿@model Management.Areas.SystemManageMent.Models.OpenData.WEBOpenDataModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<div class="row mx-0">
+    <div class="col text-right pb-3 px-0">
+        <input class="ubtn-add" type="button" value="新增" onclick="EditFun('')" />
+    </div>
+</div>
+<div class="uTable3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+                <th scope="col" class="colW4">標題</th>
+                <th scope="col" class="colW2">資料狀態</th>
+                <th scope="col">處理人員</th>
+                <th scope="col" class="colW3">維護時間</th>
+                <th scope="col" class="colW3">建立日期</th>
+                <th scope="col">開放資料集位置</th>
+                <th scope="col" class="colW2">排序</th>
+                <th scope="col" class="colW4">動作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.wEBOpenDataMains != null)
+            {
+                @foreach (var data in Model.wEBOpenDataMains)
+                {
+                    var FileUrl = Model.FileUrl.Where(x => x.Key == data.WEBOpenDataMainSN).ToList();
+                    <tr>
+                        <td>@row</td>
+                        <td align="left">@data.Title</td>
+                        <td>@(data.IsEnable == "1" ? "啟用":"未啟用")</td>
+                        <td>@data.ProcessUserID</td>
+                        <td>@data.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@data.DateCreated.Value.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="text-breakall text-start">
+                            @foreach (var list in FileUrl)
+                            {
+                                <div>@list.Value
+                                    @{
+                                        var btns = new List<btnModel>();
+                                        btns.Add(new btnModel() { Btntype = btnModel.btntype.複製 , onclickFunction=$@"txtCopy('','{list.Value}')"  });
+                                        btns.Add(new btnModel() { Btntype = btnModel.btntype.下載 , onclickFunction=$@"txtHerf('{list.Value}')"  });
+                                    }
+                                     <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <select onchange="ArticleReArrange($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.WEBOpenDataMainSN.ToString())">
+                                @{
+                                    int i = 1;
+                                }
+                                @foreach (var sort in Model.SortList.OrderBy(x => x.SortOrder))
+                                {
+                                    <option selected="@(sort.SortOrder == data.SortOrder)" value="@(sort.SortOrder)">@(i)</option>
+                                    i++;
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <input type="button" class="ubtn-edit" value="編修" onclick="EditFun('@data.WEBOpenDataMainSN')" />
+                            <input type="button" class="ubtn-delete" value="刪除" onclick="Delete('@CommonUtility.GetUrlAesEncrypt(data.WEBOpenDataMainSN.ToString())')" />
+                        </td>
+                    </tr>
+                    row++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8">@Utility.SysConstTable.ListNotFound.TW</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @* 頁碼功能- id =pager   *@
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+</div>
+
+<script>
+    var back = getCookie("back");
+    var websiteid = MODAhtmlEncode($("#drlWebSite"), "val");
+    if (back == 1) {
+        var objstr = getCookie("NewsObj");
+        if (objstr != "") {
+            if (JSON.parse(objstr) != "") {
+                var obj = JSON.parse(objstr);
+                $('#perPageShow').val(obj.displayCount);
+                $('#QryKeyword').val(obj.keyword);
+            }
+        }
+    }
+    function txtCopy(title, txt) {
+        navigator.clipboard.writeText(txt)
+            .then(() => {
+                Swal.fire({
+                    icon: "warning",
+                    title: title + "  內容已經複製"
+                });
+            })
+            .catch(err => {
+                console.log('Something went wrong', err);
+            })
+    }
+
+    function ArticleReArrange(e) {
+        var data_id = e.attr("data-id");
+        var sort = e.find(':selected').val();
+        var Url = "@Url.Action("NewsReArrange", "OpenData", new { area = "SystemManageMent" })";
+        $.ajax({
+            url: Url,
+            data: {
+                key: data_id,
+                sort: sort,
+                websiteid : websiteid,
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function(data) {
+                if (data.statusCode == 200) {
+                    searchFunction(1);
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+</script>

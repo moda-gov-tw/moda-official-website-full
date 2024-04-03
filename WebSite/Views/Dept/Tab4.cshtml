@@ -1,0 +1,57 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!--單欄文字列表-->
+<section class="deptNews bg1">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <!-- 次標 -->
+        <h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+
+        <ul class="list4-2 list-group divider pb-4">
+            @if (item != null)
+            {
+                foreach (var news in item.TabNewsView.Take(5))
+                {
+                      var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value);
+                    <li class="list-group-item d-block bg-transparent px-0">
+                        <a href="@Url.Content(@news.DynamicURL)" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                            <div class="listDate ms-md-3 order-md-2">@Html.Raw(news.TabNews.PublishDate.Value.ToString("yyyy-MM-dd"))</div>
+                            <div class="col mb-0">
+                                <h4 class="title5">
+                                    @news.TabNews.Title
+                                    @if (!string.IsNullOrEmpty(news.fileType))
+                                    {
+                                        var vs = news.fileType.ToUpper().Split('.');
+                                        <span class="fileTypeI">@(vs.Length > 1 ? vs[1] : "")</span>
+                                    }
+                                </h4>
+                            </div>
+                        </a>
+                        @if (news.NewsTags != null && news.NewsTags.Count() > 0)
+                        {
+                            <div class="listTag2">
+                                @foreach(var tag in news.NewsTags)
+                                {
+                                    <a href="javascript:;" class="btn" role="button">@Html.Raw(tag.Value)</a>
+                                }
+                            </div>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+
+        @if (item?.TabNewsView.Count() > 5)
+        {
+            <div class="btnBar1 text-center pt-3 pt-md-4 pb-3">
+                <a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({Model?.LevelView.BasicLevel.Title})")">
+                    @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+                    <span class="visually-hidden"> @("(" + item.BasicNews.Title + ")")</span>
+                </a>
+            </div>
+        }
+    </div>
+</section>

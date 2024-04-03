@@ -1,0 +1,86 @@
+﻿@model Utility.DefaultPager
+@using System.Web;
+@{
+    string btnkey = $"page_{Model.key}";
+    int pendingcount = (Model.PageButtonCount - 1) / 2;
+    int start = 0;
+    int end = 0;
+    start = Model.PageIndex - pendingcount < 0 ? 0 : Model.PageIndex - pendingcount;
+    end = Model.PageIndex + pendingcount > Model.PageCount - 1 ? Model.PageCount - 1 : Model.PageIndex + pendingcount;
+    if (Model.PageIndex + pendingcount > Model.PageCount - 1)
+    {
+        start -= (Model.PageIndex + pendingcount) - (Model.PageCount - 1);
+        start = start < 0 ? 0 : start;
+    }
+    if (Model.PageIndex - pendingcount < 0)
+    {
+        end += 0 - (Model.PageIndex - pendingcount);
+        end = end > Model.PageCount - 1 ? Model.PageCount - 1 : end;
+    }
+}
+<div class="pagerWrap">
+    <div class="dataTables_info">
+        @(Model.p + "/" +   Model.PageCount) 頁   共 @Model.TotalCount 筆資料
+    </div>
+    <div class="dataTables_paginate text-center">
+        <ul class="pagination">
+            @{
+
+                if (Model.PageIndex == 0)
+                {
+                }
+                else
+                {
+                    <li>
+                        <a class="@btnkey" href="javascript:;" data-page="1">
+                            第一頁
+                            <span class="icon12 minia-icon-arrow-left-3"></span>
+                        </a>
+                    </li>
+                }
+                if (Model.PageIndex <= (double)Model.PageButtonCount / 2)
+                {
+                }
+                else
+                {
+                    <li><a class="@btnkey" href="javascript:;" data-page="1">1</a></li>
+                    <li><span>..</span></li>
+                }
+                for (int i = start; i <= end; i++)
+                {
+                    if (Model.PageIndex == i)
+                    {
+                        <li class="active"><a  class="@btnkey" href="javascript:;">@(i + 1)</a></li>
+                    }
+                    else
+                    {
+                        <li><a  class="@btnkey" href="javascript:;" data-page="@(i + 1)">@(i + 1)</a></li>
+                    }
+                }
+                if (Model.PageIndex >= Model.PageCount - 1 - (double)Model.PageButtonCount / 2)
+                {
+                }
+                else
+                {
+                    <li><span>..</span></li>
+                    <li>
+                        <a  class="@btnkey" href="javascript:;" data-page="@(Model.PageCount)">
+                            @Model.PageCount</a>
+                    </li>
+                }
+                if (Model.PageIndex >= Model.PageCount - 1)
+                {
+                }
+                else
+                {
+                    <li>
+                        <a class="@btnkey" href="javascript:;" data-page="@(Model.PageCount)">
+                            最後一頁
+                            <span class="icon12 minia-icon-arrow-right-3"></span>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>

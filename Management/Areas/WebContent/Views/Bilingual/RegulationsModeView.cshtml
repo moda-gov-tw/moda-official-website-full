@@ -1,0 +1,37 @@
+﻿@model NewCommonModel
+@{
+    var ex = Model.wEBNewsExtends.FirstOrDefault(x => x.GroupID == "Regulations");
+}
+
+<div class="tab-pane fade  " id="@("Regulations"+Model.webNews.Lang)" role="tabpanel" aria-labelledby="@($"Regulations{Model.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">法規資訊</label>
+        <div class="col-sm-10 pt-3">
+            <span><input type="radio" name="@($"RegulationsType{Model.webNews.Lang}")" value="0" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(ex?.Column_2 == null ? "checked" : "") /> 無</span>
+            <span><input type="radio" name="@($"RegulationsType{Model.webNews.Lang}")" value="1" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(ex?.Column_2 != null ? "checked" : "") /> 有</span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>法規名稱</label>
+        <div class="col-sm-10">
+            <input name="@($"RegulationsTitle{Model.webNews.Lang}")" type="text" value="@ex?.Column_2" id="@($"RegulationsTitle{Model.webNews.Lang}")" class="form-control" placeholder="法規名稱">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>法規連結</label>
+        <div class="col-sm-10">
+            <input name="@($"RegulationsUrl{Model.webNews.Lang}")" type="text" value="@ex?.Column_1" id="@($"RegulationsUrl{Model.webNews.Lang}")" class="form-control" placeholder="法規連結">
+        </div>
+    </div>
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>()
+        {
+        new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"SaveRegulations('{Model.webNews.WEBNewsSN}', '{Model.webNews.Lang}')" },
+        new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction=$"backward(0)" },
+        };
+            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+</div>

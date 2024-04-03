@@ -1,0 +1,41 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+	var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!--標籤列表-->
+<section class="deptWork bg1">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+		<!-- 次標 -->
+		<h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+		
+		<div class="list1 row pb-4 g-3">
+			@if (item != null)
+            {
+				foreach(var news in item.TabNewsView.Take(9))
+				{
+					  var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value);
+					<div class="col-12 col-sm-6 col-lg-4">
+						<div class="card h-100 shadow-md">
+							<a href="@Url.Content(@news.DynamicURL)" class="card-body text-decoration-none" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+								<h4 class="card-title title5">@news.TabNews.Title</h4>
+								<p class="card-text">@news.TabNews.SubTitle</p>
+							</a>
+						</div>
+					</div>
+				}
+			}			
+		</div>
+
+		@if(item?.TabNewsView.Count() > 9)
+		{
+			<div class="btnBar1 text-center pt-3 pt-md-4 pb-3">
+				<a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({Model?.LevelView.BasicLevel.Title})")">
+					@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+					<span class="visually-hidden"> @("(" + item.BasicNews.Title + ")")</span>
+				</a>
+			</div>
+		}
+	</div>
+</section>

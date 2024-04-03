@@ -1,0 +1,113 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@if (Model != null)
+{
+    <section class="idxNews" data-aos="fade-up">
+        <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+            <!-- title -->
+            <div class="titleBar1 text-center">
+                <h2 class="title1 mb-2 mb-md-4">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+            </div>
+            <!-- content -->
+            <div class="row d-flex justify-content-center">
+                <div class="col">
+                    <ul class="nav nav-tabs justify-content-center" id="idxNewsTab" role="tablist">
+                        @if (Model?.NewsViews != null)
+                        {
+                            var i = 1;
+                            foreach (var item in Model.NewsViews)
+                            {
+                                <li class="nav-item px-1 px-md-3" role="presentation">
+                                    <button class="nav-link fw-normal lh-1 @(i == 1 ? "active" : "")" id="@("idxNewsTab" + i.ToString())" data-bs-toggle="tab"
+                                            data-bs-target="@("#idxNewsCon" + i.ToString())" type="button" role="tab" aria-controls="@("idxNewsCon" + i.ToString())"
+                                            aria-selected="true">
+                                        @Html.Raw(item.BasicNews.Title)
+                                    </button>
+                                </li>
+                                i++;
+                            }
+                        }
+                    </ul>
+                    <div class="tab-content" id="idxNewsTabContent">
+                        @if (Model?.NewsViews != null)
+                        {
+                            var i = 1;
+                            foreach (var item in Model.NewsViews)
+                            {
+                                <div class="tab-pane fade @(i == 1 ? "show active" : "")" id="@("idxNewsCon" + i.ToString())" role="tabpanel" aria-labelledby="@("idxNewsCon" + i.ToString())">
+                                    <ul class="list4-2 list-group divider mb-5">
+                                        @if (item.BasicNews.MainSN == 434 && item.TabNewsView.Count() == 0)
+                                        {
+                                            <li class="list-group-item d-block bg-transparent px-0">
+                                                <a href="@(LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-11-2")?.Value)" title="@(LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-11-1")?.Value)" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel='noreferrer noopener'>
+                                                    <div class="listDate ms-md-3 order-md-2"></div>
+                                                    <div class="col mb-0">
+                                                        <b class="title5 fw-normal">
+                                                            @(LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-11-1")?.Value)<i class="bi bi-box-arrow-up-right"></i>
+                                                        </b>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        }
+                                        @foreach (var news in item.TabNewsView.Take(5))
+                                        {
+                                            <li class="list-group-item d-block bg-transparent px-0">
+                                                <a href="@news.DynamicURL" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" data-filetype="@news.fileType" @Html.Raw(CommFun.getattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value, news.fileType, news.fileTitle))>
+                                                    <div class="listDate ms-md-3 order-md-2">@Html.Raw(news.TabNews?.strDate.Value.ToString("yyyy-MM-dd"))</div>
+                                                    <div class="col mb-0">
+                                                        <b class="title5 fw-normal">
+                                                            @if (news.TabNews?.IsTop ?? false)
+                                                            {
+                                                                <i class="ci ci-pushpin"></i>
+                                                            }
+                                                            @Html.Raw(news.TabNews?.Title)
+                                                            @if (!string.IsNullOrEmpty(news.fileType))
+                                                            {
+                                                                <span class="fileTypeI">@Html.Raw(news.fileType.Replace(".",""))</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                if (!Services.CommonService.CheckLocalUrl(news.DynamicURL))
+                                                                {
+                                                                    <i class="bi bi-box-arrow-up-right"></i>
+                                                                }
+                                                            }
+                                                        </b>
+                                                    </div>
+                                                </a>
+                                                @if (news.NewsTags != null && news.NewsTags.Count() > 0)
+                                                {
+                                                    <div class="listTag2">
+                                                        @foreach (var tag in news.NewsTags)
+                                                        {
+                                                            <a href="javascript:;" class="btn" role="button">@Html.Raw(tag.Value)</a>
+                                                        }
+                                                    </div>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                    @if (item.TabNewsView?.Count() > 5)
+                                    {
+                                        <div class="btnBar1 text-center ">
+                                            <a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@( LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-36")?.Value +"("+item.BasicNews.Title+")")">
+                                                @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-36")?.Value
+                                                <span class="visually-hidden"> @("("+item.BasicNews.Title+")")</span>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                                i++;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+

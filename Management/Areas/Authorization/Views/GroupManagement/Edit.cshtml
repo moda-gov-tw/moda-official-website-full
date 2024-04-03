@@ -1,0 +1,379 @@
+﻿@model Services.Models.Authorization.EditModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a href="javascript:void();" class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" role="tab" aria-controls="basic" aria-selected="true">基本資料</a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void();" class="nav-link" id="authority-tab" data-bs-toggle="tab" data-bs-target="#authority" role="tab" aria-controls="authority" aria-selected="false">功能權限</a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void();" class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#account" role="tab" aria-controls="account" aria-selected="false">群組帳號</a>
+                </li>
+                <li class="nav-item ml-auto">
+                    @{
+                        var backbtn = new List<btnModel>()
+                    {
+                    new btnModel(){ Btntype= btnModel.btntype.回上一頁 , onclickFunction="backward()" }
+                    };
+                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="backbtn" />
+                    }
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active bootstrap-table" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+                    <div class="form-horizontal" id="tab1_div">
+                        <div class="row">
+                            <div class="col-12 px-2">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red">*</span>群組名稱
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input type="text" value="@Model.sysGroup.GroupName" id="GroupName" class="form-control" placeholder="群組名稱">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 px-2">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red">*</span>說明
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input type="text" value="@Model.sysGroup.Description" id="Description" class="form-control" placeholder="說明">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 px-2">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red">*</span>狀態
+                                    </label>
+                                    <div class="col-md-10 pt-3">
+                                        @{
+                                            var isLists = Model.sysGroup == null ? new List<string>() : new List<string>() { Model.sysGroup.IsEnable };
+                                            var IsEnableModel = new definitionModel() { HtmlType = definitionModel.htmlType.radion, IdName = "IsEnable", selectIds = isLists, NeedNull = false };
+                                            <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model="IsEnableModel" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-center uBtnList">
+                            @{
+                                var btnlist = new List<btnModel>()
+                            {
+                            new btnModel(){ Btntype= btnModel.btntype.儲存 , onclickFunction="checkedFun()" },
+                            new btnModel(){ Btntype= btnModel.btntype.取消 , onclickFunction="backward()" },
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btnlist" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="authority" role="tabpanel" aria-labelledby="authority-tab">
+                    <div class="form-horizontal" id="tab2_div">
+                        <div id="" class="simpleTree-mainContainer staticTree">
+                            站台
+                            @foreach (var webSite in Model.sysWebSites)
+                            {
+                                <div class="simpleTree-nodeContainer hasChild on">
+                                    <div class="simpleTree-indent"></div>
+                                    <div class="simpleTree-toggle"></div>
+                                    <div class="simpleTree-label">@($"{webSite.Title} ({webSite.Lang})")</div>
+                                </div>
+                                <div class="simpleTree-childrenContainer">
+                                    @foreach (var tree1 in Model.groupSectionByGroupModels.Where(x => x.ParentSN == null && x.SysSectionSN == 1).OrderBy(x => x.SortOrder))
+                                    {
+                                        <div class="simpleTree-nodeContainer hasChild ">
+                                            <div class="simpleTree-indent"></div>
+                                            <div class="simpleTree-toggle"></div>
+                                            <div class="simpleTree-label">@tree1.Title</div>
+                                        </div>
+                                        <div class="simpleTree-childrenContainer">
+                                            @foreach (var tree2 in Model.sysSections.OrderBy(x => x.SortOrder))
+                                            {
+                                                var _chk = Model.groupSectionByGroupModels.FirstOrDefault(x => x.WebSiteID == webSite.WebSiteID && tree2.SysSectionSN == x.SysSectionSN) != null ? true : false;
+
+                                                <div class="simpleTree-nodeContainer hasChild">
+                                                    <div class="simpleTree-indent"></div>
+                                                    <div class="simpleTree-label">@tree2.Title</div><span class="editBar1">
+
+                                                        <input type="checkbox" class="checkbox haveAuthorization" data-websiteid='@webSite.WebSiteID' @((_chk) ? "checked" : "") value="@tree2.SysSectionSN" />
+                                                    </span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+
+
+                                </div>
+                            }
+                            @foreach (var mailBox in Model.groupSectionByGroupModels.Where(x => x.ParentSN == null && x.SysSectionSN == 25).OrderBy(x => x.SortOrder))
+                            {
+                                <div class="simpleTree-nodeContainer hasChild ">
+                                    <div class="simpleTree-indent"></div>
+                                    <div class="simpleTree-toggle"></div>
+                                    <div class="simpleTree-label">@mailBox.Title</div>
+                                </div>
+                                <div class="simpleTree-childrenContainer">
+                                    @foreach (var tree2 in Model.groupSectionByGroupModels.Where(x => x.ParentSN == mailBox.SysSectionSN).OrderBy(x => x.SortOrder))
+                                    {
+                                        <div class="simpleTree-nodeContainer hasChild on">
+                                            <div class="simpleTree-indent"></div>
+                                            <div class="simpleTree-label">@tree2.Title</div><span class="editBar1">
+                                                <input type="checkbox" class="checkbox haveAuthorization" data-websiteid='' @(tree2.haveAuthorization ? "checked" : "") value="@tree2.SysSectionSN" />
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            系統
+                            @foreach (var tree1 in Model.groupSectionByGroupModels.Where(x => x.ParentSN == null && x.SysSectionSN != 1 && x.SysSectionSN != 25).OrderBy(x => x.SortOrder))
+                            {
+                                <div class="simpleTree-nodeContainer hasChild ">
+                                    <div class="simpleTree-indent"></div>
+                                    <div class="simpleTree-toggle"></div>
+                                    <div class="simpleTree-label">@tree1.Title</div>
+                                </div>
+                                <div class="simpleTree-childrenContainer">
+                                    @foreach (var tree2 in Model.groupSectionByGroupModels.Where(x => x.ParentSN == tree1.SysSectionSN).OrderBy(x => x.SortOrder))
+                                    {
+                                        <div class="simpleTree-nodeContainer hasChild on">
+                                            <div class="simpleTree-indent"></div>
+                                            <div class="simpleTree-label">@tree2.Title</div><span class="editBar1">
+                                                <input type="checkbox" class="checkbox haveAuthorization" data-websiteid='' @(tree2.haveAuthorization ? "checked" : "") value="@tree2.SysSectionSN" />
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <div class="form-group text-center uBtnList">
+                            @{
+                                var btnlist2 = new List<btnModel>()
+                            {
+                            new btnModel(){ Btntype= btnModel.btntype.儲存 , onclickFunction="GroupFun()" }
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btnlist2" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="account" role="tabpanel" aria-labelledby="account-tab">
+                    <div class="pb-3">
+                        <input type="button" value="新增人員" class="ubtn-add" onclick="AddUsers()" />
+                    </div>
+                    <div id="tableList">
+                    </div>
+                    <div id="UsersArea"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="SysGroupSN" value="@CommonUtility.GetUrlAesEncrypt(Model.sysGroup.SysGroupSN.ToString())" />
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        function backward() {
+            SetCookie('back', 1);
+            window.location.assign("@Url.Action("Index", "GroupManagement", new { area = "Authorization" })");
+        }
+        function checkedFun() {
+            var error = "";
+            var sysgroupsn = $("#SysGroupSN").val();
+            var groupname = $("#GroupName").val();
+            var description = $("#Description").val();
+            var isenable = $("input[name=IsEnable]:checked").val();
+            if (strIsNull(groupname)) error += "群組名稱空白 \n";
+            if (error != "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: error
+                });
+            } else {
+                var model = {
+                    sysgroupsn: sysgroupsn,
+                    groupname: groupname,
+                    description: description,
+                    isenable: isenable
+                };
+                Swal.fire({
+                    title: '確定要儲存?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        saveFun(model);
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        function saveFun(obj) {
+            $('.preloader').show();
+            $.ajax({
+                url: "@Url.Action("Edit", "GroupManagement", new { area = "Authorization" } )",
+                data: { data: obj, sn: obj.sysgroupsn },
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "儲存成功"
+                        }).then(result => {
+                            backward();
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function GroupFun() {
+            var obj = [];
+            Swal.fire({
+                icon: "info",
+                title: "確定修改權限嗎??",
+                showCancelButton: true
+            }).then(result => {
+                $('.preloader').show();
+                if (result.isConfirmed) {
+                    $(".haveAuthorization").each(function() {
+                        obj.push({
+                            haveAuthorization: $(this).prop("checked"),
+                            webSiteid: getObjAtr($(this), "data-websiteid"),
+                            syssectionsn: MODAhtmlEncode($(this), "val"),
+                        });
+                    });
+                    GroupSave(obj);
+                }
+                else {
+                    $('.preloader').hide();
+                }
+            })
+        }
+        function GroupSave(obj) {
+            $.ajax({
+                url: "@Url.Action("EditGroup", "GroupManagement", new { area = "Authorization" } )",
+                data: {
+                    data: obj,
+                    sn: MODAhtmlEncode($("#SysGroupSN"), "val")
+                },
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "群組儲存成功"
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                },
+                complete: function() {
+                    $('.preloader').hide();
+                }
+            });
+        }
+        var href = "@Url.Action("UserGroupList", "GroupManagement", new { area = "Authorization" })";
+        GetUserGroupList(1);
+        $(document).on("click", ".page_b", function() {
+            var p = getObjAtr($(this), "data-page");
+            GetUserGroupList(p);
+        });
+        function GetUserGroupList(p) {
+            var key = $("#SysGroupSN").val();
+            var getUrl = "?key=" + key + "&p=" + p
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function() { });
+        }
+        function AddUsers() {
+            $("#UsersArea").load("@Url.Action("SelectorUser", "Common", new { area = "" })", function() {
+                UserSelectorGetUsers($("#SysGroupSN").val()).then(function(result) {
+                    if (JSON.parse(result).length == 0) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "未選取任何帳號"
+                        });
+                        return;
+                    }
+                    $('.preloader').show();
+                    $.ajax({
+                        url: "@Url.Action("AddGroupUser", "GroupManagement", new { area = "Authorization" } )",
+                        data: {
+                            data: JSON.parse(result),
+                            sn: $("#SysGroupSN").val()
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        type: 'post',
+                        dataType: "json",
+                        success: function(data) {
+                            $('.preloader').hide();
+                            if (data.statusCode == 200) {
+                                GetUserGroupList(1);
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "新增帳號成功"
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                })
+            });
+        }
+        $(function() {
+            $(".simpleTree-toggle").click(function() {
+                if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+                    $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+                } else {
+                    $(this).parents(".simpleTree-nodeContainer").addClass("on");
+                }
+            });
+        });
+    </script>
+}

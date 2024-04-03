@@ -1,0 +1,163 @@
+﻿@model Management.Areas.WebContent.Models.TABModel
+
+<div class="bootstrap-table">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+    @if (Model.newCommonModels.Count() > 0)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+            @foreach (var lan in Model.sysWebSiteLangs)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"")" id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw"?"中文":"英文")</a>
+                </li>
+            }
+        </ul>
+    }
+    <hr />
+    <div class="form-horizontal tab-content">
+        @if (Model.newCommonModels.Count() == 0)
+        {
+            var newCommonModel = new NewCommonModel() { webNews = new WEBNews() { Lang = "zh-tw" }, wEBNewsExtends = new List<WEBNewsExtend>() { new WEBNewsExtend() { Column_1 = "" } } };
+            <partial name="~/Areas/WebContent/Views/Tab/TabView.cshtml" model="newCommonModel" />
+        }
+        else
+        {
+            int i = 0;
+            foreach (var lan in Model.newCommonModels)
+            {
+                lan.wEBNewsExtends.Add(new WEBNewsExtend() { Column_1 = (Model.relWebLevel[i] != null ? Model.relWebLevel[i].Title : "") });
+                <partial name="~/Areas/WebContent/Views/Tab/TabView.cshtml" model="lan" />
+                i++;
+            }
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function Save(IsEnable, lan) {
+        var saveHref = '@Url.Action("WEBNewsSave", "NEWS", new { area = "WebContent" })';
+        var isEnable = MODAhtmlEncode($('input[name=IsEnable' + lan + ']:checked'), "val");
+        var contenttext = "";
+        var obj = {
+            webNewssn: '@(Model.wEBNews == null? 0 : Model.wEBNews.WEBNewsSN)',
+            weblevelsn: '@Model.webLevel.WebLevelSN',
+            module: '@Model.webLevel.Module',
+            articletype: "",
+            title: MODAhtmlEncode($("#Title" + lan), "val"),
+            subtitle: "",
+            description: "",
+            contenttext: contenttext,
+            url: MODAhtmlEncode($("#URL" + lan), "val"),
+            target: "",
+            youtubeid: "",
+            istop: "",
+            isenable: isEnable,
+            startdate: MODAhtmlEncode($("#StartDate" + lan), "val"),
+            enddate: MODAhtmlEncode($("#EndDate" + lan), "val"),
+            sortorder: MODAhtmlEncode($("#SortOrder" + lan), "val"),
+            lang: lan
+        };
+        Swal.fire({
+            title: '確定要儲存?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '確定',
+            denyButtonText: '取消',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                SaveNews(obj, saveHref, IsEnable);
+            } else if (result.isDenied) {
+                Swal.fire('已取消!', '', 'info')
+            }
+        })
+    }
+    function SaveNews(obj, saveHref, IsEnable) {
+        $('.preloader').show();
+        $.ajax({
+            url: saveHref,
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    }
+                    );
+                    $("#fox_box").load("@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + ArticleID, function() { });
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    //使用News Selector
+    function NewsSelector(sn, title, lan) {
+        //$("input[name='URL']").val(sn);
+        //$('p').children('span').text(title);
+        $('#SP' + lan).text(title);
+        $("#URL" + lan).val(sn);
+        //$("#pWebLevelMSN"+lan).html(title);
+    }
+    function Newspup(lan) {
+        var websiteid = MODAhtmlEncode($("#drlWebSite"), "val");
+        var obj = {
+            popUrl: "@Url.Action("CommonWebNews", "Common",new  {area ="" , webLevelManagment = Utility.EnumWeblevelType.WebLevelManagment})&websiteid=" + websiteid + "&lan=" + lan + "&disabled=" + false
+        };
+        pop(obj);
+    }
+    function backward() {
+        var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + ArticleID;
+        $("#fox_box").load(href, function() { });
+    }
+    function Delete() {
+        var href = '@Url.Action("WEBNewsDelete", "NEWS", new { area = "WebContent" })';
+        Swal.fire({
+            title: '確定要刪除?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '刪除',
+            denyButtonText: '不要刪除',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: href,
+                    type: 'post',
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    data: {
+                        webNewssn: '@(Model.wEBNews == null? 0 : Model.wEBNews.WEBNewsSN)'
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.statusCode == 200) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "更新成功"
+                            });
+                            backward();
+                        }
+
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('已取消!', '', 'info')
+            }
+        })
+    }
+</script>

@@ -1,0 +1,50 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+	var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="deptList">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+		<!-- 次標 -->
+		<h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+        <ul class="list4-2 list-group divider pb-4" id="ListTable">
+            @if (item != null)
+            {
+                foreach (var news in item.TabNewsView.Take(5))
+                {
+                    var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+
+                    <li class="list-group-item d-block bg-transparent px-0">
+                        <a href="@news.DynamicURL" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}" : "") target="@tagModel.target">
+                            <div class="col mb-0 listIcon1">
+                                <b class="title5 fw-normal">
+                                    @news.TabNews.Title
+                                    @if (!string.IsNullOrEmpty(news.fileType))
+                                    {
+                                        var vs = news.fileType.ToUpper().Split('.');
+                                        <span class="fileTypeI">@(vs.Length > 1 ? vs[1] : "")</span>
+                                    }
+                                    @if (!Services.CommonService.CheckLocalUrl(news.DynamicURL))
+                                    {
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    }                                   
+                                </b>
+                            </div>
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+
+		@if(item?.TabNewsView.Count() > 9)
+		{
+			<div class="btnBar1 text-center pt-3 pt-md-4 pb-3">
+				<a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({Model?.LevelView.BasicLevel.Title})")">
+					@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+                    <span class="visually-hidden"> @("(" + item.BasicNews.Title + ")")</span>
+				</a>
+			</div>
+		}
+	</div>
+</section>

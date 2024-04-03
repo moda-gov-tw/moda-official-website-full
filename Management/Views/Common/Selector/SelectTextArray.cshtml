@@ -1,0 +1,234 @@
+﻿@model SelectTextArrayModel
+@{
+    var i = 0;
+}
+@switch (Model.selectTextType)
+{    
+    case selectTextType.onlyText:
+            <label class="col-sm-2 col-form-label text-sm-right">@Model.title</label>
+            <div class="col-sm-10">
+                <div>
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th class="colW1">△▽</th>
+                                <th>@Model.txtName</th>
+                                <th class="colW5"></th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td> <input type="text" id=@($"txt{Model.IdName}") class="col-sm-8 form-control text-sm-left" value="" /></td>
+                                <td>
+                                    @{
+                                        var btn0 =
+                                new List<btnModel>()
+                    {
+                            new btnModel() { jsUseClassName = "add" + Model.IdName, Btntype = btnModel.btntype.確認新增 }
+                    };
+                                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn0" />
+                                    }
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id=@($"tbody{Model.IdName}")>
+                            @foreach (var item in Model.SelectTxts)
+                            {
+                            i++;
+                            <tr class=@($"class{Model.IdName}") data-txt="@item.txt" data-val="@item.val">
+                                    <td class=@($"sort{Model.IdName}")>@(i)</td>
+                                    <td> 
+                                        <input type="text" class="@($"classtxt{Model.IdName}") col-sm-8 form-control text-sm-left "  value="@item.txt" disabled >
+                                    </td>
+                                    <td>
+                                        @{
+                                            var Dbtn0 =
+                                        new List<btnModel>()
+                        {
+                            new btnModel() { jsUseClassName = "edit" + Model.IdName, Btntype = btnModel.btntype.編修 },
+                            new btnModel() { jsUseClassName = "del" + Model.IdName, Btntype = btnModel.btntype.刪除 }
+                        };
+                                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="Dbtn0" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <input type="hidden" id=@Model.IdName value="@(JsonConvert.SerializeObject(Model.SelectTxts))" />
+      
+        break;
+    case selectTextType.TwoControl:
+       
+            <label class="col-sm-2 col-form-label text-sm-right">@Model.title</label>
+            <div class="col-sm-10">
+                <div>
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th class="colW1">△▽</th>
+                                <th>@Model.valName</th>
+                                <th>@Model.txtName</th>
+                                <th class="colW5"></th>
+                            </tr>
+                            <tr class="@($"class{Model.IdName}")">
+                                <td></td>
+                                <td> <input type="text" id=@($"val{Model.IdName}") class="col-sm-8 form-control text-sm-left" value=""  /></td>
+                                <td> <input type="text" id=@($"txt{Model.IdName}") class="col-sm-8 form-control text-sm-left" value="" /></td>
+                                <td>
+                                    @{
+                                        var btn =
+                                new List<btnModel>()
+                    {
+                            new btnModel() { jsUseClassName = "add" + Model.IdName, Btntype = btnModel.btntype.確認新增 }
+                    };
+                                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn" />
+                                    }
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody id=@($"tbody{Model.IdName}") >
+                            @foreach (var item in Model.SelectTxts)
+                            {
+                            i++;
+                            <tr class=@($"class{Model.IdName}") data-txt="@item.txt" data-val="@item.val">
+                                  <td class=@($"sort{Model.IdName}")>@(i)</td>
+                                    <td> 
+                                        <input type="text" class="@($"classval{Model.IdName}") col-sm-8 form-control text-sm-left "  value="@item.val" disabled >
+                                    </td>
+                                     <td> 
+                                        <input type="text" class="@($"classtxt{Model.IdName}") col-sm-8 form-control text-sm-left "  value="@item.txt" disabled >
+                                    </td>
+                                    <td>
+                                        @{
+                                            var Dbtn =
+                                        new List<btnModel>()
+                                            {
+                                                new btnModel() { jsUseClassName = "edit" + Model.IdName, Btntype = btnModel.btntype.編修 },
+                                                new btnModel() { jsUseClassName = "del" + Model.IdName, Btntype = btnModel.btntype.刪除 }
+                                            };
+                                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="Dbtn" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <input type="hidden" id=@Model.IdName value="@(JsonConvert.SerializeObject(Model.SelectTxts))" />
+       
+        break;
+}
+<script src="@Url.Content("~/jquery-ui/jquery-ui.min.js")"></script>
+<script>
+    var iCount@(Model.IdName.Replace("-","")) = @(i);
+     $("#tbody@($"{Model.IdName}")" ).sortable({update: function(event,ui){
+        var newSort = 1;
+        $(".sort@($"{Model.IdName}")").each(function(){
+            $(this).html(newSort);
+            newSort++;
+        });
+     } });
+    $(document).off("click",".del@(Model.IdName)" ).on("click" , ".del@(Model.IdName)" , function(){
+        Swal.fire({
+                title: '確定要刪除？',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(this).parent().parent().remove();
+                    iCount@(Model.IdName.Replace("-",""))--;
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+     });
+     $(document).off("click",".add@(Model.IdName)" ).on("click",".add@(Model.IdName)" , function(){
+         var item = "";
+         var txt  = $("#txt@(Model.IdName)").val().trim();
+         var val  = $("#val@(Model.IdName)").val();
+         if( '@(Model.valName)' !='' )
+         {
+            if (( txt.trim() == "") || (val.trim() == "")) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請完整輸入"+'@(Model.title)'+"所需欄位"
+                });
+                return false;
+            }         
+         }else{
+            if ( txt.trim() == "" ) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "請完整輸入"+'@(Model.title)'+"所需欄位"
+                });
+                return false;
+            }
+         }
+
+         var idName= '@Model.IdName';
+         if(idName.indexOf('link') > -1 || idName.indexOf('moj') > -1)
+         {
+            if( txt.trim().substr(0,1) =='/' || txt.trim().substr(0,4) =='http'){}
+            else{
+                Swal.fire({
+                    icon: "warning",
+                    html: "<p style='font-size:18px'>請"+'@(Model.title)'+" 網址開頭部分<br>站內請以/，站外請以http or https  </p>"
+                    });
+                    return false;
+            } 
+         }
+         iCount@(Model.IdName.Replace("-",""))++;
+         if('@(Model.valName)' =='')
+         {            
+                item  = "<tr class='class@(Model.IdName)' data-txt='"+txt+"'  >";
+                item +="<td class='sort@(Model.IdName)'>"+iCount@(Model.IdName.Replace("-",""))  +"</td>";
+                item +="<td data-val='"+txt+"'>";
+                item +="<input type='text' class='classtxt@(Model.IdName) col-sm-8 form-control text-sm-left'  value='"+txt+"' disabled>";
+                item +="</td>";
+                item +="<td>";
+                item +=        "<input type='button' class='ubtn-edit edit@(Model.IdName)' value='編修' />";
+                item +=        "<input type='button' class='ubtn-delete del@(Model.IdName)' value='刪除' />";
+                item +="</td>";
+                item +="</tr>";
+         }else{
+                item  = "<tr class='class@(Model.IdName)' data-txt='"+txt+"' data-val='"+val.trim()+"' >";
+                item +="<td class='sort@(Model.IdName)'>"+iCount@(Model.IdName.Replace("-",""))  +"</td>";
+                item +="<td data-val='"+val.trim()+"'>";
+                item +="<input type='text' class='classval@(Model.IdName) col-sm-8 form-control text-sm-left'  value='"+val.trim()+"' disabled>";
+                item +="</td>";
+                item +="<td data-txt='"+txt+"'>";
+                item +="<input type='text' class='classtxt@(Model.IdName) col-sm-8 form-control text-sm-left'  value='"+txt+"' disabled>";
+                item +="</td>";
+                item +="<td>";
+                item +=        "<input type='button' class='ubtn-edit edit@(Model.IdName)' value='編修' />";
+                item +=        "<input type='button' class='ubtn-delete del@(Model.IdName)' value='刪除' />";
+                item +="</td>";
+                item +="</tr>";
+         }
+         $("#txt@(Model.IdName)").val("");
+         $("#val@(Model.IdName)").val("")
+         $("#tbody@(Model.IdName)").append(item);
+         var array = [];
+         $.each($(".class@(Model.IdName)") , function(){
+            if('@Model.valName'==''){
+                array.push({val : null , txt : $(this).attr("data-txt").trim()  });
+            }else{
+                array.push({val : $(this).attr("data-val").trim() , txt : $(this).attr("data-txt").trim()  });
+            }
+         });
+         $("#@(Model.IdName)").val(JSON.stringify(array));
+     });
+     $(document).off("click",".edit@(Model.IdName)").on("click" , ".edit@(Model.IdName)" ,function(){
+        $(this).parent().parent().find(".classtxt@(Model.IdName)").attr("disabled", false);
+        $(this).parent().parent().find(".classval@(Model.IdName)").attr("disabled", false);
+     });
+
+</script>

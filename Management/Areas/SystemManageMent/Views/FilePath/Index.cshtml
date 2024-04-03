@@ -1,0 +1,124 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var website = Services.WebSite.HomeService.GetSysWebSite();
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <h2 class="font-weight-bold mt-0">(檔案/圖檔/連結)查詢</h2>
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        類型：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-control" id="classType" name="classType">
+                                <option value="1">檔案</option>
+                                <option value="2">連結</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        關鍵字：
+                    </label>
+                    <input type="text" id="keyword" class="form-control" placeholder="關鍵字">
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        站台：
+                    </label>
+                    <select class="form-control" name="websiteid">
+                        <option value="">--請選擇--</option>
+                        @foreach (var data in website)
+                        {
+                            <option value="@data.WebSiteID">@data.Title</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label class="col-form-label">
+                        檔案類型：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-control" id="type" name="type">
+                                <option value="">--請選擇--</option>
+                                <option value="MD">MD</option>
+                                @{
+                                    var type = new Management.Models.Common.LoadUploadModel().GetFileType("0").Split(',');
+                                    foreach (var s in type)
+                                    {
+                                        <option value="@s">@s</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>() {
+                            new btnModel() { Btntype = btnModel.btntype.查詢, onclickFunction = "searchFunction(1)", jsUseClassName = "search" ,IdName="search" },
+                            new btnModel() { Btntype = btnModel.btntype.匯出, onclickFunction = "exportFunction()" ,IdName="export"},
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bootstrap-table">
+                <div id="tableBox">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script>
+    var href = "@Url.Action("List", "FilePath", new { area = "SystemManageMent" })";
+
+    function searchFunction(p) {
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+        var classType = MODASelectVal("classType");
+        var type =  MODASelectVal("type");
+        var getUrl = "?classType="+classType+"&key=" + keyword + "&websiteid=" + websiteid + "&type=" + type + "&p=" + p;
+        var pageUrl = href + getUrl;
+        reloadDataTable(pageUrl);
+    }
+    function exportFunction()
+    {
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var websiteid = chkwebsiteid(MODASelectVal("websiteid"));
+        var classType = MODASelectVal("classType");
+        var type =  MODASelectVal("type");
+        var getUrl = "?classType="+classType+"&key=" + keyword + "&websiteid=" + websiteid + "&type=" + type;
+        var exportUrl = "@Url.Action("Export", "FilePath", new { area = "SystemManageMent" })";
+        location.href = exportUrl + getUrl;
+    }
+
+    function reloadDataTable(href) {
+        $("#tableBox").html("");
+        $("#tableBox").load(href, function() {
+            $(document).off('click', '.page_a');
+            $(document).on("click", ".page_a", function() {
+                var p = getObjAtr($(this), "data-page");
+                searchFunction(p);
+            });
+        });
+    }
+
+    function chkwebsiteid(txt) {
+        switch (txt) {
+            case "MODA": return txt; break;
+            case "ACS": return txt; break;
+            case "ADI": return txt; break;
+            default: return ""; break;
+        }
+    }
+</script>
+}

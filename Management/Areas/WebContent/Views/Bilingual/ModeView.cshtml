@@ -1,0 +1,287 @@
+﻿@model NewCommonModel
+@{
+    var Customizes = Services.Authorization.WebLevelManagementService.GetCustomizeList(Model.webNews.WebLevelSN);
+    var webLevelData = Services.Authorization.WebLevelManagementService.GetWebLevel(Model.webNews.WebLevelSN);
+    var Module = webLevelData?.Module;
+    var ListType = webLevelData.ListType;
+    var easyData = ListType == "ImageTextList" ? "style=display:none;" : "";
+    easyData = "";
+}
+<div class="tab-pane fade  " id="@Model.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">類型</label>
+        <div class="col-sm-10 pt-3">
+            <span><input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="11" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(Model.webNews.ArticleType == null ? "checked" : (Model.webNews.ArticleType == "11" ? "checked" : "")) /> 無內文</span>
+            <span><input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="0" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(Model.webNews.ArticleType == null ? "checked" : (Model.webNews.ArticleType == "0" ? "checked" : "")) /> 一般資料格式</span>
+            <span><input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="2" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(Model.webNews == null ? "" : (Model.webNews.ArticleType == "2" ? "checked" : "")) /> URL 連結式</span>
+            <span><input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="1" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @(Model.webNews == null ? "" : (Model.webNews.ArticleType == "1" ? "checked" : "")) /> 檔案下載式</span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" id="@($"Title{Model.webNews.Lang}")" class="form-control" placeholder="標題">
+        </div>
+    </div>
+    <div class="form-group row" @easyData>
+        <label class="col-sm-2 col-form-label text-sm-right">Meta Description</label>
+        <div class="col-sm-10">
+            <input name="@($"SEODescription{Model.webNews.Lang}")" type="text" value="@Model.webNews?.SEODescription" id="@($"SEODescription{Model.webNews.Lang}")" class="form-control" placeholder="摘要描述，建議勿超過 150 字元">
+        </div>
+    </div>
+    <!--SEOKeywords-->
+    <div class="form-group row" @easyData>
+        <label class="col-sm-2 col-form-label text-sm-right">Meta Keywords</label>
+        <div class="col-sm-10">
+            <input name="@($"SEOKeywords{Model.webNews.Lang}")" type="text" value="@Model.webNews?.SEOKeywords" id="@($"SEOKeywords{Model.webNews.Lang}")" class="form-control" placeholder="關鍵字，如有多個，請以半形逗號隔開">
+        </div>
+    </div>
+    <!--str全部都有 ArticleType_0-->
+    <div id="@($"ArticleType_0{Model.webNews.Lang}")">
+        <div class="form-group row" style="display:none;">
+            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>版面呈現</label>
+            <div class="col-sm-10 pt-3">
+                <input type="radio" name="@($"PageViewType{Model.webNews.Lang}")" value="0" onclick="changePageViewType('@(Model.webNews.Lang)')" class="radio radio-inline " @(Model.webNews.PageViewType == null ? "checked" : (Model.webNews.PageViewType == "0" ? "checked" : "")) /> 自訂
+            </div>
+        </div>
+        <div class="form-group row" @easyData>
+            <label class="col-sm-2 col-form-label text-sm-right">內容描述</label>
+            <div class="col-sm-10">
+                <textarea name="@($"editor{Model.webNews.Lang.Replace("-","")}")" name="@($"editor{Model.webNews.Lang.Replace("-","")}")">@Model.webNews?.ContentText</textarea>
+            </div>
+        </div>
+        <!--str上傳-->
+        <div class="form-group row" @easyData>
+            @{
+                var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.News.InlineImgs,
+                file_trNumber = $"{Utility.WebFileGroupID.News.InlineImgs}{Model.webNews.Lang}",
+                needCopy = true,
+                title = "內嵌檔案",
+                FileType = "0",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+            }
+        </div>
+        <div class="form-group row" @easyData>
+            @{
+                var f2 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.News.Files,
+                file_trNumber = $"{Utility.WebFileGroupID.News.Files}{Model.webNews.Lang}",
+                title = "相關檔案",
+                FileType = "2",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="f2" />
+            }
+        </div>
+        <!--end上傳-->
+        <!--str上傳-->
+        <div class="form-group row" @easyData>
+            @{
+                var f3 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.News.Imgs,
+                file_trNumber = $"{Utility.WebFileGroupID.News.Imgs}{Model.webNews.Lang}",
+                FileType = "1",
+                title = "相關圖片",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="f3" />
+            }
+        </div>
+        <!--end上傳-->
+        <!--相關連結-->
+        <div id="@($"ArticleType_link{Model.webNews.Lang}")" @easyData>
+            <div class="form-group row">
+                @{
+                    var txtMoreModel = new SelectTextArrayModel()
+            {
+                IdName = $"link{Model.webNews.Lang}",
+                selectTextType = selectTextType.TwoControl,
+                txtName = "網址",
+                valName = "標題",
+                title = "相關連結",
+                SelectTxts = Model.wEBNewsExtends.Where(x => x.GroupID == "relatedlink").Select(x => new SelectTxt() { txt = x.Column_1, val = x.Column_2 }).ToList()
+            };
+                    <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="txtMoreModel" />
+                }
+            </div>
+        </div>
+        <!--相關影片-->
+        <div id="@($"ArticleType_video{Model.webNews.Lang}")">
+            <div class="form-group row">
+                @{
+                    var videoMoreModel = new SelectTextArrayModel()
+            {
+                IdName = $"video{Model.webNews.Lang}",
+                selectTextType = selectTextType.TwoControl,
+                txtName = "YOUTUBE代碼",
+                valName = "說明",
+                title = "相關影片",
+                SelectTxts = Model.wEBNewsExtends.Where(x => x.GroupID == "relatedvideo").Select(x => new SelectTxt() { txt = x.Column_1, val = x.Column_2 }).ToList()
+            };
+                    <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="videoMoreModel" />
+                }
+            </div>
+        </div>
+        <!--相關法律-->
+        <div id="@($"ArticleType_Moj{Model.webNews.Lang}")" @easyData>
+            <div class="form-group row">
+                @{
+                    var mojMoreModel = new SelectTextArrayModel()
+            {
+                IdName = $"moj{Model.webNews.Lang}",
+                selectTextType = selectTextType.TwoControl,
+                txtName = "網址",
+                valName = "說明",
+                title = "相關法規",
+                SelectTxts = Model.wEBNewsExtends.Where(x => x.GroupID == "relatedmoj").Select(x => new SelectTxt() { txt = x.Column_1, val = x.Column_2 }).ToList()
+            };
+                    <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="mojMoreModel" />
+                }
+            </div>
+        </div>
+
+    </div>
+    <!--end檔案下載式 ArticleType_0-->
+    <!--str檔案下載式 ArticleType_1-->
+    <div id="@($"ArticleType_1{Model.webNews.Lang}")">
+        <!--str上傳-->
+        <div class="form-group row">
+            @{
+                var f4 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.News.File,
+                file_trNumber = $"{Utility.WebFileGroupID.News.File}{Model.webNews.Lang}",
+                FileType = "0",
+                title = "相關檔案",
+                fth = "News",
+                lan = Model.webNews.Lang,
+                Required = 1
+            };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="f4" />
+            }
+        </div>
+        <!--end上傳-->
+    </div>
+    <!--end檔案下載式 ArticleType_1-->
+    <!--str URL 連結式 ArticleType_2-->
+    <div id="@($"ArticleType_2{Model.webNews.Lang}")">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>連結</label>
+            <div class="col-sm-10">
+                <input name="@($"URL{Model.webNews.Lang}")" type="text" value="@Model.webNews?.URL" id="@($"URL{Model.webNews.Lang}")" class="form-control" placeholder="連結">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">另開視窗</label>
+            <div class="col-sm-10 pt-3">
+                <input type="radio" name="@($"target{Model.webNews.Lang}")" value="_blank" class="radio radio-inline " @(Model.webNews == null ? "checked" : (Model.webNews.target == "_blank" ? "checked" : "")) /> 是
+                <input type="radio" name="@($"target{Model.webNews.Lang}")" value="_self" class="radio radio-inline " @(Model.webNews == null ? "" : (Model.webNews.target != "_blank" ? "checked" : "")) /> 否
+            </div>
+        </div>
+    </div>
+
+    <!--end URL 連結式  ArticleType_2-->
+    <!--end URL 連結式  ArticleType_3-->
+    <!--以下共用 -->
+    <div class="form-group row" @easyData>
+        @{
+            var keyModel = new SelectTextArrayModel()
+            {
+                IdName = $"key{Model.webNews.Lang}",
+                selectTextType = selectTextType.onlyText,
+                txtName = "關鍵字",
+                title = "關鍵字",
+                SelectTxts = Model.wEBNewsExtends.Where(x => x.GroupID == "keyword").Select(x => new SelectTxt() { txt = x.Column_1, val = x.Column_2 }).ToList()
+            };
+            <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="keyModel" />
+        }
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布單位</label>
+        <div class="col-sm-10">
+            <div>
+                @{
+                    var selectIds = new List<string>();
+                    var DepID = string.IsNullOrWhiteSpace(Model.webNews?.DepartmentID) ? Model.sysUserSysDepartmentID : Model.webNews?.DepartmentID;
+                    selectIds.Add(DepID);
+                    var depControl = new definitionModel()
+            {
+                IdName = $"dep{Model.webNews.Lang}",
+                selectIds = selectIds,
+
+            };
+                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@depControl />
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+@*        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+            <div class="col-sm-10 pt-3">
+                <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1" class="radio radio-inline " @(Model.webNews.IsEnable == "1" ? "checked" : "") @(Model.webNews.IsEnable == "3" ? "disabled" : "") /> <label for="1">發布</label>
+                <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0" class="radio radio-inline " @((Model.webNews.IsEnable == null ? "checked" : Model.webNews.IsEnable == "0" ? "checked" : Model.webNews.IsEnable == "-2" ? "checked" : "")) @(Model.webNews.IsEnable == "3" ? "disabled" : "") /><label for="0">不公開</label>
+            </div>
+        </div>*@
+@*        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>發布日期</label>
+            <div class="col-sm-10">
+                <input name="@($"StartDate{Model.webNews.Lang}")" step="1" type="datetime-local" value="@( Model.webNews == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"StartDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+            <div class="col-sm-10">
+                <input name="@($"EndDate{Model.webNews.Lang}")" type="datetime-local" step="1" value="@( Model.webNews == null? "" : Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"EndDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+            </div>
+        </div>*@
+        <!--靜態資料-->
+        <div class="form-group row @($"ArticleType_0{Model.webNews.Lang}")">
+            @if (Model.webNews.WEBNewsSN == 0)
+            {
+                <label class="col-sm-2 col-form-label text-sm-right">靜態化資訊</label>
+                <label class="col-sm-10 col-form-label text-sm-left">請先新增資料</label>
+            }
+            else
+            {
+                var StaticLinkModel = new StaticLink()
+                {
+                    MainSN = Model.webNews.MainSN,
+                    Lang = Model.webNews.Lang,
+                    WebSiteID = Model.webNews.WebSiteID,
+                    SourseTable = "webnews"
+                };
+                <partial name="~/Views/Common/StaticLink/Detail.cshtml" model="StaticLinkModel" />
+            }
+        </div>
+        <div class="form-group text-center uBtnList">
+            @{
+                var btns = new List<btnModel>()
+            {
+            new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save(1,'{Model.webNews.Lang}')" },
+            new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction=$"backward(0)" },
+            };
+                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+            }
+        </div>
+        <!--end 以下共用 -->
+    </div>
+</div>
+<script>
+    CKEDITOR.replace("@($"editor{Model.webNews.Lang.Replace("-", "")}")", {
+        customConfig: '/ckeditor/CMS1_config.js'   //載入Config file
+    });
+</script>

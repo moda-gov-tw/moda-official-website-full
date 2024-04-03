@@ -1,0 +1,107 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.IndexModel
+@{
+    var md = Model;
+    var tree = "";
+    void findTree(List<WebLevel> data, int ParentID)
+    {
+        var firstOn =  "";
+        var minData = data.GroupBy(x => new { x.WebLevelKey ,x.ParentSN,x.MainSN  }).Select(g=> g).ToList();
+        firstOn = ParentID == 0 ? "on" : "";
+        foreach (var d in minData.Where(x => x.Key.ParentSN == ParentID).OrderBy(x => x.First().SortOrder))
+        {
+
+            if (md.ParentSNOnList?.Count() > 0)
+            {
+                firstOn = md.ParentSNOnList.Any(x => x == d.Key.MainSN) ? "on" : "";
+            }
+
+            if (d.Key.WebLevelKey == null) return;
+            var zhData = d.FirstOrDefault(x => x.Lang == "zh-tw");
+            if (zhData == null) return;
+            var toggle = data.FirstOrDefault(x => x.ParentSN == zhData.WebLevelSN);
+            var togglediv = toggle != null ? "<div class='simpleTree-toggle'></div>" : "";
+            var ModuleType = d.First().Module;
+            var isCP = "";
+            var cpNewId = "";
+            var Module = "";
+            var Article = "";
+            var Auth = "";
+            var Level = "";
+            var Module_class = "treeDotEditBtn";
+            var Article_class = "treeConEditBtn";
+            var Auth_class = "treeRightEditBtn";
+            var levelSN = CommonUtility.GetUrlAesEncrypt(zhData.WebLevelSN.ToString());
+            var ChildNode = "ChildNode";
+            
+
+            if (ModuleType != "CP")
+            {
+                if (Model.GodMode)
+                {
+                    Module = levelSN;
+                    Article = levelSN;
+                    Auth = levelSN;
+                    Level = levelSN;
+                }
+                else
+                {
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Module")) { Module = levelSN; Level = levelSN; }
+                    else { Module_class = ""; Level = ""; }
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Article")) { Article = levelSN; }
+                    else if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Reviewer")) { Article = levelSN;}
+                    else { Article_class = ""; }
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Auth")) { Auth = levelSN; }
+                    else { Auth_class = ""; }
+                }
+            }
+            else {
+                var newData = Model.WEBCP.FirstOrDefault(x => x.WebLevelSN == zhData.WebLevelSN);
+                isCP = "CP";
+                cpNewId = newData?.WEBNewsSN.ToString();
+                if (Model.GodMode)
+                {
+                    Module = levelSN;
+                    Auth = levelSN;
+                    Level = levelSN;
+                    Article = levelSN;
+                }
+                else
+                {
+                    
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Module")) { Module = levelSN; Level = levelSN; }
+                    else { Module_class = ""; Level = ""; }
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Article")) { Article = levelSN; }
+                    else if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Reviewer")) { Article = levelSN;}
+                    else { Article_class = ""; }
+                    if (Model.authSysGroupWebLevels.Any(x => x.WebLevelSN == zhData.WebLevelSN && x.AuthType == "Auth")) { Auth = levelSN; }
+                    else { Auth_class = ""; }
+                }
+            }
+            var _twIsEnable = ParentID == 0 ? "" : d.FirstOrDefault(x => x.Lang == "zh-tw")?.IsEnable =="1" ?"(中)開":"(中)關";
+            var _enIsEnable = ParentID == 0 ? "" : d.FirstOrDefault(x => x.Lang == "en")?.IsEnable =="1" ?"(EN)開":"(EN)關" ;
+            var isEnable = ParentID ==0 ?"": $"<span>{_twIsEnable}/{_enIsEnable}</span>";
+            var moduleType = ModuleType == "DEPT" ? "PAGELIST" : ModuleType;
+            tree += $@"
+                    <div class='simpleTree-nodeContainer hasChild {firstOn}'>
+                        <div class='simpleTree-indent'></div>
+                        {togglediv }
+                        <div class='simpleTree-label ' data-type='{ChildNode}' data-id='{Level}'>{zhData.Title} {isEnable}</div>
+                            <span class='editBar1' data-ModuleType='{(moduleType)}'> 
+                                <a href='javascript:;' class='btn btn-sm {Module_class} btnOp' data-id='{Module}' data-type='Module' title='節點維護'><i class='fa fa-list-ul'></i></a>
+                                <a href='javascript:;' class='btn btn-sm {Article_class} {isCP} btnOp' data-ChildNode ='{Article}' data-id='{Article}' data-newId='{cpNewId}' data-type='Article' title='內容編修'><i class='fa fa-pencil-square-o'></i></a>
+                                <a href='javascript:;' class='btn btn-sm {Auth_class} uBtnPad1 btnOp' data-id='{Auth}' data-type='Auth' title='權限設定'><i class='fa fa-user'></i></a>
+                            </span>
+                         </div>
+            ";
+            if (data.Any(x => x.ParentSN == zhData.WebLevelSN))
+            {
+                tree += "<div class='simpleTree-childrenContainer hasChild'>  ";
+                findTree(data, zhData.WebLevelSN);
+                tree += "</div> ";
+            }
+        }
+
+    }
+    findTree(Model.levelForTrees, 0);
+}
+  @Html.Raw(tree)

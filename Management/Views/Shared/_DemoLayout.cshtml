@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+@{
+
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel ;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<html lang="@masterModel.SysWebSiteLang.Lang" class="webSitelanguage">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width,initial-scale = 1" />
+    <meta name="format-detection" content="telephone=no">
+    @RenderSection("meta", required: false)
+    <!-- favicon -->
+    @if (masterModel.SysWebSiteLang.WebSiteID == "MODA")
+    {
+        <link rel="shortcut icon" type="image/png" href="@Url.Content($"~/demo/assets/img/favicon.ico")">
+    }
+    else
+    {
+        <link rel="shortcut icon" type="image/png" href="@Url.Content($"~/demo/{masterModel.SysWebSiteLang.WebSiteID}/assets/img/favicon.ico")">
+    }
+    <link rel="apple-touch-icon" sizes="192x192" href="~/assets/img/touch-icon.png">
+    <!-- PWA -->
+    <!-- 套件css -->
+    <link rel="stylesheet" href="@Url.Content("~/demo/vendor/css/allVendor.css")" asp-append-version="true" media="all" />
+    <!-- 主要css -->
+    @switch (masterModel.SysWebSiteLang.WebSiteID)
+    {
+        case "MODA":
+            <link rel="stylesheet" href="@Url.Content("~/demo/assets/css/layout.css")" asp-append-version="true" media="all" />
+            break;
+        default:
+            <link rel="stylesheet" href="@Url.Content($"~/demo/{masterModel.SysWebSiteLang.WebSiteID}/assets/css/layout.css")" asp-append-version="true" media="all" />
+            break;
+    }
+    <link rel="stylesheet" href="@Url.Content("~/demo/vendor/css/prism.min.css")" asp-append-version="true" media="all" />
+    <!-- ======單獨這頁用的css end -->
+    @RenderSection("gacode", required: false)
+</head>
+<body class="d-flex flex-column min-vh-100  @(masterModel.SysWebSiteLang.WebSiteID=="MODA" ?"":masterModel.SysWebSiteLang.WebSiteID) ">
+    <noscript>
+        @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-48")?.Value
+    </noscript>
+
+    <div class="loading" id="loading"><span class="loadingLogo"></span></div>
+
+    <a href="#AC" id="startBrick" class="visually-hidden-focusable" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-49")?.Value">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-49")?.Value</a>
+    <header class="header">
+        <!-- header -->
+        @*<partial name="~/Area/Views/Home/Header.cshtml" />*@
+    </header>
+    <!-- main -->
+    @RenderBody()
+
+    <!-- footer -->
+    <footer class="ft mt-auto footer">
+ @*       <partial name="~/Area/Views/Home/Footer.cshtml" />*@
+    </footer>
+    <a href="#toTop" class="topBtn border border-2 border-white text-center rounded-circle" id="topBtn" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-50")?.Value"><i class="ci ci-top"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-50")?.Value</span></a>
+    <!-- 所有頁面共用的js -->
+    <!-- PWA -->
+    @*    <script src="@Url.Content("~/assets/js/sw.js")" asp-append-version="true"></script>*@
+    <!-- plugin -->
+    <script src="@Url.Content("~/demo/vendor/js/jquery-3.6.0.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/jquery-ui.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/bootstrap.bundle.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/bootstrap-submenu.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/swiper-bundle.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/aos.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/vendor/js/jquery.magnific-popup.min.js")" asp-append-version="true"></script>
+    <!-- main -->
+    @switch (masterModel.SysWebSiteLang.WebSiteID)
+    {
+        case "MODA":
+            <script src="@Url.Content("~/demo/assets/js/common.js")" asp-append-version="true"></script>
+            break;
+        default:
+            <script src="@Url.Content($"~/demo/{masterModel.SysWebSiteLang.WebSiteID}/assets/js/common.js")" asp-append-version="true"></script>
+            break;
+    }
+    @*  <script src="@Url.Content("~/assets/js/common.js")" asp-append-version="true"></script>*@
+    <script src="@Url.Content("~/demo/js/axios.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/demo/js/site.js")" asp-append-version="true"></script>
+     <script src='@Url.Content("~/demo/vendor/js/prism.js")' type='text/javascript' asp-append-version="true"></script> 
+    <script>
+        webSiteLange('@masterModel.SysWebSiteLang.Lang' ,'@masterModel.SysWebSiteLang.WebSiteID'  );
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

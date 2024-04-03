@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+{
+<link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+
+}
+@Html.AntiForgeryToken()
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item"><a href="@Url.Action("mailtous","Home")">寫信給我們</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+        <div class="step_main d-flex wrap5 flex-wrap">
+            <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                <div class="Step1 ">步驟一</div>
+                <div class="step fs-5 ps-3">認證電子信箱</div>
+            </div>
+            <div class="step_list d-flex align-items-center col-4 pb-md-5 not_yet">
+                <div class="Step2 ">步驟二</div>
+                <div class="step fs-5 ps-3">填寫意見內容</div>
+            </div>
+            <div class="step_list d-flex align-items-center col-4 pb-md-5 not_yet">
+                <div class="Step3 ">步驟三</div>
+                <div class="step fs-5 ps-3">案件成立</div>
+            </div>
+
+        </div>
+        <div>
+            <p style="text-indent: -1.9em;padding-left: 2em;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>為確認您可以收到我們的回信，請先認證電子信箱</p>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_email" class="form-label">電子信箱<span class="text-danger fs16">*</span></label>
+                    <input type="text" class="form-control" id="input_email" placeholder="XXX@OOO.com.tw">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_name" class="form-label">驗證</label>
+                    <div class="row g-3 flex-nowrap">
+                        <div class="col">
+                            <div id="myWidget"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div>
+                    <div class="px-4 py-4 rounded-4 check_box_bg2 my-4">
+                        <ol class=" mb-0">
+                            <li class="mb-3">輸入必填欄位<span class="text-danger">*</span>後請點擊「認證電子信箱」，並至您的電子信箱接收認證信。</li>
+                            <li class="mb-3">請於收到認證信後 @ViewBag.addHours 小時內完成認證，逾期請重新操作。</li>
+                            <li class="">若無法收到認證信，請至「垃圾郵件」查看或使用其他信箱。</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <input type="button" id="nextBtn" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" role="button" value="認證電子信箱" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts
+{
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_turnstileCb" async defer></script>
+<script>
+    var timeoutID = setInterval(_reSetTurnstileCb, 90000);
+    if(getCookie("agreement") != "true"){
+        location.replace("@Url.Action("mailtous", "Home")");
+    }
+    $("#nextBtn").click(function(){
+        FECommon.basicLoadingOn();
+        var saveHref = '@Url.Action("verifyemail", "Home")';
+        var chkemai = IsEmail($("#input_email").val());
+        if(chkemai== false)
+        {
+            FECommon.basicLoadingOff();
+            $("#input_email").focus();
+            SetMsgShowAlert(2, "", "請輸入正確的 Email 格式");
+        } else {
+            var obj ={
+                "email":$("#input_email").val(),
+                "cftoken" :cftoken
+            }
+            $.ajax({
+                url: saveHref,
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val()
+                },
+                dataType: "json",
+                success: function(data) {
+                    FECommon.basicLoadingOff();
+                    if (data.statusCode == 200) {
+                        SetCookie("certification",true);
+                        location.replace("@Url.Action("certification", "Home")");
+                    }else{
+                        SetMsgShowAlert(2,"",data.content);
+                        turnstile.reset("#myWidget");
+                    }
+                }
+            });
+        }
+    });
+    var cftoken;
+    sitekey = "@(AppSettingHelper.GetAppsetting("CloudFlareTurnstileSitekey"))"
+    _turnstileCb();
+</script>
+
+}

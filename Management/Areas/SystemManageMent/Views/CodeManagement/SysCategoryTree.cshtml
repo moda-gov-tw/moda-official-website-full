@@ -1,0 +1,43 @@
+﻿@model Management.Areas.SystemManageMent.Models.CodeManagement.IndexModel
+@using DBModel;
+@using Management.ManagementUtility;
+@{
+
+    var tree = "";
+    void findTree(List<SysCategory> data, string ParentKey)
+    {
+        foreach (var d in data.Where(x => x.ParentKey == ParentKey).OrderBy(x => x.SortOrder))
+        {
+            var toggle = data.FirstOrDefault(x => x.ParentKey == d.SysCategoryKey);
+            var togglediv = toggle != null ? "<div class='simpleTree-toggle'></div>" : "";
+            var ModuleType = d;
+
+            var Module_class = "treeConEditBtn";
+            var m_id = CommonUtility.GetUrlAesEncrypt(d.ParentKey.ToString());
+            var m_id2 = CommonUtility.GetUrlAesEncrypt(d.WebSiteID.ToString());
+            var data_id = CommonUtility.GetUrlAesEncrypt(d.SysCategoryKey.ToString());
+            var ison = "";
+            //var hidden = d.Lang == "en" ? "style=display:none": "";
+            if (ParentKey == "0")
+            {
+                ison = " on";
+            }
+            tree += $@"
+              <div class='simpleTree-nodeContainer hasChild{ison}' >
+              <div class='simpleTree-indent'></div>
+             {togglediv}
+              <div class='simpleTree-label btnOp' data-type='List' data-id='{data_id}' m_id2='{m_id2}'>{(string.IsNullOrWhiteSpace(d.Description) ? d.Lang : d.Description)}</div>
+              <span class='editBar1'>
+              <a href='javascript:; ' class='btn btn-sm {Module_class}  btnOp' m_id='{m_id}' m_id2='{m_id2}' data-id='{data_id}'  data-type='Edit' title='內容'><i class='fa fa-pencil-square-o'></i></a>
+              </span>
+              </div>
+              ";
+            tree += "<div class='simpleTree-childrenContainer hasChild'>  ";
+            findTree(data, d.SysCategoryKey);
+            tree += "</div> ";
+        }
+    }
+    findTree(Model.sysCategories, "");
+}
+ @Html.Raw(tree)
+

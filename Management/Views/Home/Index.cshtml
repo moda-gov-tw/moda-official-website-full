@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>全球資訊網後端管理系統</title>
+    <link rel="shortcut icon" type="image/png" href="/images/favicon.ico">
+    <!-- CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-extension.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/colors/default.css" rel="stylesheet" id="theme">
+    <link href="/sweetalert2/sweetalert2.min.css" rel="stylesheet" id="theme">
+    <!-- Js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sidebar-nav/metismenu.js"></script>
+    <script src="/js/jquery.slimscroll.min.js"></script>
+    <script src="/js/waves.js"></script>
+    <script src="/styleswitcher/jQuery.style.switcher.js"></script>
+    <script src="/js/custom.min.js"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.min.js")"></script>
+    <!--sweetalert2-->
+    @*<script src="@Url.Content("~/sweetalert2/sweetalert2.all.min.js")"></script>*@
+    <script src="@Url.Content("~/sweetalert2/sweetalert2.min.js")"></script>
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+    <section id="wrapper" class="login-register">
+        <div class="login-box">
+            <h1 class="logo1"><span class="sr-only">數位發展部</span></h1>
+            <div class="white-box">
+                <div class="form-horizontal form-material" id="loginform">
+                    <h2 class="box-title m-b-20 text-center">全球資訊網後端管理系統</h2>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input name="tbUserID" type="text" id="tbUserID" class="form-control"
+                                   placeholder="請輸入帳號" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input name="tbpwad" type="password" id="tbpwad" class="form-control"
+                                   placeholder="請輸入密碼" />
+                        </div>
+                    </div>
+                    <div class="form-group text-center m-t-30 m-b-10">
+                        <div class="col-xs-12">
+                            @{
+                                var btns = new List<btnModel>() { 
+                                    new btnModel() { IdName = "btnLogin", Btntype = btnModel.btntype.登入, onclickFunction = "login()"}  };
+                                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                    <div class="row mx-0 text-right" style="display:none">
+                        <div class="col-12 px-0">
+                            <a class="text-muted" href="@Url.Action("Forget","Home")"><i class="fa fa-lock m-r-5"></i>忘記密碼</a>
+                        </div>
+                    </div>
+                    <div style="display:none;">AD token : @ViewBag.token </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript">
+                 if ('@ViewBag.msg' != "") {
+                     Swal.fire({
+                         title: '@ViewBag.msg',
+                         icon: "warning"
+                     });
+                 }
+                 function login() {
+                     $('.preloader').show();
+                     var model = {
+                         ac: $("[name=tbUserID]").val(),
+                         psd: $("[name=tbpwad]").val(),
+                         captcha: $("[name=captcha]").val()
+                     };
+                     if (model.ac == "" || model.psd == "" ) {
+                         $('.preloader').hide();
+                         Swal.fire({
+                             icon: "warning",
+                             title: "請輸入帳號/密碼/驗證碼"
+                         }).then(result => {
+                         })
+                     }else{
+                     $.ajax({
+                         url: '@Url.Action("oldLogin", "Home")',
+                         data: { ac: model.ac, psd: model.psd, captcha: model.captcha },
+                         type: 'post',
+                         dataType: 'json',
+                         success: function (data) {
+                             $('.preloader').hide();
+                             if (data.statusCode == 200) {
+                                 location.href="@Url.Action("Index", "WebLevelManagement", new {area= "WebContent" })"
+                             } else {
+                                 $('.preloader').hide();
+                                 var info = data.content;
+                                 console.log(info);
+                                 if (info.isOver90days == true) {
+                                     Swal.fire({
+                                         icon: "warning",
+                                         title: info.message
+                                     }).then(result => {
+                                         location.href = info.resetOver90days;
+                                     });
+                                 } else {
+                                     Swal.fire({
+                                         icon: "warning",
+                                         title: info.message
+                                     }).then(result => {
+                                     });
+                                 }
+                             }
+                         }
+                     });
+                     }
+                 }
+    </script>
+</body>
+</html>

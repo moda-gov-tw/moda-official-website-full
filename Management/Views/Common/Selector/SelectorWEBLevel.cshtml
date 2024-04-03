@@ -1,0 +1,24 @@
+﻿@model definitionModel
+@{
+    var UserData = BaseController.UserData as Services.Models.sysUserModel;
+    var list = Services.CommonService.GetWEBLevel(UserData.WebSiteID);
+}
+<select id="@Model.IdName" name="@Model.IdName" class="form-control">
+    <option value="">--請選擇--</option>
+    @foreach (var lv1 in list.Where(x => x.ParentSN == 0).OrderBy(x => x.SortOrder))
+    {
+        <option value="@lv1.WebLevelSN" disabled=@(lv1.WebLevelSN == 1 || lv1.WebLevelSN == 2 || lv1.WebLevelSN == 3)>@lv1.Title</option>
+        foreach(var lv2 in list.Where(x => x.ParentSN == lv1.WebLevelSN).OrderBy(x => x.SortOrder))
+        {
+            <option value="@lv2.WebLevelSN">@("  "+lv1.Title+"-"+lv2.Title)</option>
+            foreach(var lv3 in list.Where(x => x.ParentSN == lv2.WebLevelSN).OrderBy(x => x.SortOrder))
+            {
+                <option value="@lv3.WebLevelSN">@("  " + lv1.Title+"-"+lv2.Title +"-"+lv3.Title)</option>
+                foreach(var lv4 in list.Where(x => x.ParentSN == lv3.WebLevelSN).OrderBy(x => x.SortOrder))
+                {
+                    <option value="@lv4.WebLevelSN">@("  " + lv1.Title+"-"+lv2.Title +"-"+lv3.Title + "-"+lv4.Title)</option>
+                }
+            }
+        }
+    }
+</select>

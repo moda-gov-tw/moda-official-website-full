@@ -1,0 +1,107 @@
+﻿@{
+    var masterModel = ViewData[$"WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var _WebSiteID = masterModel.Master.WebSiteID;
+    var _Lang = masterModel.Lang;
+    var LangSysCategory = masterModel.sysCategories;
+    var footerMenu = masterModel.FatFooterMenu.Where(x => x.Lang == _Lang);
+}
+
+<div class="a11yBrickBar1 wrap2 mx-auto px-3 px-md-4 px-lg-5"><a href="#AZ" id="AZ" accesskey="Z" class="a11yBrick" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-42")?.Value">:::</a></div>
+
+<div class="ftTop d-none d-lg-block">
+    <div class="wrap2 mx-auto px-4 px-lg-5">
+
+        <div class="ftNav off">
+            <div class="ftNavSwitchBar text-center w-100 position-relative">
+                <button type="button" class="ftNavSwitch ftNavSwitchJs btn rounded-circle position-absolute" data-opentitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-43")?.Value" data-closetitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-44")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-43")?.Value"><i class="fa-solid fa-chevron-up"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-43")?.Value</span></button>
+            </div>
+            <div class="ftNavLt row gx-5">
+                @foreach (var item in footerMenu.Where(x => x.ParentSN == footerMenu.Min(x => x.MainSN)).OrderBy(x => x.SortOrder).Take(6))
+                {
+                    var ChildData = footerMenu.Where(x => x.ParentSN == item.MainSN).ToList();
+                    var tagModel = CommFun.taggetattr(item.target, item.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                    <div class="col">
+                        <div class="ftNavLv1 text-lg text-white fs-5 border-bottom border-1 border-white">
+                            <a class="d-block text-white" href="@Url.Content(item.DynamicURL)" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? Html.Raw($@"rel=""{tagModel.rel}""") : "") target="@tagModel.target">
+                                <b class="d-block fw-light">@Html.Raw(item.Title)</b>
+                            </a>
+                        </div>
+                        @if (ChildData?.Count() > 0)
+                        {
+                            <div class="ftNavLv2">
+                                <div class="col">
+                                    <ul class="list-unstyled flex-column">
+                                        @foreach (var Child in ChildData.OrderBy(x => x.SortOrder))
+                                        {
+                                            var tagModel0 = CommFun.taggetattr(Child.target, Child.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                            <li>
+                                                <a href="@Url.Content(Child.DynamicURL)" class="d-block text-white" title="@tagModel0.title" @(!string.IsNullOrWhiteSpace(tagModel0.rel) ? Html.Raw($@"rel=""{tagModel0.rel}""") : "") target="@tagModel0.target">
+                                                    @Html.Raw(Child.Title)
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+            </div>
+        </div>
+        @if (masterModel.SocialMediaArea.Count() > 0)
+        {
+            <div class="ftSocial text-end pt-3">
+                @foreach (var item in masterModel.SocialMediaArea.Where(x => x.Img?.FilePath != ""))
+                {
+                    var tagModel2 = CommFun.taggetattr(item.BasicData.target, item.BasicData.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                    <a class="d-inline-block overflow-hidden text-white border border-white rounded-circle text-center align-top"
+                       href="@item.BasicData.URL" title="@tagModel2.title" @(!string.IsNullOrWhiteSpace(tagModel2.rel) ? Html.Raw($@"rel=""{tagModel2.rel}""") : "") target="@tagModel2.target">
+                        <span class="ci ci-ftSocialIcon lazy" data-bg="@item.Img?.FilePath"></span>
+                        <span class="visually-hidden">@item.BasicData.Title</span>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+<div class="ftBtm">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 fw-light fs-md-6">
+        <div class="row">
+            <div class="col-12 col-md">
+                <div class="ftBtmLogo mb-3">
+                    <a class="d-inline-block" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{masterModel.Lang}/index")">
+                        <!-- 淺色版面的logo -->
+                        <img class="mw-100 lightShow" src="@masterModel.ContactUsArea.LogoFile?.FilePath" width="340" height="56" alt="@masterModel.SysWebSiteLang.Title">
+                        <!-- 深色版面的logo -->
+                        <img class="mw-100 darkShow" src="@masterModel.ContactUsArea.DarkLogoFile?.FilePath" width="340" height="56" alt="@masterModel.SysWebSiteLang.Title">
+                    </a>
+                </div>
+                <div class="ftBtmRights">
+                    @Html.Raw(masterModel.ContactUsArea?.BasicLevel?.ContentHeader)
+                    <p class="mb-2 mb-md-0">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-47")?.Value <span id="spanDateNow"></span></p>
+                </div>
+            </div>
+            <div class="col-12 col-md text-md-end">
+                <ul class="listSlash list-unstyled list-inline">
+                    @{
+                        foreach (var item in masterModel.WebsiteAnnouncementArea)
+                        {
+                            var tagModel = CommFun.taggetattr(item.target, item.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                            <li class="list-inline-item">
+                                <a class="text-decoration-none" href="@Url.Content(item.DynamicURL)" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? Html.Raw($@"rel=""{tagModel.rel}""") : "") target="@tagModel.target">@Html.Raw(item.Title)</a>
+                            </li>
+                        }
+                    }
+                </ul>
+                @Html.Raw(masterModel.ContactUsArea?.BasicLevel?.ContentFooter)
+                <div class="col-md-auto">
+                    @if (!string.IsNullOrWhiteSpace(masterModel.AAimg?.FilePath))
+                    {
+                        <a class="d-inline-block" href="@masterModel.AAimg?.FileTitle" target="_blank" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-45")?.Value"><img src="@masterModel.AAimg?.FilePath" width="127" height="45" alt="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-46")?.Value"></a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

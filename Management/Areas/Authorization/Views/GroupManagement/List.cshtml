@@ -1,0 +1,115 @@
+﻿@model Management.Areas.Authorization.Models.GroupManagement.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+    var total = Model.defaultPager.TotalCount;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="sortTh" data-title="GroupName" onclick="sortTh(1,$(this))">名稱<button type="button" class="sortIcon sortNo "></button></th>
+            <th scope="col" class="sortTh" data-title="Description" onclick="sortTh(1,$(this))">描述<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW2 sortTh" data-title="UsersCount" onclick="sortTh(1,$(this))">人數<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW2 sortTh" data-title="SectionCount" onclick="sortTh(1,$(this))">功能數<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW4 sortTh" data-title="ProcessDate" onclick="sortTh(1,$(this))">最後修改時間<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW2 sortTh" data-title="IsEnable" onclick="sortTh(1,$(this))">狀態<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW2 sortTh" data-title="SortOrder" onclick="sortTh(1,$(this))">排序<button type="button" class="sortIcon sortNo"></button></th>
+            <th scope="col" class="colW5 ">功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.SysGroups.Count > 0)
+        {
+            foreach (var data in Model.SysGroups)
+            {    
+                var indexsort = Model.SortData.FindIndex(x => x == data.SortOrder.Value) + 1;
+             
+                var SysGroupSN = CommonUtility.GetUrlAesEncrypt(data.SysGroupSN.ToString());
+                <tr>
+                    <td>@row</td>
+                    <td>@data.GroupName</td>
+                    <td align="left">@data.Description</td>
+                    <td>@data.UsersCount</td>
+                    <td>@data.SectionCount</td>
+                    <td>@data?.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@(data.IsEnable == "1" ? "啟用" : "停用")</td>
+                    <td>
+                        <select onchange="ReArrange($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.SysGroupSN.ToString())">
+                            @for (int sort = 1; sort <= total; sort++)
+                            {
+                                <option selected="@(sort == indexsort)" value="@(sort)">@(sort)</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        @{
+                            var btns = new List<btnModel>()
+                {
+                new btnModel(){ onclickFunction ="buttonFunction($(this))" ,  attr_data_id=SysGroupSN , attr_data_type="ability"  , Btntype= data.IsEnable == "1" ? btnModel.btntype.停用 : btnModel.btntype.啟用 }
+                };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                        <a class="ubtn-edit" href="@Url.Action("Edit", "GroupManagement", new { area = "Authorization", key = CommonUtility.GetUrlAesEncrypt(data.SysGroupSN.ToString()) })">編修</a>
+                        @{
+                            var btns2 = new List<btnModel>()
+                {
+                new btnModel(){ onclickFunction ="buttonFunction($(this))" ,  attr_data_id=SysGroupSN , attr_data_type="delete"  , Btntype= data.CanDelete != "0"  ? btnModel.btntype.刪除 : btnModel.btntype.不可編輯 }
+                };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns2" />
+                        }
+                    </td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model.SysGroups.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}
+@Html.AntiForgeryToken()
+<script>
+    function ReArrange(e){
+        var data_id = e.attr("data-id");
+        var sort = e.find(':selected').val();
+        var Url = "@Url.Action("ReArrange", "GroupManagement", new { area = "Authorization" })";
+        $.ajax({
+            url: Url,
+            data: {
+                key: data_id,
+                sort: sort
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    searchFunction(1);
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+
+</script>

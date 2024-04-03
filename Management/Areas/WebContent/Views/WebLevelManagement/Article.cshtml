@@ -1,0 +1,208 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.ArticleModel
+
+<div class="bootstrap-table">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        關鍵字：
+                    </label>
+                    <input type="text" id="keyword" class="form-control" placeholder="關鍵字">
+                    <label class="col-form-label">
+                        語系：
+                    </label>
+                    <select id="language" class="form-control">
+                        <option value="zh-tw" selected>中文</option>
+                        <option value="en">英文</option>
+                    </select>
+                </div>
+                <div class="col col-dateToDate">
+                    <label class="col-form-label">
+                        發布日期：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="date" id="str" class="form-control" placeholder="yyyy/MM/dd">
+                        </div>
+                        <div class="col">~</div>
+                        <div class="col">
+                            <input type="date" id="end" class="form-control" placeholder="yyyy/MM/dd">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="col-form-label">
+                        資料狀態：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <select id="isenable" class="form-control">
+                                <option value="">--請選擇--</option>
+                                @foreach (var pair in Model.IsEnable)
+                                {
+                                    <option value="@pair.Key">@pair.Value</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col col-btn" @((Model.WebLevel.Module == Utility.SysConst.Module.NEWS.ToString())?"style=display:none;":"")>
+                            <input type="button" value="查詢" class="ubtn-search search" onclick="searchFunction(1)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col" @((Model.WebLevel.Module == Utility.SysConst.Module.NEWS.ToString())?"":"style=display:none;")>
+                    <label class="col-form-label">
+                        單位：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var DepModel = new definitionModel() { IdName = "dep" };
+                                    <partial name="~/Views/Common/Selector/SelectorDepartments.cshtml" model=@DepModel />
+                            }
+                        </div>
+                        <div class="col">
+                            <input type="button" value="查詢" class="ubtn-search search" onclick="searchFunction(1)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mx-0">
+                <div class="col text-end pb-3 px-0">
+                    @{
+                        var btns = new List<btnModel>();
+                         btns.Add(new btnModel() { Btntype = btnModel.btntype.新增 , IdName="btnNews" ,  onclickFunction="Create()" });
+                         <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model=@btns />
+                    }
+
+                </div>
+            </div>
+            <div class="bootstrap-table">
+                <div class="uTable3">
+                    <input type="hidden" name="sortType" data-title="SortOrder" data-sort="asc" />
+                    <div id="tableList">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var module = '@Model.WebLevel.Module';
+    var weblevelmsn = '@Model.WebLevel.WebLevelSN';
+    var lan = "";
+    var href = "@Url.Action("ArticleList", "WebLevelManagement", new { area = "WebContent" })";
+    var backperPageShow = 0;
+    var back = getCookie("back");
+    if (back == 1) {
+        var objstr = getCookie("NewsObj");
+        if (objstr != "") {
+            if (JSON.parse(objstr) != "") {
+                var obj = JSON.parse(objstr);
+                if (obj.key == weblevelmsn) {
+                    $('#perPageShow').val(obj.displayCount);
+                    backperPageShow = obj.displayCount;
+                    $("#key").val(obj.key);
+                    $("#keyword").val(obj.keyword);
+                    $("#str").val(obj.str);
+                    $("#end").val(obj.end);
+                    $("#isenable").val(obj.isenable);
+                    $("#dep").val(obj.dep);
+                    $('#language').val(obj.language);
+                    lan = obj.language;
+                    searchFunction(obj.p);
+                }
+                else {
+                    searchFunction(1);
+                }
+
+            } else {
+                searchFunction(1);
+            }
+        } else {
+            searchFunction(1);
+        }
+
+    } else {
+        searchFunction(1);
+    }
+    $(document).off('click', '.page_a');
+    $(document).on("click", ".page_a", function() {
+        var p = getObjAtr($(this), "data-page");
+        searchFunction(p);
+    });
+
+    function searchFunction(p) {
+        var key = '@Model.WebLevel.WebLevelSN';
+        var keyword = MODAhtmlEncode($("#keyword"), "val");
+        var str = MODAhtmlEncode($("#str"), "val");
+        var end = MODAhtmlEncode($("#end"), "val");
+        var isenable = MODAhtmlEncode($("#isenable"), "val");
+        var dep = MODAhtmlEncode($("#dep"), "val");
+        var language = MODAhtmlEncode($("#language"), "val");
+        var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+        var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+        var sorttitle= getObjAtr($("[name=sortType]") ,"data-title");
+        var sorttype=  getObjAtr($("[name=sortType]") ,"data-sort");
+        var selectobj = {
+            "displayCount": diCount,
+            "p": p,
+            "key": key,
+            "keyword": keyword,
+            "str": str,
+            "isenable": isenable,
+            "dep": dep,
+            "language": language,
+            "sorttitle":sorttitle,
+            "sorttype":sorttype
+        };
+        SetCookie("NewsObj", selectobj);
+        SetCookie("back", 1);
+        var getUrl = "?sorttitle="+sorttitle+"&sorttype="+sorttype+"&key=" + key + "&keyword=" + keyword + "&str=" + str + "&end=" + end + "&sts=" + isenable + "&dep=" + dep + "&lan=" + language + "&p=" + p;
+        var pageUrl =  encodeURI( href + getUrl);
+        reloadDataTable(pageUrl);
+    }
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function() {
+            var sortobj =  $("[name=sortType]");
+                $(".sortTh").each(function(){
+                    if($(this).attr("data-title")==sortobj.attr("data-title")){
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if(sortobj.attr("data-sort")!="asc"){
+                            sort = "sortDesc"
+                        }
+                         $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+        });
+    }
+    function Create() {
+        $("#fox_box").html("");
+        SetCookie("back", "");
+        Fun(weblevelmsn, "", module);
+    }
+    function EditFun(e) {
+        $("#fox_box").html("");
+        Fun(weblevelmsn, e, module);
+
+    }
+    function Fun(id, key2, type) {
+        var href = "@Url.Action("NewsType", "WebLevelManagement", new { area = "WebContent" })?key=" + id + "&key2=" + key2 + "&key3=" + type;
+        $("#fox_box").load(href, function() {
+            if (lan == "en") {
+                $(".nav-link").each(function() {
+                    if ($(this).attr("aria-controls") == "en") {
+                        $(this)[0].click();
+                    }
+                });
+            }
+        });
+    }
+
+    $("#language").change(function() {
+        lan = $("#language option:selected").val();
+    });
+</script>

@@ -1,0 +1,229 @@
+﻿@model Management.Areas.MailBox.Models.CaseApplyClass.DetailModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var WebSiteID = Management.BaseController.UserData.WebSiteID;
+    var ParentClass = Model.ParentClass?.FirstOrDefault(x => x.WebSiteID == WebSiteID && x.Value == "1");
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+
+            <div class="bootstrap-table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="font-weight-bold my-0">意見分類維護</h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-right pb-3">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal tab-content">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            <span style="color:red">*</span>分類代碼
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="CaseNo" type="text" value="@md?.caseApplyClass?.CaseNo" id="CaseNo" class="form-control" placeholder="意見分類代號" maxlength=200>
+                        </div>
+                    </div>
+                    @if (ParentClass != null)
+                    {
+                        <div class="form-group row">
+                            @{
+                                var sysCategoryKeys = md?.caseApplyClass?.SysCategoryKey != null ? md?.caseApplyClass?.SysCategoryKey : null;
+                                var sysC1 = new SelectorSysCategoryModal()
+                                {
+                                    IdName = $"SysCategoryKey",
+                                    parentKey = $"{WebSiteID}-10-2",
+                                    Lang = "zh-tw",
+                                    WebSiteId = WebSiteID,
+                                    multiple = false,
+                                    sysCategoryKeys = new List<string>() { sysCategoryKeys },
+                                    required = true
+                                };
+                                <partial name="~/Views/Common/Selector/SelectorSysCategory.cshtml" model="sysC1" />
+                            }
+                        </div>
+                    }
+                    <div class="form-group row">
+                        @if (ParentClass != null)
+                        {
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                <span style="color:red">*</span>網頁意見-小分類
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="CaseName" type="text" value="@md?.caseApplyClass?.CaseName" id="CaseName" class="form-control" placeholder="網頁意見-小分類" maxlength=200>
+                            </div>
+                        }
+                        else
+                        {
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                <span style="color:red">*</span>網頁意見分類
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="CaseName" type="text" value="@md?.caseApplyClass?.CaseName" id="CaseName" class="form-control" placeholder="網頁意見分類" maxlength=200>
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group row" style="display:none;">
+                        @if (ParentClass != null)
+                        {
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                網頁意見-小分類（EN）
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="CaseNameEN" type="text" value="@md?.caseApplyClass?.CaseNameEN" id="CaseNameEN" class="form-control" placeholder="網頁意見-小分類（EN）" maxlength=200>
+                            </div>
+                        }
+                        else
+                        {
+                            <label class="col-sm-2 col-form-label text-sm-right">
+                                網頁意見分類（EN）
+                            </label>
+                            <div class="col-sm-10">
+                                <input name="CaseNameEN" type="text" value="@md?.caseApplyClass?.CaseNameEN" id="CaseNameEN" class="form-control" placeholder="網頁意見分類（EN）" maxlength=200>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            <span style="color:red">*</span>承辦單位
+                        </label>
+                        <div class="col-sm-10">
+                            @{
+                                var DepModel = new definitionModel() { IdName = "SysDepartmentSN", selectIds = new List<string>() { md?.caseApplyClass?.SysDepartmentSN.ToString() }, AllWebsite = true };
+                                <partial name="~/Views/Common/Selector/SelectorDepartments2.cshtml" model=@DepModel />
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        @{
+                            var Tos = md?.caseApplyClassTos;
+                            var SelectTxts = Tos != null ? Tos.Select(x => new SelectTxt() { txt = x.Name, val = x.Email }).ToList() : new List<SelectTxt>();
+                            var txtMoreModel = new SelectTextArrayModel()
+            {
+                IdName = $"CCTo",
+                selectTextType = selectTextType.TwoControl,
+                txtName = "承辦者",
+                valName = "Email",
+                title = "承辦人員",
+                SelectTxts = SelectTxts
+            };
+                            <partial name="~/Views/Common/Selector/SelectTextArray.cshtml" model="txtMoreModel" />
+                        }
+                    </div>
+                    <div class="form-group row" style="display:none;">
+                        <label class="col-sm-2 col-form-label col-sm-2 col-form-label pt-0 d-flex justify-content-sm-end align-items-center flex-wrap text-break">
+                            公文子類別
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="CaseType" value="一般" class="radio radio-inline " checked=@( md?.caseApplyClass == null ?true : (md?.caseApplyClass?.CaseType=="一般")) /><span>一般綜合性</span>
+                            <input type="radio" name="CaseType" value="複合" class="radio radio-inline " checked=@(md?.caseApplyClass?.CaseType=="複合") /><span>複雜綜合性</span>
+                            <input type="radio" name="CaseType" value="其他" class="radio radio-inline " checked=@(md?.caseApplyClass?.CaseType=="其他") /><span>其他</span>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="display:none;">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            辦理天數
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="HandleDate" type="text" value="@md?.caseApplyClass?.HandleDate" id="HandleDate" class="form-control" placeholder="辦理天數" maxlength=2>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label col-sm-2 col-form-label pt-0 d-flex justify-content-sm-end align-items-center flex-wrap text-break">
+                            狀態
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="radio" name="IsEnable" value="1" class="radio radio-inline " checked=@(md?.caseApplyClass?.IsEnable=="1") /><span>啟用</span>
+                            <input type="radio" name="IsEnable" value="0" class="radio radio-inline " checked=@(md?.caseApplyClass == null ?true : ( md?.caseApplyClass?.IsEnable=="0")) /><span>停用</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">
+                            備註
+                        </label>
+                        <div class="col-sm-10">
+                            <input name="info" type="text" value="@md?.caseApplyClass?.info" id="info" class="form-control" placeholder="備註" maxlength=500>
+                        </div>
+                    </div>
+                    <div class="form-group text-center uBtnList">
+                        @{
+                            var btns = new List<btnModel>() {
+                        new btnModel() {  Btntype = btnModel.btntype.儲存, onclickFunction = "saveFun()"},
+                        new btnModel(){   Btntype = btnModel.btntype.取消 , onclickFunction="back()" }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+
+    <script>
+        function saveFun() {
+            var CCTo = txtAreaObj("CCTo");
+            var obj = {
+                CaseNo: $("[name='CaseNo']").val(),
+                CaseApplyClassSN: '@(md?.caseApplyClass?.CaseApplyClassSN)',
+                CaseName: $("[name='CaseName']").val(),
+                CaseNameEN: $("[name='CaseNameEN']").val(),
+                SysDepartmentSN: $("[name='SysDepartmentSN']").val(),
+                SysCategoryKey: $("#select_SysCategoryKey > option:selected").val(),
+                CaseType: $('input[name=CaseType]:checked').val(),
+                HandleDate: $("[name='HandleDate']").val(),
+                IsEnable: $('input[name=IsEnable]:checked').val(),
+                info: $("[name='info']").val(),
+                CCTo: CCTo,
+            };
+            $.ajax({
+                url: '@Url.Action("SaveCaseApplyClass", "CaseApplyClass", new { area = "MailBox" })',
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        }).then(function () {
+                            back();
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function back() {
+            SetCookie("back", 1);
+            location.href = '@Url.Action("Index", "CaseApplyClass", new { area = "MailBox" })';
+        }
+        function txtAreaObj(Name) {
+            var array = [];
+            $.each($(".class" + Name), function () {
+                var val = $(this).find(".classval" + Name).val() == undefined ? null : $(this).find(".classval" + Name).val();
+                var txt = $(this).find(".classtxt" + Name).val();
+                array.push({ val: val, txt: txt });
+            });
+            return array;
+        }
+    </script>
+}
+

@@ -1,0 +1,11 @@
+﻿@model definitionModel
+@{
+    var list = Services.CommonService.GetGroups();
+}
+<select id="@Model.IdName" name="@Model.IdName" class="form-control">
+    <option value="">--請選擇--</option>
+    @foreach (var g in list.OrderBy(x => x.SortOrder))
+    {
+        <option value="@g.SysGroupSN" selected="@(Model.selectIds.Any(x=> x== g.SysGroupSN.ToString()))">@g.GroupName</option>
+    }
+</select>

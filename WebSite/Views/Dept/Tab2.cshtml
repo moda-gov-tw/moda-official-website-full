@@ -1,0 +1,41 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!--圖示列表(六角)-->
+<section class="deptService">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <!-- 次標 -->
+        <h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+
+        <div class="list2 row text-center px-lg-5">
+            @if (item != null)
+            {
+                foreach (var news in item.TabNewsView.Take(8))
+                {
+                      var tagModel = CommFun.taggetattr(news.TabNews.target, news.TabNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value);
+                    <div class="col-6 col-sm-4 col-lg-3 pt-2 pb-2 pb-lg-4">
+                        <a href="@Url.Content(@news.DynamicURL)" class="d-block" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                            <div class="listPic">
+                                <div class="bg-full"></div>
+                                <span class="listIcon lazy" data-bg="@news.Logo?.FilePath"></span>
+                            </div>
+                            <h4 class="px-4 title5">@news.TabNews.Title</h4>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+        @if (item?.TabNewsView.Count() > 8)
+        {
+            <div class="btnBar1 text-center pt-3 pt-md-4 pb-3">
+                <a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({Model?.LevelView.BasicLevel.Title})")">
+                    @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+                    <span class="visually-hidden"> @("(" + item.BasicNews.Title + ")")</span>
+                </a>
+            </div>
+        }
+    </div>
+</section>

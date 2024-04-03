@@ -1,0 +1,137 @@
+﻿<div id="UsersSelecterUserModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-4">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="modal-title">人員清單</h3>
+            </div>
+            <div class="modal-body px-5 py-4">
+                <div class="form-group row mx-0">
+                    <div class="col col-sm-auto pl-0 pr-0 pr-sm-3">
+                        <label class="col-form-label py-3">
+                            單位：
+                        </label>
+                        <div class="uRow2 pr-0">
+                            <div class="uRow2-Col2-1 pr-0">
+                                <input type="button" class="ubtn-choose" onclick="DepSelector()" value="請選擇" /><label id="dep" data-id="" class="pl-2"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm pl-0 pr-0">
+                        <label class="col-form-label py-3">
+                            帳號/姓名：
+                        </label>
+                        <div class="uRow2">
+                            <div class="uRow2-Col2-1 pr-3">
+                                <input type="text" class="form-control" id="SelectorKeyword" placeholder="請輸入帳號或姓名" />
+                            </div>
+                            <div class="uRow2-Col2-2">
+                                <input type="button" class="ubtn-search mx-0" onclick="UserSelectorSearch(1)" value="查詢" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mx-0">
+                    <div class="col-12 px-0">
+                        <input type="button" class="btn ml-0" id="returnSelected" value="新增勾選名單" />
+                        <input type="button" class="btn" id="returnAll" value="新增全部查詢結果名單" />
+                    </div>
+                </div>
+                <div id="UserSelectorTableList"></div>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div id="DepArea"></div>
+<script>
+    var SelectedUsers = [];
+    var group = "";
+    function UserSelectorGetUsers(key) {
+        group = key;
+        UserSelectorSearch(1);
+        $('#UsersSelecterUserModal').modal('show');
+        return new Promise((resolve, reject) => {
+            $("#returnSelected")[0].addEventListener('click', function (e) {
+                $('input:checked[class="Listchkbox"]').each(function () {
+                    SelectedUsers.push({ 'userID': $(this).data('id') });
+                })
+                $('#UsersSelecterUserModal').modal('hide');
+                resolve(JSON.stringify(SelectedUsers));
+            }, { once: true });
+            $("#returnAll")[0].addEventListener('click', function (e) {
+                var AllUsers = "@Url.Action("SelectorAllUser", "Common", new { area=""} )";
+                $.ajax({
+                    url: AllUsers,
+                    data: { key: $("#SelectorKeyword").val(), dep: $("#dep").data("id"), group: group},
+                    type: 'post',
+                    success: function (data) {
+                        $('#UsersSelecterUserModal').modal('hide');
+                        resolve(data);
+                    }
+                });
+
+            }, { once: true });
+        });
+    }
+    function UserSelectorSearch(p) {
+        var href = "@Url.Action("SelectorUserList", "Common", new { area = "" })";
+        var key = MODAhtmlEncode($("#SelectorKeyword"),"val");
+        var dep = $("#dep").data("id");
+        var getUrl = "?key=" + key + "&dep=" + dep + "&group=" + group + "&p=" + p;
+        var pageUrl = href + getUrl;
+        console.log(pageUrl);
+        UserSelectorReloadDataTable(pageUrl);
+    }
+    $('#UserSelectorTableList').on("click", ".page_a", function () {
+        var p = getObjAtr($(this), "data-page");
+        SelectedUsersPush();
+        UserSelectorSearch(p);
+    });
+    function UserSelectorReloadDataTable(href) {
+        $("#UserSelectorTableList").html("");
+        $("#UserSelectorTableList").load(href, function () {
+            $('#UserSelectorSelectAll').change(function () {
+                var chkboxs = $('input[class="Listchkbox"]')
+                if (this.checked) {
+                    chkboxs.each(function () {
+                        $(this).prop("checked", true);
+                    })
+                }
+                else {
+                    chkboxs.each(function () {
+                        $(this).prop("checked", false);
+                    })
+                }
+            })
+            SelectedUsersPop();
+        });
+    }
+    @*叫用DepartmentSelector共用元件*@
+    function DepSelector() {
+        $("#DepArea").load("@Url.Action("TreeDepartment", "Common", new { area = "" })", function () {
+            @*load完成後才能叫用DepartmentSelector的function*@
+            DepartmentSelectorTrigger().then(function (result) {
+                var DepData = JSON.parse(result);
+                $('#dep').data('id', DepData.DepID);
+                $('#dep').html(DepData.DepName);
+            })
+        });
+    }
+    function SelectedUsersPush() {
+        $('input:checked[class="Listchkbox"]').each(function () {
+            SelectedUsers.push({ 'userID': $(this).data('id') });
+        })
+    }
+    function SelectedUsersPop() {
+        SelectedUsers = SelectedUsers.filter(function (item) {
+            var USchkbox = $('input[class="Listchkbox"][data-id="' + item.userID + '"]');
+            USchkbox.prop("checked", true);
+            return USchkbox.length == 0;
+        });
+    }
+</script>

@@ -1,0 +1,233 @@
+﻿@model List<Management.Areas.WebManagement.Models.OperationStatistics.CountryModel>
+@{
+    var md = Model;
+}
+<style type="text/css">
+    #legend {
+        font-weight: 700;
+        fill:#666;
+    }
+    #legend g text{
+        font-size: 0.8em;
+    }
+    .map {
+        background-color: #FFFFFF;
+        overflow-x: auto;
+    }
+    .map path{
+        cursor: pointer;
+    }
+    .background {
+        fill: transparent;
+        pointer-evens: all;
+    }
+    .world {
+        transform-origin: center;
+    }
+    div.tooltip {
+        position: absolute;
+        padding: 7px;
+        font-size: 0.8em;
+        pointer-events: none;
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div class="map">
+    <svg id="my_dataviz" width="1000" height="563"></svg>
+</div>
+<script>
+    var svg = d3.select("svg");
+    var width = svg.attr("width");
+    var height = svg.attr("height");
+    var path = d3.geoPath();
+    var data = d3.map();
+    var worldmap = "@Url.Action("GetGeoJson","BrowseStatistics",new {area="WebManagement"})";
+  //  var worldmap = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson";
+   
+    T1data = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(md))' );
+    var centered, world;
+
+    function CreateData()
+    {
+        T1data.forEach(function(e){
+        data.set(e.code, +e.pop);
+    });
+    }
+    CreateData();
+    // style of geographic projection and scaling
+    var projection = d3.geoRobinson()
+        .scale(161)
+        .translate([width / 2, height / 2]);
+    // Define color scale
+    var colorScale = d3.scaleThreshold()
+        .domain([10, 100, 1000, 20000, 30000, 40000, 50000])
+        .range(['#dddddd','#ead0a9','#a4b3d5','#b8e076','#85ceb7','#ffe159','#fda481','#e67c73']);
+
+    // add tooltip
+    var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    // Load external data and boot
+    d3.queue()
+        .defer(d3.json, worldmap)
+        .await(ready);
+
+    // Add clickable background
+    svg.append("rect")
+        .attr("class", "background")
+        .attr("width", width)
+        .attr("height", height)
+        .on("click", click);
+
+
+      // ----------------------------
+      //Start of Choropleth drawing
+      // ----------------------------
+
+    function ready(error, topo) {
+        // topo is the data received from the d3.queue function (the world.geojson)
+        // the data from world_population.csv (country code and country population) is saved in data variable
+        var mouseOver = function(d) {
+            d3.selectAll(".Country")
+                .transition()
+                .duration(200)
+                .style("opacity", .5)
+                .style("stroke", "transparent");
+            d3.select(this)
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                .style("stroke", "black");
+            tooltip.style("left", (d3.event.pageX + 15) + "px")
+                .style("top", (d3.event.pageY - 28) + "px")
+                .transition().duration(400)
+                .style("opacity", 1)
+                .text(d.properties.name + '：' + d.total);
+        }
+
+        var mouseLeave = function() {
+            d3.selectAll(".Country")
+                .transition()
+                .duration(200)
+                .style("opacity", 1)
+                .style("stroke", "transparent");
+            tooltip.transition().duration(300)
+                .style("opacity", 0);
+        }
+
+        // Draw the map
+        world = svg.append("g")
+        .attr("class", "world");
+        world.selectAll("path")
+            .data(topo.features)
+            .enter()
+            .append("path")
+            // draw each country
+            // d3.geoPath() is a built-in function of d3 v4 and takes care of showing the map from a properly formatted geojson file, if necessary filtering it through a predefined geographic projection
+            .attr("d", d3.geoPath().projection(projection))
+
+            //retrieve the name of the country from data
+            .attr("data-name", function(d) {
+                return d.properties.name
+            })
+
+            // set the color of each country
+            .attr("fill", function(d) {
+                d.total = data.get(d.id) || 0;
+                return colorScale(d.total);
+            })
+
+            // add a class, styling and mouseover/mouseleave and click functions
+            .style("stroke", "transparent")
+            .attr("class", function(d) {
+                return "Country"
+            })
+            .attr("id", function(d) {
+                return d.id
+            })
+            .style("opacity", 1)
+            .on("mouseover", mouseOver)
+            .on("mouseleave", mouseLeave)
+            .on("click", click);
+
+        // Legend
+        var x = d3.scaleLinear()
+            .domain([2.6, 75.1])
+            .rangeRound([600, 860]);
+
+        var legend = svg.append("g")
+            .attr("id", "legend");
+
+        var legend_entry = legend.selectAll("g.legend")
+            .data(colorScale.range().map(function(d) {
+                d = colorScale.invertExtent(d);
+                if (d[0] == null) d[0] = x.domain()[0];
+                if (d[1] == null) d[1] = x.domain()[1];
+                return d;
+            }))
+            .enter().append("g")
+            .attr("class", "legend_entry");
+
+        var ls_w = 20,
+            ls_h = 20;
+
+        legend_entry.append("rect")
+            .attr("x", 0)
+            .attr("y", function(d, i) {
+                return height - (i * ls_h) - ls_h;
+            })
+            .attr("width", ls_w)
+            .attr("height", ls_h)
+            .style("fill", function(d) {
+                return colorScale(d[0]);
+            })
+            .style("opacity", 0.8);
+
+        legend_entry.append("text")
+            .attr("x", 30)
+            .attr("y", function(d, i) {
+                return height - (i * ls_h) - 6;
+            })
+            .text(function(d, i) {
+                if (i === 0) return "< " + d[1];
+                if (d[1] < d[0]) return "> "+ d[0];
+                return d[0] + " - " + d[1];
+            });
+
+        legend.append("text").attr("x", 0).attr("y", function(d,i){
+            return height - (ls_h * 8) - 15;
+        }).text("瀏覽人次");
+    }
+
+    // Zoom functionality
+    function click(d) {
+    var x, y, k;
+
+    if (d && centered !== d) {
+        var centroid = path.centroid(d);
+        x = -(centroid[0] * 6);
+        y = (centroid[1] * 6);
+        k = 3;
+        centered = d;
+    } else {
+        x = 0;
+        y = 0;
+        k = 1;
+        centered = null;
+    }
+
+    world.selectAll("path")
+        .classed("active", centered && function(d) { return d === centered; });
+
+    world.transition()
+        .duration(750)
+        .attr("transform", "translate(" + x + "," + y + ") scale(" + k + ")" );
+
+    }
+
+
+</script>

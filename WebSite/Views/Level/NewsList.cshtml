@@ -1,0 +1,438 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using System.Net;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var Category = Model.langCategory;
+    var noNeedDateListType = new List<string>() { "BilingualList" };
+    var NeedDateList = noNeedDateListType.FirstOrDefault(x => x == Model.WebLevel.ListType) == null ? true : false;
+
+}
+@section meta{
+    <title>@Model.ogData.title</title>
+    <meta property="og:title" content="@Model.ogData.title" />
+    <meta property="og:image" content="@Model.ogData.image" />
+    <meta property="og:image:type" content="@Model.ogData.image_type">
+    <meta property="og:image:width" content="@Model.ogData.image_width">
+    <meta property="og:image:height" content="@Model.ogData.image_height">
+    <meta property="og:description" content="@(string.IsNullOrWhiteSpace( Model.WebLevel.SEODescription) ?  Model.ogData.description : Model.WebLevel.SEODescription )" />
+    <meta name="keywords" content="@(  string.IsNullOrWhiteSpace( Model.WebLevel.SEOKeywords) ?  Model.ogData.keyword  : Model.WebLevel.SEOKeywords )" />
+    <meta name="description" content="@(string.IsNullOrWhiteSpace( Model.WebLevel.SEODescription) ?  Model.ogData.description : Model.WebLevel.SEODescription )" />
+}
+@section gacode{
+    @if (!string.IsNullOrWhiteSpace(Model.SysWebSiteLang.GACode))
+    {
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.SysWebSiteLang.GACode))
+    }
+}
+<main class="main">
+    <!-- 0.麵包屑 -->
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model="Model.webSiteBreadcrumbs" />
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <div class="d-flex twoColConWrap">
+            <!-- 左側選單 start -->
+            <partial name="~/Views/Home/leftMenu.cshtml" model=Model.webSiteBreadcrumbs />
+            <!-- 左側選單 end -->
+            <!-- 右半主內容 start -->
+            <div class="rightMain">
+                <div class="a11yBrickBar1">
+                    <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-30")?.Value">:::</a>
+                </div>
+                <!-- 標題 -->
+                <partial name="~/Views/Home/titleBar.cshtml" model=Model.TitleBarModel />
+                <!-- 搜尋功能 -->
+                <div class="conSearchBar1 mb-4 conSearchBarJs off">
+
+                    <div class="conSearchBarWrap">
+                        @switch (Model.WebLevel.Module)
+                        {
+                            case "Bilingual":
+                                <div class="searchIw2 flex-fill">
+                                    <div class="searchI">
+                                        <div class="searchI-C">
+                                            <label for="QryKeyword" class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-7")?.Value</label>
+                                            <input type="text" name="" id="QryKeyword" placeholder="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-1")?.Value" value="@Model.txt" class="searchI-C ipt1 rounded-4 searchField" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-25")?.Value">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="searchIw7">
+                                    <div class="searchI align-items-center gap-4">
+                                        <div class="searchI-C gap-2 d-flex align-items-center">
+                                            <b>@(Model.WebLevel.Lang.ToUpper() == "EN" ? "Filter" : "進階篩選") </b>
+                                            <div class="chx1I">
+                                                <input type="checkbox" name="Regulations" id="Regulations" class="visually-hidden" value="1">
+                                                <label for="Regulations" class="d-flex align-items-center gap-2">
+                                                    <i class="ci ci-law"></i>
+                                                    <span class="chx1Txt">@(Model.WebLevel.Lang.ToUpper() == "EN" ? " Legal Glossary" : "法規詞彙")</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="searchI-R">
+                                            <input type="button" class="btn btn2 rounded-4 searchSubmit" value="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-2")?.Value" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-10")?.Value" onclick="Search(1)">
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+                            default:
+                                <!-- 結尾有日曆的 -->
+                                <div class="searchIw3" @(NeedDateList ? "" : $@" style=display:none; ")>
+                                    <div class="searchI">
+                                        <div class="searchI-C">
+                                            <label for="QryDateS" class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-6")?.Value</label>
+                                            <input name="QryDateS" type="text" id="QryDateS" title="yyyy-mm-dd" class="ipt1 rounded-4 datepicker1" placeholder="yyyy-mm-dd" maxlength="10" autocomplete="off" value="@Model.str_Date">
+                                        </div>
+                                        <div class="searchI-R">
+                                            <a href="javascript:;" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-7")?.Value" class="calendarBtn1"><span class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey== Model.SysWebSiteLang.WebSiteID + "-7-7")?.Value</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 開頭有~結尾有日曆的 -->
+                                <div class="searchIw4" @(NeedDateList ? "" : $@" style=display:none; ")>
+                                    <div class="searchI">
+                                        <div class="searchI-L">~</div>
+                                        <div class="searchI-C">
+                                            <label for="QryDateE" class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-8")?.Value</label>
+                                            <input name="QryDateE" type="text" id="QryDateE" title="yyyy-mm-dd" class="ipt1 rounded-4 datepicker1" placeholder="yyyy-mm-dd" maxlength="10" autocomplete="off" value="@Model.end_Date">
+                                        </div>
+                                        <div class="searchI-R">
+                                            <a href="javascript:;" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-9")?.Value" class="calendarBtn1"><span class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey== Model.SysWebSiteLang.WebSiteID + "-7-9")?.Value</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                @foreach (var condition in Model.Conditions)
+                                {
+                                    var i = condition.Split('-')?[1] ?? "";
+                                    if (i == "8")
+                                    {
+                                        <div class="searchIw1">
+                                            <div class="searchI">
+                                                <div class="searchI-L">
+                                                    <label for="CustomizeTags">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-8")?.Value：</label>
+                                                </div>
+                                                <div class="searchI-C">
+                                                    <select id="CustomizeTags" class="sel1 rounded-4">
+                                                        <option value="">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                                        @foreach (var Tag in Model.CustomizeTags)
+                                                        {
+                                                            <option value="@Tag.WebLevelCustomizeTagSn">@Tag.TagName</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="searchIw1">
+                                            <div class="searchI">
+                                                <div class="searchI-L">
+                                                    <label for="Condition@(i)">@(Category.FirstOrDefault(x => x.SysCategoryKey == condition)?.Value)：</label>
+                                                </div>
+                                                <div class="searchI-C">
+                                                    <select id="Condition@(i)" class="sel1 rounded-4">
+                                                        <option value="">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                                        @foreach (var cate in Category.Where(x => x.ParentKey == condition).OrderBy(x => x.SortOrder).ToList())
+                                                        {
+                                                            <option value="@cate.SysCategoryKey">@cate.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                @if (Model.WebLevel.Module == "Schedule")
+                                {
+                                    <div class="searchIw1">
+                                        <div class="searchI">
+                                            <div class="searchI-L">
+                                                <label for="Chief">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-13")?.Value：</label>
+                                            </div>
+                                            <div class="searchI-C">
+                                                <select id="Chief" class="sel1 rounded-4">
+                                                    <option value="">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                                    @foreach (var chief in Category.Where(x => x.IsEnable == "1" && x.ParentKey == Model.SysWebSiteLang.WebSiteID + "-13").OrderBy(x => x.SortOrder))
+                                                    {
+                                                        <option value="@chief.SysCategoryKey">@($@"{chief.Value}{chief.Description}")</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="searchIw1">
+                                        <div class="searchI">
+                                            <div class="searchI-L">
+                                                <label for="SysZipCode">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-75")?.Value：</label>
+                                            </div>
+                                            <div class="searchI-C">
+                                                <select id="SysZipCode" class="sel1 rounded-4">
+                                                    <option value="">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                                    @foreach (var zipCode in Model.sysZipCodes)
+                                                    {
+                                                        <option value="@zipCode.ZipCodeSn">@zipCode.Title</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- 結尾有按鈕 -->
+                                <div class="searchIw5">
+                                    <div class="searchI">
+                                        <div class="searchI-C">
+                                            <label for="QryKeyword" class="visually-hidden">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-7")?.Value</label>
+                                            <input type="text" name="QryKeyword" id="QryKeyword" placeholder="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-1")?.Value" value="@Model.txt" class="searchI-C ipt1 rounded-4 searchField" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-25")?.Value">
+                                        </div>
+                                        <div class="searchI-R">
+                                            <input type="button" class="btn btn2 rounded-4 searchSubmit" value="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-2")?.Value" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-10")?.Value" onclick="Search(1)">
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+
+                        }
+
+                    </div>
+                </div>
+                <!--Header-->
+                <div id="ContentHeader">
+                    @if (!string.IsNullOrEmpty(Model.WebLevel.ContentHeader))
+                    {
+                        <div class="article1 mb-4">
+                            @Html.Raw(Model.WebLevel.ContentHeader)
+                        </div>
+                    }
+                </div>
+
+                <!-- 列表 -->
+                @{
+                    if (Model.list.Count() > 0)
+                    {
+                        if (Model.WebLevel.Module == "Schedule")
+                        {
+
+                            var listpath = $@"~/Views/News/List/{Model.WebLevel.Module}.cshtml";
+                            <partial name="@listpath" model=@Model />
+                            //<div class="scheduleWrap" id="ListTable">
+                            //    <div class="dayList">
+                            //        @{
+                            //            var Dates = Model.list.OrderByDescending(x => x.webNews.PublishDate).GroupBy(x => x.schedule.scheduledate).Select(g => new { g.Key }).ToList();
+                            //            foreach (var date in Dates)
+                            //            {
+                            //                var userData = Model.list.Where(x => x.schedule.scheduledate == date.Key.ToString()).GroupBy(x => x.scheduletTitle).Select(g => new { key = g.Key, data = g }).ToList();
+                            //                <div class="dayI">
+                            //                    <div class="date">
+                            //                        <b>@date.Key.ToString()</b>
+                            //                    </div>
+                            //                    <div class="timeList">
+                            //                        @foreach (var sn in userData.OrderBy(x=>x.data.First().scheduletChiefSort)  )
+                            //                        {
+                            //                            <div class="timeI">
+                            //                                <div class="name"><b>@sn.key</b></div>
+                            //                                <div class="con overflow-hidden">
+                            //                                    <div class="v2TimeI">
+                            //                                        @foreach (var detail in sn.data.OrderBy(x => x.scheduletChiefSort).ThenBy(x => x.schedule.scheduletime))
+                            //                                        {
+                            //                                            <div class="title"><b><span class="v2TimePoint">@detail.schedule.scheduletime</span> @detail.webNews.Title</b></div>
+                            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.SubTitle))
+                            //                                            {
+                            //                                                <div class="site">@($"{Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.SysWebSiteLang.WebSiteID +"-7-74")?.Value}{detail.webNews.SubTitle}")</div>
+                            //                                            }
+                            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.ContentText))
+                            //                                            {
+                            //                                                <div class="site">@($"{Category.FirstOrDefault(x => x.SysCategoryKey == masterModel.SysWebSiteLang.WebSiteID + "-7-79")?.Value}{detail.webNews.ContentText}")</div>
+                            //                                            }
+                            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.Description))
+                            //                                            {
+                            //                                                <div class="note">@detail.webNews.Description</div>
+                            //                                            }
+                            //                                            if (detail.schedule.schedulelinkdisplay != "none" || detail.schedule.schedulefiledisplay != "none")
+                            //                                            {
+                            //                                            <div>
+                            //                                                <ul class="list4-3 list-group">
+                            //                                                    @if (detail.schedule.schedulefiledisplay != "none")
+                            //                                                    {
+                            //                                                        foreach (var file in detail.schedule.schedulefile)
+                            //                                                        {
+                            //                                                            <li class="list-group-item d-block bg-transparent">
+                            //                                                                <a href="@file.url" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" rel="noreferrer noopener" title="@($"{file.title}{Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value}")">
+                            //                                                                    <div class="col mb-0 listIcon1">
+                            //                                                                        <b class="title5 fw-normal">@file.filename<span class="fileTypeI">@file.filetype</span></b>
+                            //                                                                    </div>
+                            //                                                                </a>
+                            //                                                            </li>
+                            //                                                        }
+                            //                                                    }
+                            //                                                    @if (detail.schedule.schedulelinkdisplay != "none")
+                            //                                                {
+                            //                                                    foreach (var link in detail.schedule.schedulelink)
+                            //                                                    {
+                            //                                                        <li class="list-group-item d-block bg-transparent">
+                            //                                                            <a href="@link.column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="@($"{link.column_2}{Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value}")">
+                            //                                                                <div class="col mb-0 listIcon1">
+                            //                                                                    <b class="title5 fw-normal">
+                            //                                                                        @link.column_2
+                            //                                                                        @if (link.isLocal)
+                            //                                                                        {
+                            //                                                                            <i class="bi bi-link-45deg"></i>
+                            //                                                                        }
+                            //                                                                        else
+                            //                                                                        {
+                            //                                                                            <i class="bi bi-box-arrow-up-right"></i>
+                            //                                                                        }
+                            //                                                                    </b>
+                            //                                                                </div>
+                            //                                                            </a>
+                            //                                                        </li>
+                            //                                                    }
+                            //                                                }
+                            //                                                </ul>
+                            //                                            </div>
+                            //                                            <div class="eventI row">
+                            //                                                @if( detail.schedule.schedulenewsdisplay != "none"){
+                            //                                                        foreach(var news in detail.schedule.schedulenews)
+                            //                                                        {
+                            //                                                            <div class="eventTxt col-12">
+                            //                                                    <a href="@news.newsurl">
+                            //                                                        <div class="eventTitle">@news.newstitle</div>
+                            //                                                        <div class="eventIntro">
+                            //                                                            @news.newscontext<span class="fileTypeI">@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-73")?.Value</span>
+                            //                                                        </div>
+                            //                                                    </a>
+                            //                                                </div>
+                            //                                                if (news.imagedisplay != "none" || news.videodisplay != "none")
+                            //                                                {
+                            //                                                    <div class="col-12">
+                            //                                                        <div class="row">
+                            //                                                            @if (news.imagedisplay != "none")
+                            //                                                            {
+                            //                                                                <div class="eventPic col-md-6">
+                            //                                                                    <div class="imgCover picZoomJs" data-mctxtclose="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-69")?.Value"
+                            //                                         data-mctxtprev="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-70")?.Value" data-mctxtnext="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-71")?.Value"
+                            //                                         data-mctxtnum="@Category.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-72")?.Value">
+                            //                                                                        <div class="position-relative">
+                            //                                                                            @{
+                            //                                                                                bool first = true;
+                            //                                                                                foreach (var img in news.newsimage)
+                            //                                                                                {
+                            //                                                                                    <a class="card @(first ? "d-block" : "d-none") border-0" href="@img.url">
+                            //                                                                                        <div class="pic position-relative overflow-hidden">
+                            //                                                                                            <img src="@img.url" alt="">
+                            //                                                                                        </div>
+                            //                                                                                        <div class="card-body px-0 py-2 d-none">
+                            //                                                                                            <b class="card-title">@img.title</b>
+                            //                                                                                        </div>
+                            //                                                                                    </a>
+                            //                                                                                    first = false;
+                            //                                                                                }
+                            //                                                                            }
+
+                            //                                                                        </div>
+                            //                                                                    </div>
+                            //                                                                </div>
+                            //                                                            }
+                            //                                                            @if (news.videodisplay != "none")
+                            //                                                            {
+                            //                                                                foreach (var video in news.newsvideo)
+                            //                                                                {
+                            //                                                                    <div class="eventVideo col-md-6">
+                            //                                                                        <div class="imgCover">
+                            //                                                                            <a href="@($"https://youtu.be/{video.column_1}")" class="card h-100 d-block border-0" target="_blank" rel="noreferrer noopener" title="@Category.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value">
+                            //                                                                                <div class="pic position-relative overflow-hidden">
+                            //                                                                                    <img src="@($"https://i.ytimg.com/vi/{video.column_1}/hqdefault.jpg")" alt="">
+                            //                                                                                    <div class="play"></div>
+                            //                                                                                </div>
+                            //                                                                                <div class="card-body px-0 py-2 d-none">
+                            //                                                                                    <b class="card-title">@video.column_2</b>
+                            //                                                                                </div>
+                            //                                                                            </a>
+                            //                                                                        </div>
+                            //                                                                    </div>
+                            //                                                                }
+                            //                                                            }
+                            //                                                        </div>
+                            //                                                    </div>
+                            //                                                }
+                            //                                                        }
+                            //                                                    }
+                            //                                            </div>
+                            //                                            }
+                            //                                        }
+                            //                                    </div>
+                            //                                </div>
+                            //                            </div>
+                            //                        }
+                            //                    </div>
+                            //                </div>
+                            //            }
+                            //        }
+                            //    </div>
+                            //</div>
+                        }
+                        else
+                        {
+                            var listpath = $@"~/Views/News/List/{Model.WebLevel.ListType}.cshtml";
+                            <partial name="@listpath" model=@Model />
+                        }
+                        <partial name="~/Views/Common/Pagination.cshtml" model=Model.pager />
+                    }
+                    else
+                    {
+                        <div id="ListTable" class="text-center txt1 py-5">@Html.Raw(Model.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-11")?.Value)</div>
+                    }
+                }
+                <!--Footer-->
+                <div class="article1 mb-4">
+                    @Html.Raw(Model.WebLevel.ContentFooter)
+                </div>
+            </div>
+            <!-- 右半主內容 end -->
+        </div>
+    </div>
+    <input type="hidden" value='@Model.WebLevel.MainSN' id="sqn" />
+    <div id="ns" style="display:none;"></div>
+    <div id="ca" style="display:none;"></div>
+</main>
+@section scripts{
+    <script>
+        var _JsData;
+        var _needtag = NeedTag('@(Model.WebLevel.ListType)');
+        var _Module = '@Model.WebLevel.Module';
+        _JsData = JSON.parse('@(Html.Raw(Model.StrBigjsonData))');
+        foreverApi = '@(Model.foreverApi ? "1" : "0")';
+        LeftMenu('@Model.WebLevel.WebLevelSN');
+        NewList('@Model.WebLevel.MainSN');
+        var ListPage = '@Url.Content($"~/_news/{Model.WebLevel.ListType}.html")';
+        var listTag2Page = '@Url.Content("~/_news/listTag2.html")';
+        $("#ns").load(ListPage, function () {
+            if (_needtag) { $("#ca").load(listTag2Page, function () { }); }
+        });
+        if ('@Model.WebLevel.ListType' == 'AccordionList') {
+            var tag = location.hash;
+            var lang = '@Model.WebLevel.Lang';
+            function tagclick(tag) {
+                $("#qaH" + tag).children(".accordion-button").click();
+            }
+            if (tag.length > 1) {
+                tag = tag.replace("#qaH", "");
+                var tagIndex = _JsData.findIndex(x => x.mainsn == tag);
+                if (tagIndex > -1) {
+                    var _tagIndex = tagIndex + 1;
+                    var p = Math.ceil(_tagIndex / 15);
+                    if (p > 1) {
+                        $("#ns").load(ListPage, function () {
+                            serials(SearchJsonData(p), tagclick(tag));
+                            var navH = $('.navbar').outerHeight();
+                            var topBarH = $('.baseNav').outerHeight();
+                            var position = $("#qaH" + tag).stop().offset().top - navH - topBarH;
+                            $('html, body').stop().animate({ scrollTop: position }, 400, 'linear');
+                        });
+                    } else {
+                        tagclick(tag);
+                    }
+                }
+            }
+        }
+
+    </script>
+}

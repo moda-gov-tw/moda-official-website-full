@@ -1,0 +1,19 @@
+﻿@model List<WebSiteWebLevelPageListModel>
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<!-- 列表樣式七 -->
+<div class="list1 row mb-5 g-3">
+    @foreach (var item in Model)
+    {
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 shadow-md">
+                <a href="@item.url" class="card-body text-decoration-none" @Html.Raw(CommFun.getattr(item.target, item.webLevel.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                    <b class="card-title title5">@item.webLevel.Title</b>
+                    <p class="card-text"></p>
+                </a>
+            </div>
+        </div>
+    }
+</div>

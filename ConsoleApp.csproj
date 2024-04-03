@@ -1,0 +1,2501 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\mail\A-9-3.html" />
+    <None Remove="wwwroot\mail\MailLayout.html" />
+    <None Remove="wwwroot\website\ACS\assets\css\layout.css" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_idx1-dark.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_idx1.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_idxIcon1.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_itemBg1.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_itemBg2.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_list5Icon.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\bg_sidebarTop.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\favicon.ico" />
+    <None Remove="wwwroot\website\ACS\assets\img\fbshare.jpg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_AA.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw1-dark.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw1-L.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw1-R.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw3-L.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw3-R.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_arw3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_calendar1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_close1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_context.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dark.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept4-2-1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept4-2-2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept4-2-3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept5-2-1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept5-2-2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept5-2-3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept5-2-4.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_dept5-2-5.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_en-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_en.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_en2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_envelope-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_envelope.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_envelope2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_fa.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_fb.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_fb2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_firstP.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_font1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_font2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_font3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_hint.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_home-dark.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_home.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_idxBusiness1-1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_idxBusiness1-2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_idxBusiness1-3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_idxBusiness1-4.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_idxBusiness1-5.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_ig.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_ig2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_lastP.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_light.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_line.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1-1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1-2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1-3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1-4.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1-hv.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_link1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_moda-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_moda.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_moda2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_modaMascot.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_navClose.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_navSwitch.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_nextP.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_open1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink1.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink1.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink2.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink3.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink3.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink4.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink4.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_otherLink5.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_play.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_prevP.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_print.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_pushpin.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_rss.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_scope-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_scope.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_share.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_sitemap-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_sitemap.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_sitemap2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_title1-L.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_title1-R.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_topArw.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_tw-black.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_tw.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_tw2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_twitter.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_twitter2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_yt.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\icon_yt2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\logo_acs-2-dark.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\logo_acs-2.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\logo_acs-dark.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\logo_acs.svg" />
+    <None Remove="wwwroot\website\ACS\assets\img\pic_kv1-m.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\pic_kv1.png" />
+    <None Remove="wwwroot\website\ACS\assets\img\pic_wait1.jpg" />
+    <None Remove="wwwroot\website\ACS\assets\img\test_pic1.jpg" />
+    <None Remove="wwwroot\website\ACS\assets\img\test_pic2.jpg" />
+    <None Remove="wwwroot\website\ACS\assets\img\touch-icon.png" />
+    <None Remove="wwwroot\website\ACS\assets\js\common.js" />
+    <None Remove="wwwroot\website\ACS\assets\js\sw.js" />
+    <None Remove="wwwroot\website\ADI\assets\css\layout.css" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_idxIcon1-dark.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_idxIcon1.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_itemBg1-dark.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_itemBg1-hv.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_itemBg1.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_list5Icon.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_sidebarTop-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\bg_sidebarTop.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\favicon.ico" />
+    <None Remove="wwwroot\website\ADI\assets\img\fbshare.jpg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_AA.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw1-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw1-L.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw1-R.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw3-L.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw3-R.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw3.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_arw4.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_calendar1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_close1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_context.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept4-2-1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept4-2-2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept4-2-3.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept5-2-1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept5-2-2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept5-2-3.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept5-2-4.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_dept5-2-5.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_en-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_en-black2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_en.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_envelope-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_envelope-black2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_envelope.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_fa.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_fb.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_fb2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_firstP.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font1-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font2-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font3-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_font3.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_hint.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_home-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_home.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_ig.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_ig2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_lastP.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_light.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_line.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_link1-hv.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_link1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_moda-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_moda-black2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_modaMascot.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_navClose.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_navSwitch.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_nextP.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_open1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_otherLink1.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_otherLink2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_otherLink3.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_otherLink4.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_play.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_prevP.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_print.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_pushpin.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_rss.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_scope-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_scope.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_share.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_sitemap-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_sitemap-black2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_sitemap.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_topArw.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_tw-black.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_tw-black2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_twitter.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_twitter2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_yt.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\icon_yt2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi-2-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi-2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi2-dark.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\logo_adi2.svg" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_idxFeatured-1.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_idxFeatured-2.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_idxFeatured-3.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_idxFeatured-4.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_kv1-m.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_kv1.jpg" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_kv1.png" />
+    <None Remove="wwwroot\website\ADI\assets\img\pic_wait1.jpg" />
+    <None Remove="wwwroot\website\ADI\assets\img\test_pic1.jpg" />
+    <None Remove="wwwroot\website\ADI\assets\img\test_pic2.jpg" />
+    <None Remove="wwwroot\website\ADI\assets\img\touch-icon.png" />
+    <None Remove="wwwroot\website\ADI\assets\js\common.js" />
+    <None Remove="wwwroot\website\ADI\assets\js\sw.js" />
+    <None Remove="wwwroot\website\assets\css\layout.css" />
+    <None Remove="wwwroot\website\assets\img\bg_dept1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_dept2-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_dept3-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_dept4-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_dept5-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_dept6-1.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_idx1-dark.png" />
+    <None Remove="wwwroot\website\assets\img\bg_idx1.png" />
+    <None Remove="wwwroot\website\assets\img\bg_idx2-dark.png" />
+    <None Remove="wwwroot\website\assets\img\bg_idx2.png" />
+    <None Remove="wwwroot\website\assets\img\bg_itemBg1-hv.png" />
+    <None Remove="wwwroot\website\assets\img\bg_itemBg1.png" />
+    <None Remove="wwwroot\website\assets\img\bg_itemBg2-hv.png" />
+    <None Remove="wwwroot\website\assets\img\bg_itemBg2.png" />
+    <None Remove="wwwroot\website\assets\img\bg_list5Icon.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_sidebarTop-dark.svg" />
+    <None Remove="wwwroot\website\assets\img\bg_sidebarTop.svg" />
+    <None Remove="wwwroot\website\assets\img\favicon.ico" />
+    <None Remove="wwwroot\website\assets\img\fbshare.jpg" />
+    <None Remove="wwwroot\website\assets\img\fbshare2.jpg" />
+    <None Remove="wwwroot\website\assets\img\icon_AA.png" />
+    <None Remove="wwwroot\website\assets\img\icon_arw1-dark.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw1-L.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw1-R.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw3-L.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw3-R.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_arw4.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_calendar1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_close1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_context.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dark.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept1-4.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept2-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept2-2.png" />
+    <None Remove="wwwroot\website\assets\img\icon_dept3-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept4-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept4-2-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept4-2-2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept4-2-3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-2-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-2-2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-2-3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-2-4.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept5-2-5.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_dept6-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_en-black.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_en.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_en2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_envelope-black.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_envelope.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_envelope2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_fa.png" />
+    <None Remove="wwwroot\website\assets\img\icon_fb.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_fb2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_firstP.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_font1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_font2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_font3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_hint.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_home-dark.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_home.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-0.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-4.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-5.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-6.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-7.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxFocus1-8.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxStory1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxStory1-2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxStory1-3.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_idxStory1-4.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_ig.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_ig2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_lastP.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_light.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_line.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_link1-hv.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_link1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_modaMascot.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_navClose.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_navSwitch.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_nextP.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_open1.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_play.png" />
+    <None Remove="wwwroot\website\assets\img\icon_prevP.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_print.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_pushpin.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_rss.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_scope-black.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_scope.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_share.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_sitemap-black.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_sitemap.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_sitemap2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_topArw-dark.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_topArw.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_tw-black.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_tw.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_tw2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_twitter.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_twitter2.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_yt.svg" />
+    <None Remove="wwwroot\website\assets\img\icon_yt2.svg" />
+    <None Remove="wwwroot\website\assets\img\logo_moda-2.svg" />
+    <None Remove="wwwroot\website\assets\img\logo_moda-dark.svg" />
+    <None Remove="wwwroot\website\assets\img\logo_moda.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_AudreyTang-small.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_AudreyTang.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_Chiueh-small.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_HermingChiueh.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_HuaiJenLee.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-0.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-1.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-1.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-2.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-2.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-3.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-3.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-4.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-4.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-5.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-5.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-6.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-6.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-7.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-7.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-8.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxFocus1-8.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-1_hv.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-2.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-2_hv.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-3.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-3_hv.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-4.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-4_hv.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-5.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxPartner1-5_hv.svg" />
+    <None Remove="wwwroot\website\assets\img\pic_idxWork1-1.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxWork1-2.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxWork1-3.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxWork1-4.png" />
+    <None Remove="wwwroot\website\assets\img\pic_idxWork1-5.png" />
+    <None Remove="wwwroot\website\assets\img\pic_kv1-m.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_kv1.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_kv2-m.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_kv2.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_speaker-default.png" />
+    <None Remove="wwwroot\website\assets\img\pic_wait1.jpg" />
+    <None Remove="wwwroot\website\assets\img\pic_Yeh-small.jpg" />
+    <None Remove="wwwroot\website\assets\img\test_pic1.jpg" />
+    <None Remove="wwwroot\website\assets\img\test_pic2.jpg" />
+    <None Remove="wwwroot\website\assets\img\touch-icon.png" />
+    <None Remove="wwwroot\website\assets\img\txt_kv1-1.svg" />
+    <None Remove="wwwroot\website\assets\img\txt_kv1-2.svg" />
+    <None Remove="wwwroot\website\assets\img\TxzC70f.png" />
+    <None Remove="wwwroot\website\assets\js\common.js" />
+    <None Remove="wwwroot\website\assets\js\sw.js" />
+    <None Remove="wwwroot\website\css\site.css" />
+    <None Remove="wwwroot\website\favicon.ico" />
+    <None Remove="wwwroot\website\js\index.js" />
+    <None Remove="wwwroot\website\js\site.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.min.css" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Remove="wwwroot\website\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Remove="wwwroot\website\lib\bootstrap\LICENSE" />
+    <None Remove="wwwroot\website\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation-unobtrusive\LICENSE.txt" />
+    <None Remove="wwwroot\website\lib\jquery-validation\dist\additional-methods.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Remove="wwwroot\website\lib\jquery-validation\LICENSE.md" />
+    <None Remove="wwwroot\website\lib\jquery\dist\jquery.js" />
+    <None Remove="wwwroot\website\lib\jquery\dist\jquery.min.js" />
+    <None Remove="wwwroot\website\lib\jquery\dist\jquery.min.map" />
+    <None Remove="wwwroot\website\lib\jquery\LICENSE.txt" />
+    <None Remove="wwwroot\website\vendor\css\allVendor.css" />
+    <None Remove="wwwroot\website\vendor\css\allVendor.min.css" />
+    <None Remove="wwwroot\website\vendor\css\prism.css" />
+    <None Remove="wwwroot\website\vendor\css\prism.min.css" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_444444_256x240.png" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_555555_256x240.png" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_777620_256x240.png" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_777777_256x240.png" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_cc0000_256x240.png" />
+    <None Remove="wwwroot\website\vendor\img\ui-icons_ffffff_256x240.png" />
+    <None Remove="wwwroot\website\vendor\js\aos.js" />
+    <None Remove="wwwroot\website\vendor\js\bootstrap-submenu.js" />
+    <None Remove="wwwroot\website\vendor\js\bootstrap.bundle.min.js" />
+    <None Remove="wwwroot\website\vendor\js\jquery-3.6.0.min.js" />
+    <None Remove="wwwroot\website\vendor\js\jquery-ui.min.js" />
+    <None Remove="wwwroot\website\vendor\js\jquery.countTo.min.js" />
+    <None Remove="wwwroot\website\vendor\js\jquery.magnific-popup.min.js" />
+    <None Remove="wwwroot\website\vendor\js\lazyload.min.js" />
+    <None Remove="wwwroot\website\vendor\js\prism.js" />
+    <None Remove="wwwroot\website\vendor\js\swiper-bundle.min.js" />
+    <None Remove="wwwroot\website\vendor\webfonts\bootstrap-icons.woff" />
+    <None Remove="wwwroot\website\vendor\webfonts\bootstrap-icons.woff2" />
+    <None Remove="wwwroot\website\vendor\webfonts\fa-brands-400.ttf" />
+    <None Remove="wwwroot\website\vendor\webfonts\fa-brands-400.woff2" />
+    <None Remove="wwwroot\website\vendor\webfonts\fa-solid-900.ttf" />
+    <None Remove="wwwroot\website\vendor\webfonts\fa-solid-900.woff2" />
+    <None Remove="wwwroot\website\_news\AccordionList.html" />
+    <None Remove="wwwroot\website\_news\ColorBlockList.html" />
+    <None Remove="wwwroot\website\_news\IcoList.html" />
+    <None Remove="wwwroot\website\_news\ImageTextList.html" />
+    <None Remove="wwwroot\website\_news\ImageTextList2.html" />
+    <None Remove="wwwroot\website\_news\LabelList.html" />
+    <None Remove="wwwroot\website\_news\listTag2.html" />
+    <None Remove="wwwroot\website\_news\NoDateTextList.html" />
+    <None Remove="wwwroot\website\_news\OneTextList.html" />
+    <None Remove="wwwroot\website\_news\Schedule.html" />
+    <None Remove="wwwroot\website\_news\ScheduleFile.html" />
+    <None Remove="wwwroot\website\_news\ScheduleLink.html" />
+    <None Remove="wwwroot\website\_news\ScheduleTime.html" />
+    <None Remove="wwwroot\website\_news\ToSchedule.html" />
+    <None Remove="wwwroot\website\_news\ToScheduleImg.html" />
+    <None Remove="wwwroot\website\_news\ToScheduleViedo.html" />
+    <None Remove="wwwroot\website\_news\TwoTextList.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\mail\A-9-3.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\mail\MailLayout.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\css\layout.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_idx1-dark.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_idx1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_idxIcon1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_itemBg1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_itemBg2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_list5Icon.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\bg_sidebarTop.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\fbshare.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_AA.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw1-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw1-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw1-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw3-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw3-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_arw3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_calendar1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_close1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_context.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept4-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept4-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept4-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept5-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept5-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept5-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept5-2-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_dept5-2-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_en-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_en.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_en2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_envelope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_envelope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_envelope2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_fa.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_fb.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_fb2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_firstP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_font1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_font2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_font3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_hint.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_home-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_home.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_idxBusiness1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_idxBusiness1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_idxBusiness1-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_idxBusiness1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_idxBusiness1-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_ig.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_ig2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_lastP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_light.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_line.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1-hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_link1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_moda-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_moda.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_moda2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_modaMascot.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_navClose.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_navSwitch.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_nextP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_open1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink4.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_otherLink5.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_play.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_prevP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_print.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_pushpin.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_rss.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_scope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_scope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_share.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_sitemap-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_sitemap.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_sitemap2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_title1-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_title1-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_topArw.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_tw-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_tw.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_tw2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_twitter.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_twitter2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_yt.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\icon_yt2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\logo_acs-2-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\logo_acs-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\logo_acs-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\logo_acs.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\pic_kv1-m.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\pic_kv1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\pic_wait1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\test_pic1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\test_pic2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\img\touch-icon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\js\common.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ACS\assets\js\sw.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\css\layout.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_idxIcon1-dark.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_idxIcon1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_itemBg1-dark.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_itemBg1-hv.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_itemBg1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_list5Icon.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_sidebarTop-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\bg_sidebarTop.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\fbshare.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_AA.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw1-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw1-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw1-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw3-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw3-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_arw4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_calendar1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_close1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_context.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept4-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept4-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept4-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept5-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept5-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept5-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept5-2-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_dept5-2-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_en-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_en-black2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_en.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_envelope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_envelope-black2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_envelope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_fa.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_fb.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_fb2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_firstP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font1-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font2-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font3-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_font3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_hint.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_home-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_home.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_ig.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_ig2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_lastP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_light.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_line.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_link1-hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_link1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_moda-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_moda-black2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_modaMascot.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_navClose.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_navSwitch.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_nextP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_open1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_otherLink1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_otherLink2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_otherLink3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_otherLink4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_play.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_prevP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_print.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_pushpin.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_rss.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_scope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_scope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_share.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_sitemap-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_sitemap-black2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_sitemap.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_topArw.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_tw-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_tw-black2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_twitter.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_twitter2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_yt.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\icon_yt2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi-2-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi2-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\logo_adi2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_idxFeatured-1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_idxFeatured-2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_idxFeatured-3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_idxFeatured-4.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_kv1-m.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_kv1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_kv1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\pic_wait1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\test_pic1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\test_pic2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\img\touch-icon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\js\common.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\ADI\assets\js\sw.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\css\layout.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept3-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept4-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept5-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_dept6-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_idx1-dark.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_idx1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_idx2-dark.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_idx2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_itemBg1-hv.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_itemBg1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_itemBg2-hv.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_itemBg2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_list5Icon.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_sidebarTop-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\bg_sidebarTop.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\fbshare.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\fbshare2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_AA.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw1-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw1-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw1-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw3-L.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw3-R.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_arw4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_calendar1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_close1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_context.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept2-2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept3-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept4-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept4-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept4-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept4-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-2-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-2-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-2-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-2-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept5-2-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_dept6-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_en-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_en.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_en2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_envelope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_envelope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_envelope2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_fa.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_fb.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_fb2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_firstP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_font1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_font2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_font3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_hint.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_home-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_home.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-0.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-6.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-7.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxFocus1-8.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxStory1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxStory1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxStory1-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_idxStory1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_ig.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_ig2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_lastP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_light.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_line.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_link1-hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_link1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_modaMascot.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_navClose.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_navSwitch.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_nextP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_open1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_play.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_prevP.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_print.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_pushpin.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_rss.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_scope-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_scope.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_share.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_sitemap-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_sitemap.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_sitemap2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_topArw-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_topArw.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_tw-black.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_tw.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_tw2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_twitter.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_twitter2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_yt.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\icon_yt2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\logo_moda-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\logo_moda-dark.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\logo_moda.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_AudreyTang-small.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_AudreyTang.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_Chiueh-small.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_HermingChiueh.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_HuaiJenLee.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-0.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-3.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-4.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-4.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-5.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-5.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-6.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-6.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-7.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-7.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-8.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxFocus1-8.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-1_hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-2_hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-3.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-3_hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-4.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-4_hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-5.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxPartner1-5_hv.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxWork1-1.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxWork1-2.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxWork1-3.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxWork1-4.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_idxWork1-5.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_kv1-m.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_kv1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_kv2-m.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_kv2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_speaker-default.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_wait1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\pic_Yeh-small.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\test_pic1.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\test_pic2.jpg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\touch-icon.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\txt_kv1-1.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\txt_kv1-2.svg">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\img\TxzC70f.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\js\common.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\assets\js\sw.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\css\site.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\favicon.ico">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot\website\js\index.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\js\site.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.esm.min.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\dist\js\bootstrap.min.js.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\bootstrap\LICENSE">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation-unobtrusive\LICENSE.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation\dist\additional-methods.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation\dist\additional-methods.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation\dist\jquery.validate.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation\dist\jquery.validate.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery-validation\LICENSE.md">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery\dist\jquery.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery\dist\jquery.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery\dist\jquery.min.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\lib\jquery\LICENSE.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\css\allVendor.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\css\allVendor.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\css\prism.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\css\prism.min.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_444444_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_555555_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_777620_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_777777_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_cc0000_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\img\ui-icons_ffffff_256x240.png">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\aos.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\bootstrap-submenu.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\bootstrap.bundle.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\jquery-3.6.0.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\jquery-ui.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\jquery.countTo.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\jquery.magnific-popup.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\lazyload.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\prism.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\js\swiper-bundle.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\bootstrap-icons.woff">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\bootstrap-icons.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\fa-brands-400.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\fa-brands-400.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\fa-solid-900.ttf">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\vendor\webfonts\fa-solid-900.woff2">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\AccordionList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ColorBlockList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\IcoList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ImageTextList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ImageTextList2.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\LabelList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\listTag2.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\NoDateTextList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\OneTextList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\Schedule.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ScheduleFile.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ScheduleLink.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ScheduleTime.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ToSchedule.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ToScheduleImg.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\ToScheduleViedo.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\website\_news\TwoTextList.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBModel\DBModel.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EPocalipse.IFilter">
+      <HintPath>dll\EPocalipse.IFilter.dll</HintPath>
+    </Reference>
+    <Reference Include="LineBot">
+      <HintPath>dll\LineBot.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="wwwroot\website\default_log.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="wwwroot\website\log.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,144 @@
+﻿@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var _WebSiteID = masterModel.Master.WebSiteID;
+    var _Lang = masterModel.Lang;
+    var otherLanger = masterModel.Lang == "zh-tw" ? "en" : "zh-tw";
+    var otherLangerTitle = masterModel.Lang == "zh-tw" ? "英文版" : "zh-tw";
+    var otherLangerClass = masterModel.Lang == "zh-tw" ? "ci-en" : "ci-tw";
+    var LangSysCategory = masterModel.sysCategories;
+    var headMenu = masterModel.HeadMenu.Where(x => x.Lang == _Lang);
+}
+<!-- 滿版的搜尋 -->
+<div class="searchAreaWrap searchAreaJs position-fixed top-0 start-0 w-100">
+    <div class="searchArea d-flex w-100 align-items-center justify-content-center">
+        <div class="searchAreaMask searchAreaMaskJs"></div>
+        <div class="searchAreaFm p-4">
+            <div class="form-group d-flex">
+                <input class="searchAreaIpt searchAreaIptJs flex-fill w-100 rounded-4" type="text" name="q" id="query" placeholder="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-1")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-25")?.Value">
+                <button class="searchAreaBtn" type="button" onclick="gooSearch('@_Lang','@_WebSiteID', $('#query').val() )" value="Search" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-10")?.Value"><i class="ci ci-scope"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-10")?.Value</span></button>
+                <a href="javascript:;" onclick="window.open('https://www.google.com.tw/advanced_search?hl=zh-TW&amp;as_q=&amp;num=100&amp;as_sitesearch=moda.gov.tw/&amp;cof=FORID%3A10&amp;ie=UTF-8&amp;sa=%E6%90%9C%E5%B0%8B&amp;siteurl=www', '_blank')" class="advancedBtn btn rounded-4" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-18")?.Value">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-19")?.Value</a>
+            </div>
+            <div class="hotSearch w-100 py-4">
+                <div class="listTag">
+                    @{
+                        foreach (var pop in masterModel.PopularKeys)
+                        {
+                            <a class="btn mb-2" href="javascript:;" onclick="gooSearch('@_Lang','@_WebSiteID','@pop')" role="button">@pop</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <a href="javascript:;" class="closeBtn closeBtnJs d-block position-absolute top-0 end-0 text-white fw-bolder"><i class="ci-x position-absolute top-0 end-0 w-100"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-26")?.Value</span></a>
+    </div>
+</div>
+
+<!-- logo+主選單-->
+<nav class="navbar navbar-light navbar-expand-xxl align-items-center">
+    <div class="wrap1 mx-auto px-3 px-md-4 px-lg-5 d-flex justify-content-between align-items-center w-100">
+        <div class="navbar-brand col-8 col-md-auto mb-0 me-auto">
+            <!-- Logo -->
+            <a class="d-block" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{masterModel.Lang}/index")">
+                <!-- 淺色版面的logo -->
+                <img class="mw-100 lightShow" src="@masterModel.LogoImg?.FilePath" width="398" height="66" alt="">
+                @*<img class="mw-100 lightShow" src="@masterModel.LogoImg?.FilePath" width="398" height="66" alt="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-21")?.Value">*@
+                <!-- 深色版面的logo -->
+                <img class="mw-100 darkShow" src="@masterModel.DarkLogoImg?.FilePath" width="398" height="66" alt="">
+                @*<img class="mw-100 darkShow" src="@masterModel.DarkLogoImg?.FilePath" width="398" height="66" alt="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-21")?.Value">*@
+                <h1 class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-20")?.Value</h1>
+            </a>
+        </div>
+        <!-- 手機版英版鈕 -->
+        <div class="mLang d-block d-xxl-none">
+            <a class="nav-link px-1 text-white" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{otherLanger}/index")" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-14")?.Value">
+                <i class="ci @otherLangerClass"></i>
+                <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-14")?.Value</span>
+            </a>
+        </div>
+
+        <!-- 手機版選單開關 -->
+        <button type="button" class="navbar-toggler navbarNavSwitchJs" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" data-opentitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-22")?.Value" data-closetitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-27")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-22")?.Value">
+            <span class="navbar-toggler-icon"></span><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-22")?.Value</span>
+        </button>
+
+        <!-- offcanvas Type --------------------------->
+        <div id="navbarNav" class="offcanvas offcanvas-end navbarNav">
+            <div class="offcanvas-body navbarNavBodyJs">
+                <ul class="navbar-nav ms-auto align-items-xxl-center">
+                    @foreach (var item in headMenu.Where(x => x.ParentSN == headMenu.Min(x => x.MainSN)).OrderBy(x => x.SortOrder))
+                    {
+                        var tagModel2 = CommFun.taggetattr(item.target, item.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                        var ChildData1 = headMenu.Where(x => x.ParentSN == item.MainSN).ToList();
+                        if (ChildData1?.Count() > 0)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="@Url.Content(item.DynamicURL)" data-bs-toggle="dropdown" data-submenu title="@tagModel2.title" @(!string.IsNullOrWhiteSpace(tagModel2.rel) ? $"rel={tagModel2.rel}":"") target="@tagModel2.target">@Html.Raw(item.Title)</a>
+                                <ul class="dropdown-menu">
+                                    @foreach (var Child in ChildData1.OrderBy(x => x.SortOrder))
+                                    {
+                                        tagModel2 = CommFun.taggetattr(Child.target, Child.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                        var ChildData2 = headMenu.Where(x => x.ParentSN == Child.MainSN).ToList();
+                                        if (ChildData2?.Count() > 0)
+                                        {
+                                            <li class="dropdown dropdown-submenu dropend">
+                                                <a class="dropdown-item dropdown-toggle" href="@Url.Content(Child.DynamicURL)" data-toggle="dropdown" title="@tagModel2.title" @(!string.IsNullOrWhiteSpace(tagModel2.rel) ? $"rel={tagModel2.rel}":"") target="@tagModel2.target">@Html.Raw(Child.Title)</a>
+                                                <ul class="dropdown-menu dropdown-menu-start" data-bs-popper="none">
+                                                    @foreach (var Child2 in ChildData2.OrderBy(x => x.SortOrder))
+                                                    {
+                                                        var tagModel3 = CommFun.taggetattr(Child2.target, Child2.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                                        <li><a class="dropdown-item" href="@Url.Content(Child2.DynamicURL)" title="@tagModel3.title" @(!string.IsNullOrWhiteSpace(tagModel3.rel) ? $"rel={tagModel3.rel}":"") target="@tagModel3.target">@Html.Raw(Child2.Title)</a></li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a class="dropdown-item" href="@Url.Content(Child.DynamicURL)" title="@tagModel2.title" @(!string.IsNullOrWhiteSpace(tagModel2.rel) ? $"rel={tagModel2.rel}":"") target="@tagModel2.target">@Html.Raw(Child.Title)</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Content(item.DynamicURL)" title="@tagModel2.title" @(!string.IsNullOrWhiteSpace(tagModel2.rel) ? $"rel={tagModel2.rel}":"") target="@tagModel2.target">@Html.Raw(item.Title)</a>
+                            </li>
+                        }
+
+                    }
+                    
+                </ul>
+            </div>
+            <div class="mBaseNav d-block d-xxl-none">
+                <ul class="nav justify-content-center">
+                    @if (masterModel.Master.WebSiteID != "MODA")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link px-3 text-white" href="@Url.Content(@$"/")" @Html.Raw(CommFun.getattr("_blank", LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-68")?.Value, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                <i class="ci ci-moda"></i>
+                                <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-68")?.Value</span>
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link px-3 text-white" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{masterModel.Lang}/Home/sitemap")" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-12")?.Value">
+                            <i class="ci ci-sitemap"></i>
+                            <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-12")?.Value</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:;" class="searchSwitchBtn searchSwitchBtnJs nav-link text-white px-3" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-24")?.Value">
+                            <i class="ci ci-scope"></i>
+                            <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-24")?.Value</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- Main navbar END -->
+    </div>
+</nav>
+
+<!-- Logo Nav END -->

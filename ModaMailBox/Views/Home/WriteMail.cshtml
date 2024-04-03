@@ -1,0 +1,402 @@
+﻿@model WriteMailModel
+@using System.Text.Json;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+    var page = ModaMailBox.Controllers.BaseController.CaseApplyPage;
+}
+@section meta
+    {
+<link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+}
+@Html.AntiForgeryToken()
+<div class="step1">
+    <div class="breadcrumb1">
+        <partial name="~/Views/common/AltC.cshtml" />
+        <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("mailtous", "Home")">寫信給我們</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@(page?.PageTitle ?? "")</li>
+
+                </ol>
+            </nav>
+        </div>
+    </div>
+    @{
+        if (md.Msg == "")
+        {
+            <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+                <!-- 內容主標 -->
+            <div class="wrap5">
+                    <div class="step_main d-flex wrap5 flex-wrap">
+                        <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                            <div class="Step1 ">步驟一</div>
+                            <div class="step fs-5 ps-3">認證電子信箱</div>
+                        </div>
+                        <div class="step_list d-flex align-items-center col-4 pb-md-5">
+                            <div class="Step2 ">步驟二</div>
+                            <div class="step fs-5 ps-3">填寫意見內容</div>
+                        </div>
+                        <div class="step_list d-flex align-items-center col-4 pb-md-5 not_yet">
+                            <div class="Step3 ">步驟三</div>
+                            <div class="step fs-5 ps-3">案件成立</div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="input_name" class="form-label">
+                                    真實姓名<span class="text-danger fs16">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="input_name" name="input_name" placeholder="請輸入您的真實姓名" required value="@md.CaseApply?.ApplyUser" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="input_email" class="form-label">
+                                    電子信箱<span class="text-danger fs16">*</span>
+                                </label>
+                                <input type="email" class="form-control" id="input_email" disabled required value="@md.CaseApplyValidate?.Email">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="TelAreacode" class="form-label">
+                                    聯絡電話
+                                </label>
+                                <div class="row g-3">
+                                    <div class="col-sm-2">
+                                        <input id="TelAreacode" type="text" name="TelAreacode" class="form-control" placeholder="區碼" aria-label="area_code" pattern="\d{2}" required value="@md.CaseApply?.TelAreacode" autocomplete="off">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="Tel" class="form-control" placeholder="請輸入您的聯絡電話"
+                                           aria-label="Contact_number" pattern="\d{8}" required value="@md.CaseApply?.Tel" autocomplete="off">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="TelExtension" class="form-control" placeholder="分機" aria-label="extension" value="@md.CaseApply?.TelExtension" autocomplete="off">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="mb-3">
+                                <label for="input_phone" class="form-label">
+                                    行動電話
+                                </label>
+                                <input type="text" pattern="\d{4}\d{6}" class="form-control" name="Mobile" id="input_phone" placeholder="09XXXXXXXX" required value="@md.CaseApply?.Mobile" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <span class="blockquote-footer">聯絡電話和行動電話僅可輸入數字，不包含任何分隔空白或符號。聯絡電話及行動電話至少需填寫一項。</span>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <div class="mb-3">
+                                <label for="webSelect" class="form-label">
+                                    機關信箱<span class="text-danger fs16">*</span>
+                                </label>
+                                <select id="webSelect" class="form-select webSelect" name="webSelect" aria-label="Default select example">
+                                    <option value="">請選擇機關</option>
+                                    @foreach (var item in md.CasesModels.GroupBy(x => new { x.WebSiteID, x.WebSiteName, x.WebSiteSort }).OrderBy(x => x.Key.WebSiteSort))
+                                    {
+                                        <!option value="@item.Key.WebSiteID" @(md.CasesModels.FirstOrDefault(x => x.WebSiteID == item.Key.WebSiteID && x.CaseApplyClassSN == md.CaseApplyClassSN) != null ? "selected='selected'" : "")>@item.Key.WebSiteName</!option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        @foreach (var w in md.ParentClass)
+                        {
+                            if (w.Value == "1")
+                            {
+                                <div class="col-lg-6 col-md-6 col-12 ClassArea @w.WebSiteID" style="display:none;">
+                                    <div class="mb-3">
+                                        <label for="selectSysCategory" class="form-label">
+                                            意見分類<span class="text-danger fs16">*</span>
+                                        </label>
+                                        <select id="selectSysCategory" name="selectSysCategory" class="form-select selectSysCategory" aria-label="Default select example">
+                                            <option value="">請選擇民意信箱意見分類</option>
+                                            @foreach (var item in md.SysCategory.Where(x => x.WebSiteID == w.WebSiteID).OrderBy(x => x.WebSiteID).ThenBy(x => x.SortOrder))
+                                            {
+                                                <!option class="@item.WebSiteID SysCategoritems" value="@item.SysCategoryKey" @(item.SysCategoryKey == md.CasesModels.FirstOrDefault(x => x.CaseApplyClassSN == md.CaseApplyClassSN)?.SysCategoryKey ? "selected='selected'" : "")>@item.Value</!option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12 ClassArea @w.WebSiteID" style="display:none;">
+                                    <div class="mb-3">
+                                        <label for="selectCaseApplyClassSN" class="form-label">
+                                            子項目<span class="text-danger fs16">*</span>
+                                        </label>
+                                        <select id="selectCaseApplyClassSN" class="form-select @w.WebSiteID" aria-label="Default select example" name="selectCaseApplyClassSN">
+                                            <option value="">請選擇子項目</option>
+                                            @foreach (var item in md.CasesModels.Where(x => x.WebSiteID == w.WebSiteID).OrderBy(x => x.WebSiteSort).ThenBy(x => x.CaseNo))
+                                            {
+                                                <!option class="@item.SysCategoryKey classitems" value="@item.CaseApplyClassSN" @(item.CaseApplyClassSN == md.CaseApplyClassSN ? "selected='selected'" : "")>@item.CaseName</!option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-lg-6 col-md-6 col-12  ClassArea @w.WebSiteID" style="display:none;">
+                                    <div class="mb-3">
+                                        <label for="selectCaseApplyClassSN" class="form-label">
+                                            意見分類<span class="text-danger fs16">*</span>
+                                        </label>
+                                        <select id="selectCaseApplyClassSN" class="form-select @w.WebSiteID" aria-label="Default select example" name="selectCaseApplyClassSN">
+                                            <option value="">請選擇民意信箱意見分類</option>
+                                            @foreach (var item in md.CasesModels.Where(x => x.WebSiteID == w.WebSiteID).OrderBy(x => x.WebSiteSort).ThenBy(x => x.CaseNo))
+                                            {
+                                                <!option class="@item.WebSiteID classitems" value="@item.CaseApplyClassSN" @(item.CaseApplyClassSN == md.CaseApplyClassSN ? "selected='selected'" : "")>@item.CaseName</!option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div class="row">
+
+                        <div class="mb-3">
+                            <label for="input_title" class="form-label">主旨<span class="text-danger fs16">*</span></label>
+                            <textarea class="form-control" id="input_title" name="input_title" rows="1" autocomplete="off">@Html.Raw(md.CaseApply?.Subject ?? "")</textarea>
+                            <span class="blockquote-footer">請輸入 200 個字元以內之純文字，勿使用 HTML 或其他網頁與程式語法（如：<> 等）。</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label for="FormControlTextarea" class="form-label">內容<span class="text-danger fs16">*</span></label>
+                            <textarea class="form-control" id="FormControlTextarea" name="FormControlTextarea" rows="6" autocomplete="off">@Html.Raw(md.CaseApply?.CaseContent ?? "")</textarea>
+                            <span class="blockquote-footer">請輸入 2,000 個字元以內之純文字，勿使用 HTML 或其他網頁與程式語法（如：<> 等）;</span>
+                            <span class="blockquote-footer">內容過長請改以附件方式提供。</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="px-4 py-4 rounded-4 check_box_bg2 my-4 fs-5 filesList_box">
+                                <p>
+                                    附件：
+                                </p>
+                                <div class="table-responsive-md">
+                                    <table class="table fs-6">
+                                        <thead>
+                                            <tr>
+                                                <th>檔案</th>
+                                                <th></th>
+                                                <th class="pageBar" style="width: 15%;padding-right: 3rem;">容量大小</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="filetbody">
+                                            <tr class="fileitem">
+                                                <td>
+                                                    <div class="flex">
+                                                        <input type='file' class='filesList' onchange='Scan("f1",$(this))' accept=".txt,.csv,.gif,.jpg,.jpeg,.png,.tif,.tiff" />
+                                                    </div>
+                                                    <input type="button" class="delete" onclick='resetFile("f1",$(this))' />
+                                                </td>
+                                                <td data-th="檔案名稱："><span class="text fileName">未選擇任何檔案</span></td>
+                                                <td data-th="容量大小：" class="filelength pageBar" data-length='0'></td>
+                                            </tr>
+                                            <tr class="fileitem">
+                                                <td>
+                                                    <div class="flex">
+                                                        <input type='file' class='filesList' onchange='Scan("f2",$(this))' accept=".txt,.csv,.gif,.jpg,.jpeg,.png,.tif,.tiff" />
+                                                    </div>
+                                                    <input type="button" class="delete" onclick='resetFile("f2",$(this))' />
+                                                </td>
+                                                <td data-th="檔案名稱："><span class="text2 fileName">未選擇任何檔案</span></td>
+                                                <td data-th="容量大小：" class="filelength pageBar" data-length='0'></td>
+                                            </tr>
+                                            <tr class="fileitem">
+                                                <td>
+                                                    <div class="flex">
+                                                        <input type='file' class='filesList' onchange='Scan("f3",$(this))' accept=".txt,.csv,.gif,.jpg,.jpeg,.png,.tif,.tiff" />
+                                                    </div>
+                                                    <input type="button" class="delete" onclick='resetFile("f3",$(this))' />
+                                                </td>
+                                                <td data-th="檔案名稱："><span class="text3 fileName">未選擇任何檔案</span></td>
+                                                <td data-th="容量大小：" class="filelength pageBar" data-length='0'></td>
+                                            </tr>
+                                            <tr class="fileitem">
+                                                <td>
+                                                    <div class="flex">
+                                                        <input type='file' class='filesList' onchange='Scan("f4",$(this))' accept=".txt,.csv,.gif,.jpg,.jpeg,.png,.tif,.tiff" />
+                                                    </div>
+                                                    <input type="button" class="delete" onclick='resetFile("f4",$(this))' />
+                                                </td>
+                                                <td data-th="檔案名稱："><span class="text4 fileName">未選擇任何檔案</span></td>
+                                                <td data-th="容量大小：" class="filelength pageBar" data-length='0'></td>
+                                            </tr>
+                                            <tr class="fileitem">
+                                                <td>
+                                                    <div class="flex">
+                                                        <input type='file' class='filesList' onchange='Scan("f5",$(this))' accept=".txt,.csv,.gif,.jpg,.jpeg,.png,.tif,.tiff" />
+                                                    </div>
+                                                    <input type="button" class="delete" onclick='resetFile("f5",$(this))' />
+                                                </td>
+                                                <td data-th="檔案名稱："><span class="text5 fileName">未選擇任何檔案</span></td>
+                                                <td data-th="容量大小：" class="filelength pageBar" data-length='0'></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ol>
+                                    <li class="mb-2">至多可上傳 5 個檔案，單一檔案上傳容量限制為 5 MB （5,120KB），總容量限制為 25 MB（25,600KB）。</li>
+                                    <li class="mb-2">
+                                        檔案格式須為 txt、csv、gif、jpg、jpeg、png、tif、tiff 。
+                                    </li>
+                                    <li class="mb-2">為考量資訊安全，系統將會對您上傳的檔案進行掃毒，若發現夾帶電腦病毒或是惡意程式，系統將無法接收。</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-5">
+                            <label for="input_name" class="form-label">驗證</label>
+                            <div class="row g-3  flex-nowrap">
+                                <div class="col">
+                                    <div id="myWidget"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled list-inline mb-0 justify-content-center">
+                        <li class="list-inline-item">
+                            <button type="button" name="tempsave" class="write_btn_bg d-inline-flex fs-6  px-4 py-2 rounded-3" data-poptitle="下一步" role="button">
+                                下一步
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+
+</div>
+<div class="step2">
+</div>
+
+@section Scripts
+    {
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_turnstileCb" async defer></script>
+<script>
+   var timeoutID = setInterval(_reSetTurnstileCb, 90000);
+     window.history.replaceState({ page: 0 }, "writemail", "/writemail");
+
+     var msg = "@Html.Raw(md.Msg)";
+     var jsonData = JSON.parse('@(Html.Raw(JsonSerializer.Serialize(md.CasesModelViewItems)))');
+     $(".webSelect").change(function () {
+         var _val = $(this).val();
+         $("[name=selectSysCategory]").val("");
+         $("[name=selectCaseApplyClassSN]").val("");
+         $(".SysCategoritems").hide();
+         $(".classitems").hide();
+         $(".ClassArea").hide();
+         if (_val != "") {
+             ShowClass(_val, jsonData);
+         }
+     });
+
+     $(".selectSysCategory").change(function () {
+         var _val = $(this).val();
+         $("[name=selectCaseApplyClassSN]").val("");
+         $(".classitems").hide();
+         if (_val != "") {
+             ShowClass(_val, jsonData);
+         }
+     });
+
+     if (msg == '') {
+         whenreload();
+         $("[name='tempsave']").click(function () {
+             var web = MODASelectVal("webSelect");
+             var syscategory = (web != "" ? $("." + web + " [name=selectSysCategory]").length > 0 ? $("." + web + " [name=selectSysCategory]").val() : "0" : "")
+             FECommon.basicLoadingOn();
+             var obj = {
+                 "CaseValidateSN": '@(Model.CaseApplyValidate?.CaseValidateSN)',
+                 "Subject": $("[name=input_title]").val(),
+                 "CaseContent": $("[name=FormControlTextarea]").val(),
+                 "CaseApplyClassSN": (web != "" ? $("." + web + " [name=selectCaseApplyClassSN]").val() : ""),
+                 "WebSiteId": web,
+                 "ApplyUser": $("[name=input_name]").val(),
+                 "ContactEmail": $('#input_email').val(),
+                 "TelAreacode": $("[name=TelAreacode]").val(),
+                 "Tel": $("[name=Tel]").val(),
+                 "TelExtension": $("[name=TelExtension]").val(),
+                 "Mobile": $("[name=Mobile]").val(),
+                 "cftoken": cftoken,
+                 "syscategory": syscategory,
+             };
+             serials([TempFile()], TempSave(obj));
+         });
+     } else {
+         //過期
+         SetMsgShowAlertRedirect(2, "", msg, "/");
+     }
+     var cftoken;
+    sitekey = "@(AppSettingHelper.GetAppsetting("CloudFlareTurnstileSitekey"))";
+    _turnstileCb();
+     function whenreload() {
+         var web = "@(md?.CasesModels?.FirstOrDefault(x => x.CaseApplyClassSN == md.CaseApplyClassSN)?.WebSiteID ?? "")";
+         var category = "@(md?.CasesModels?.FirstOrDefault(x => x.CaseApplyClassSN == md.CaseApplyClassSN)?.SysCategoryKey ?? "")";
+         var cclass = @(md?.CaseApplyClassSN ?? 0);
+         $(".classitems").hide();
+         if (web != "") {
+             ShowClass(web, jsonData);
+         }
+         if (category != "") {
+             ShowClass(category, jsonData);
+         }
+         if (cclass != 0) {
+             if (web != "") {
+                 $("." + web + " [name=selectCaseApplyClassSN]").val(cclass);
+             }
+         }
+     }
+     function submit() {
+         var msg = {
+             Status: 3,
+             Title: '',
+             Text: '如確定送出申請，請點擊「確認」',
+             confirmButtonText: '確認',
+             cancelButtonText: '取消',
+             confirmFunc: function () {
+                 FECommon.basicLoadingOn();
+                 location.replace('@Url.Action("ConfirMation", "Home")');
+             },
+             cancelFunc: function () {
+                 Swal.fire('', '已取消', 'info');
+             },
+         };
+         ShowMsgAlert(msg);
+     }
+
+     function fromCheck(obj) {
+         var focusOn = null;
+         var error = [];
+         if (obj.ApplyUser.Length == 0) {
+             focusOn = focusOn ?? "input_name";
+             error.push("真實姓名不能為空");
+         }
+
+         if (obj.Tel.Length == 0 && obj.TelAreacode.Length == 0 && obj.TelExtension.Length == 0 && obj.Mobile.Length == 0) {
+             focusOn = focusOn ?? "TelAreacode";
+             error.push("聯絡電話或行動電話需擇一填寫");
+         }
+     }
+</script>
+
+}
+<style>
+    .swal2-actions {
+        flex-direction: row-reverse;
+    }
+</style>

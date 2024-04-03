@@ -1,0 +1,40 @@
+﻿@model Management.Areas.WebManagement.Models.OperationStatistics.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW8">檔案名稱</th>
+            <th scope="col">檔案路徑</th>
+            <th scope="col" class="colW3">檔案下載數</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.BrowseStatisticsModels.Count > 0)
+        {
+            @foreach (var data in Model.BrowseStatisticsModels)
+            {
+                <tr>
+                    <td>@row</td>
+                    <td class="text-break text-start">@data.OriginalFileName</td>
+                    <td align="left">@data.Path</td>
+                    <td>@data.DownLoadCount</td>
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>

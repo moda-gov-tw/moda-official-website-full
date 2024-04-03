@@ -1,0 +1,358 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.ModuleModel;
+@{
+    var md = Model;
+}
+<div class="bootstrap-table">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+
+    <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+        @foreach (var lan in Model.sysWebSiteLangs)
+        {
+            <li class="nav-item">
+                <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"") " id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw"?"中文":"英文")</a>
+            </li>
+        }
+    </ul>
+    <div class="form-horizontal tab-content">
+        @{
+            foreach (var lan in Model.webLevelDatas)
+            {
+                <partial name="~/Areas/WebContent/Views/WebLevelManagement/ModuleView.cshtml" model="lan" />
+            }
+
+        }
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+
+    $(".editModule").click(function() {
+        var Module = '@Model.mainLevelData.Module';
+        var WeblevelType = '@Model.mainLevelData.WeblevelType';
+        var lan = getObjAtr($(this), "data-type");
+        var sn = getObjAtr($(this), "data-id");
+        var weblevelType = $("input[name='LevelMenu" + lan + "']:checked").val();
+        var module = $("input[name='LevelMenu3" + lan + "']:checked").val();
+        var templateValue = $("input[name='LevelMenu5" + lan + "']:checked").val();
+        var seodescription = MODAhtmlEncode($("[name='SEODescription" + lan + "']"), "val");
+        var seokeywords = MODAhtmlEncode($("[name='SEOKeywords" + lan + "']"), "val");
+        var listType = $("input[name='LevelMenu2" + lan + "']").length > 0 ? $("input[name='LevelMenu2" + lan + "']:checked").val() : "";
+        var title = MODAhtmlEncode($("[name='title" + lan + "']"), "val");
+        var description = MODAhtmlEncode($("[name='Description" + lan + "']"), "val");
+        var webLevelKey = MODAhtmlEncode($("[name='webLevelKey" + lan + "']"), "val");
+        var DepartmentID = MODASelectVal("dep"+lan);
+        var contentheader = "";
+        var contentfooter = "";
+        var condition = $("input[name='condition" + lan + "']:checked").map(function(i, e) { return e.value }).toArray().join(",");
+        var isEnable = $("input[name='IsEnable" + lan + "']:checked").val();
+        var fileinfo = [];
+        var rssShow = "0";
+        if (weblevelType == "NEWS") {
+            rssShow = $("input[name='RSSShow" + lan + "']:checked").val();
+        }
+        var mainMenuShow = $("input[name='MainMenuShow" + lan + "']:checked").val();
+        var fatFooterShow = $("input[name='FatFooterShow" + lan + "']:checked").val();
+        var leftMenuShow = $("input[name='LeftMenuShow" + lan + "']:checked").val();
+        var sortMethod = $("input[name='SortMethod" + lan + "']:checked").val();
+        var customizes = txtAreaObj("custom" + lan);
+        var additionalCSS = "";
+        var additionalScript ="";
+        switch (lan) {
+            case "zh-tw":
+                contentheader = CKEDITOR.instances.ContentHeaderzhtw.getData();
+                contentfooter = CKEDITOR.instances.ContentFooterzhtw.getData();
+                if( Module =="PAGELIST" && WeblevelType == "2"  ) {
+                    additionalCSS = CKEDITOR.instances.AdditionalCSSzhtw.getData();
+                    additionalScript = CKEDITOR.instances.AdditionalScriptzhtw.getData();
+                }
+                break;
+            case "en":
+                contentheader = CKEDITOR.instances.ContentHeaderen.getData();
+                contentfooter = CKEDITOR.instances.ContentFooteren.getData();
+                if( Module =="PAGELIST"  && WeblevelType == "2") {
+                    additionalCSS = CKEDITOR.instances.AdditionalCSSen.getData();
+                    additionalScript = CKEDITOR.instances.AdditionalScripten.getData();
+                }
+                break;
+        }
+
+        if (customizes.filter(x => x.txt == "" || x.val == "").length > 0) {
+               Swal.fire({
+                    icon: "warning",
+                    title: "請完整輸入[分類]所需欄位\n"
+                });
+                return false;
+        }
+
+        var obj = {
+            webLevelKey: webLevelKey,
+            title: title,
+            weblevelsn: sn,
+            lang: lan,
+            fatfootershow: fatFooterShow,
+            mainmenushow: mainMenuShow,
+            leftmenushow: leftMenuShow,
+            pageview: 0,
+            weblevelType: weblevelType,
+            description: description,
+            module: module,
+            rssshow: rssShow,
+            sortmethod: sortMethod,
+            templatevalue: templateValue,
+            Parameter: $("#select" + lan).val(),
+            startdate: $("#StartDate" + lan).val(),
+            enddate: $("#EndDate" + lan).val(),
+            isenable: isEnable,
+            listtype: listType,
+            contentheader: contentheader,
+            contentfooter: contentfooter,
+            condition: condition,
+            seodescription:seodescription,
+            seokeywords:seokeywords,
+            DepartmentID:DepartmentID,
+            additionalCSS :additionalCSS,
+            additionalScript :additionalScript
+        };
+        SaveModuleForGroup(obj, customizes);
+    });
+    function ChangeModule(e, fileinfo) {
+        var _key = getObjAtr(e, "data-id");
+        var _lag = MODAhtmlEncode(e, "val");
+        var href = "@Url.Action("Module", "WebLevelManagement", new { area = "WebContent" })?key=" + _key + "&lang=" + _lag;
+        $("#fox_box").load(href, function() { });
+    }
+    function SaveModuleForGroup(obj, customizes) {
+        $('.preloader').show();
+        $.ajax({
+            url: "@Url.Action("EditModule", "WebLevelManagement", new { area = "WebContent" } )",
+            data:
+            {
+                data: obj,
+                module: obj.module,
+                customize: customizes,
+                fileinfo: fileinfo(obj.lang)
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "更新成功"
+                    }).then((result) => {
+                        RefWebLevelTree('@CommonUtility.GetUrlAesEncrypt((  Model?.mainLevelData?.ParentSN == 0 ? Model?.mainLevelData?.WebLevelSN.ToString() :  Model?.mainLevelData?.ParentSN.ToString()))');
+                        var id = '@CommonUtility.GetUrlAesEncrypt((  Model?.mainLevelData?.ParentSN == 0 ? Model?.mainLevelData?.WebLevelSN.ToString() :  Model?.mainLevelData?.ParentSN.ToString()))'
+                        back2NodeList(id);
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+    var data = @Html.Raw(Json.Serialize(Model));
+    function changeLevelMenu(e, lan) {
+        var weblevelType = '@Model.mainLevelData.WeblevelType';
+        var levelMenu = e.val();
+        if (levelMenu != "CP") {
+            if (weblevelType == "1") {
+                if (levelMenu == "RSS" || levelMenu == "BANKNOTE1" || levelMenu == "BANKNOTE2" || levelMenu == "JOURNAL" || levelMenu == "DEPT") {
+                    $("#div_LevelMenu2").hide();
+                    $("#div_Sort").hide();
+                }
+                else {
+                    $("#div_LevelMenu2").show();
+                    if (levelMenu == "NEWS") { $("#div_Sort").show(); }
+                    LevelMenu2(e, lan);
+                }
+            }
+            else {
+                $("#div_LevelMenu2").hide();
+                if (levelMenu == "NEWS") { $("#div_Sort").show(); }
+            }
+
+
+        } else {
+            $("#div_LevelMenu2").hide();
+            $("#div_RSS").hide();
+            $("#div_Sort").hide();
+        }
+        $("#div_LevelMenu3" + lan).show();
+        LevelMenu3(levelMenu, lan)
+    }
+    function changeLevel3Menu(e, lan) {
+        var Module = e.val();
+        var weblevelType = '@Model.mainLevelData.WeblevelType';
+        if (weblevelType != "1") {
+            $("#div_LevelMenu2").hide();
+            $("#div_RSS").hide();
+            $("#div_FatFooter").hide();
+            $("#div_MainMenu").hide();
+            LevelMenu5(Module, lan);
+        }
+    }
+    function LevelMenu2(e, lan) {
+        var radio = "";
+        $("#LevelMenu2List").empty();
+
+        var typeName = getObjAtr(e, "data-type");
+        var LevelMenu2Data = data.levelMenu2.filter(x => x.typeName.includes(typeName));
+        LevelMenu2Data.forEach(function(item) {
+            radio += "<div class='form-check form-check-inline'>";
+            radio += "<input type='radio' checked value='" + item.value + "' name='LevelMenu2" + lan + "' data-type='" + item.typeName + "' class='form-check-input' />";
+            radio += "<label class='form-check-label'>" + item.title + "</label></div>";
+        });
+        $("#LevelMenu2List").append(radio);
+    }
+    function LevelMenu3(levelMenu, lan) {
+        var radio = "";
+        $("#LevelMenu3List").empty();
+        if (levelMenu == "NEWS") {
+            var Module = '@Model.mainLevelData.Module';
+            var weblevelType = '@Model.mainLevelData.WeblevelType';
+            if (weblevelType == "1") {
+                if (Module == "RSS"
+                    || Module == "BANKNOTE1"
+                    || Module == "BANKNOTE2"
+                    || (Module == "NEWS")
+                ) {
+
+                    var LevelMenu3Data = data.levelMenu3.filter(x => x.value == Module);
+                    LevelMenu3Data.forEach(function(item) {
+                        radio += "<div class='form-check form-check-inline'><input type='radio' checked  value='" + item.value + "' name='LevelMenu3" + lan + "' data-type='" + item.typeName + "' class='form-check-input' /><label class='form-check-label'>" + item.title + '</label></div>';
+                    });
+                }
+                else {
+                    var LevelMenu3Data = data.levelMenu3.filter(x => x.value == "NEWS");
+                    LevelMenu3Data.forEach(function(item) {
+                        radio += "<div class='form-check form-check-inline'><input type='radio' checked  value='" + item.value + "'  name='LevelMenu3" + lan + "' data-type='" + item.typeName + "' class='form-check-input' /><label class='form-check-label'>" + item.title + '</label></div>';
+                    });
+                    $("#div_RSS").show();
+                }
+            } else {
+
+                var LevelMenu3Data = data.levelMenu3.filter(
+                    x => x.value != "CP"
+                        && x.value != "PAGELIST"
+                        && x.value != "RSS"
+                        && x.value != "BANKNOTE1"
+                        && x.value != "BANKNOTE2"
+                        && x.value != "DEPT");
+                var isChecked = false;
+                LevelMenu3Data.forEach(function(item) {
+                    var sChecked = "";
+                    if (!isChecked) {
+                        if (item.value == Module) {
+                            sChecked = "checked";
+                            isChecked = true;
+                        }
+                    }
+                    radio += "<div class='form-check form-check-inline'><input type='radio' value='" + item.value + "'  name='LevelMenu3" + lan + "' data-type='" + item.typeName + "' class='form-check-input'  onclick='changeLevel3Menu($(this))'  " + sChecked + " /><label class='form-check-label'>" + item.title + '</label></div>';
+                });
+            }
+        } else {
+            var LevelMenu3Data = data.levelMenu3.filter(x => x.typeName == levelMenu);
+            LevelMenu3Data.forEach(function(item) {
+                radio += "<div class='form-check form-check-inline'><input type='radio' checked  value='" + item.value + "' name='LevelMenu3" + lan + "' data-type='" + item.typeName + "' class='form-check-input' /><label class='form-check-label'>" + item.title + '</label></div>';
+            });
+        }
+        $("#LevelMenu3List").append(radio);
+    }
+    function LevelMenu5(module, lan) {
+        var radio = "";
+        $('#div_LevelMenu5').empty();
+        var type = data.template.filter(x => x.value.includes(module));
+        if (type.length > 0) {
+            var LevelMenu5Data = data.levelMenu5.filter(x => x.typeName.includes(type[0].typeName));
+            if (LevelMenu5Data.length > 0) {
+                radio += "<label class=\"col-sm-2 col-form-label text-sm-right\">版型選擇</label>";
+                radio += "<div class=\"col-sm-10 pt-3\">";
+                LevelMenu5Data.forEach(function(item) {
+                    radio += "<input type='radio' value='" + item.value + "' name='LevelMenu5" + lan + "'data-type='" + item.typeName + "' class='radio-inline radio'/>" + item.title;
+                })
+                radio += "</div>";
+                $('#div_LevelMenu5').append(radio);
+            }
+        }
+    }
+    function back2NodeList(e) {
+        var href = "@Url.Action("ChildNodeList", "WebLevelManagement", new { area = "WebContent" })?key=" + e;
+        $("#fox_box").load(href, function() { });
+    }
+    $('.back2NodeList').click(function() {
+
+        var sn = getObjAtr($(this), "data-id");
+        back2NodeList(sn);
+    })
+
+    function txtAreaObj(Name) {
+        var array = [];
+        $.each($(".class" + Name), function() {
+            var val = $(this).data("val") == undefined ? null : $(this).data("val");
+            var txt = $(this).find(".classtxt" + Name).val();
+            array.push({ val: val, txt: txt });
+        });
+        return array;
+    }  
+    function ChangeTree(lan)
+    {
+        var mainSN = '@Model.mainLevelData.MainSN';
+        var ParentSN= MODASelectVal("Tree"+lan);
+        var obj = { mainSN : mainSN , ParentSN:ParentSN};
+         Swal.fire({
+                title: '確定要修改?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    FunChangeTree(obj);
+                } else if (result.isDenied) {
+                   
+                }
+            })
+    }
+     function FunChangeTree(obj) {
+        $('.preloader').show();
+        $.ajax({
+            url: "@Url.Action("ChangeTree","WebLevelManagement",new  {area ="WebContent" })",
+            type: 'post',
+            data: obj,
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            dataType: "json",
+            success: function(data) {
+                $('.preloader').hide();
+                if (data.statusCode == 200) {
+                    Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        });
+                     location.reload();
+                }
+                else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                    $('.preloader').hide();
+                }
+            }
+        });
+    }
+
+
+</script>
+

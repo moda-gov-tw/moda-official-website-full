@@ -1,0 +1,106 @@
+﻿@model Management.Areas.Authorization.Models.DepartmentManagement.IndexModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row bg-gray1">
+    <div class="uCol4-1-l">
+        <div class="treeWrap">
+            <div id="" class="simpleTree-mainContainer staticTree">
+                <partial name="~/Areas/Authorization/Views/DepartmentManagement/DepartmentTree.cshtml" model="@Model.SysDepartments" />
+            </div>
+        </div>
+    </div>
+    <div class="uCol4-1-r">
+        <div class="white-box" id="fox_box">
+            <p>請點左邊部門</p>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+     var backperPageShow = "0";
+     var websiteid =  MODAhtmlEncode($("#drlWebSite"),"val");
+     
+     var back = getCookie("back");
+     GetData("");
+    $(function(){
+            $(".simpleTree-toggle").click(function () {
+            if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+                $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+            } else {
+                $(this).parents(".simpleTree-nodeContainer").addClass("on");
+            }
+        });
+        $(".btnOp").click(function () {
+            
+           var data_id = getObjAtr($(this),"data-id");
+           var m_id = getObjAtr($(this),"m_id");
+           var type = getObjAtr($(this), "data-type");
+           switch (type) {
+               case "List":
+                   ListFun(data_id);
+                   break;
+               case "Edit":
+                   EditFun(data_id,m_id);
+                   break;
+           }   
+       });
+    });
+     function GetData(id) {       
+            if (back == 1) {
+                var objstr = getCookie("DepObj");
+                if (objstr != "") {
+                    if (JSON.parse(objstr) != "") {
+                        var obj = JSON.parse(objstr);
+                        id = id == "" ? obj.id : id;
+                        $('#perPageShow').val(obj.displayCount);
+                        backperPageShow = obj.displayCount;
+                        searchFunction(id, obj.p);
+                    } else {
+                        searchFunction(id,1);
+                    }
+                } else {
+                    searchFunction(id,1);
+                }
+            } else {
+                searchFunction(id,1);
+            }
+      }
+            SetCookie("back", "");
+            $(document).on("click", ".page_a", function () {
+                var p = getObjAtr($(this), "data-page");
+                var id = MODAhtmlEncode($("#hidDepId"),"val");
+                searchFunction(id,p);
+            });
+     function searchFunction(parentId , p) {
+            $('.preloader').show();
+            var href = "@Url.Action("List", "DepartmentManagement", new { area = "Authorization" })";
+            var getUrl = "?key="+parentId+"&websiteid="+websiteid+"&p=" + p;
+            var pageUrl = href + getUrl;
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'),"val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var p = p;
+            var selectobj = {
+                "id" :parentId,
+                "displayCount": diCount,
+                "p": p
+            };
+            SetCookie("DepObj", selectobj);
+            $("#fox_box").load(pageUrl, function () { $('.preloader').hide(); });
+      }
+     function ListFun(id) {
+            $('.preloader').show();
+            GetData(id);
+            $('.preloader').hide();
+        }
+    function EditFun(id,m_id) {
+        $('.preloader').show();
+        var key2 = m_id;
+        if(key2 ==""){ key2 = MODAhtmlEncode($("#hidDepId"),"val"); }
+        $("#fox_box").load("@Url.Action("Edit", "DepartmentManagement", new { area = "Authorization"  })?key=" + id+"&key2="+key2 , 
+        function () { $('.preloader').hide(); });
+    }
+</script>
+}

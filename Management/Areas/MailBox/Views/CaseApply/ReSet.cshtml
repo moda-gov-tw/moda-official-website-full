@@ -1,0 +1,156 @@
+﻿@model Management.Areas.MailBox.Models.CaseApply.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="row searchBar1">
+                    <div class="col">
+                        <label class="col-form-label">
+                            機關信箱：
+                        </label>
+                        <select id="wedsiteid" name="wedsiteid" class="form-control">
+                            <option value="">--請選擇--</option>
+                            @foreach (var item in Model.websiteDept)
+                            {
+                                <option value="@item.WebSiteId">@item.DepartmentName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            原處理機關：
+                        </label>
+                        <select id="DocDpet" name="DocDpet" class="form-control">
+                            <option value="">--請選擇--</option>
+                            @foreach (var item in Model.websiteDept)
+                            {
+                                <option value="@item.DepartmentID">@item.DepartmentName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="col-form-label">
+                            關鍵字：
+                        </label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" id="QryKeyword" class="form-control" placeholder="關鍵字">
+                            </div>
+                            <div class="col">
+                                <input type="button"
+                                       value="查詢" onclick="searchFunction(1)"
+                                       class="ubtn-search">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="uTable3">
+                <div id="tableList" style="min-width: 1200px;"></div>
+            </div>
+        </div>
+        <div id="DepArea"></div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+
+        function changeW() {
+            var webSite = MODAhtmlEncode($("#CaseApplyClassSN0"), "val");
+            $(".classitems").hide();
+            $("." + webSite).show();
+            $("[name=CaseApplyClassSN]").val("");
+        }
+        var href = "@Url.Action("ReSetList", "CaseApply", new { area = "MailBox" })";
+        var backperPageShow = 0;
+        var back = getCookie("back");
+        if (back == 1) {
+            var objstr = getCookie("GupObj");
+            if (objstr != "") {
+                if (JSON.parse(objstr) != "") {
+                    var obj = JSON.parse(objstr);
+                    $('#perPageShow').val(obj.displayCount);
+                    backperPageShow = obj.displayCount;
+                    $("#QryKeyword").val(obj.keyword);
+                    searchFunction(obj.p);
+                } else {
+                    searchFunction(1);
+                }
+            } else {
+                searchFunction(1);
+            }
+        } else {
+            searchFunction(1);
+        }
+        SetCookie("back", "");
+
+        $(document).on("click", ".page_a", function () {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+        function searchFunction(p) {
+            $('.preloader').show();
+            var wedsiteid = MODAhtmlEncode($("#wedsiteid"), "val");
+            var DocDpet = MODAhtmlEncode($("#DocDpet"), "val");
+            var keyword = MODAhtmlEncode($("#QryKeyword"), "val");
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(15, DisplayCount, backperPageShow);
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "DocDpet": DocDpet,
+                "wedsiteid": wedsiteid,
+                "keyword": keyword,
+            };
+            SetCookie("GupObj", selectobj);
+            var getUrl = "?wedsiteid=" + selectobj.wedsiteid + "&DocDpet=" + selectobj.DocDpet + "&keyword=" + selectobj.keyword + "&p=" + p;
+            var pageUrl = href + getUrl;
+
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function () {
+                $('.preloader').hide();
+            });
+        }
+        function SendApi(CaseNo) {
+            $.ajax({
+                url: '@Url.Action("SendAPI", "CaseApply", new { area = "MailBox" })',
+                type: 'post',
+                data: {
+                    "CaseNo": CaseNo
+                },
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: data.content
+                        }).then(function () {
+                            searchFunction(1);
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function Detail(p) {
+            location.href = '@Url.Action("ReSetDetail", "CaseApply", new { area = "MailBox" })?sn=' + p;
+        }
+    </script>
+}

@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+    var otherLanger = masterModel.Lang == BaseController.MainLang ? "en" : "zh-tw";
+    var otherLangerTitle = masterModel.Lang == BaseController.MainLang ? "英文版" : "zh-tw";
+    var otherLangerClass = masterModel.Lang == BaseController.MainLang ? "ci-en" : "ci-tw";
+    var mainWebSiteId = BaseController.MainWebSite;
+}
+<html lang="@masterModel.SysWebSiteLang.Lang" class="webSitelanguage">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale = 1" />
+    <meta name="format-detection" content="telephone=no">
+    @RenderSection("meta", required: false)
+    <!-- favicon -->
+    @if (masterModel.SysWebSiteLang.WebSiteID == mainWebSiteId)
+    {
+        <link rel="shortcut icon" type="image/png" href="@Url.Content($"~/assets/img/favicon.ico")">
+        <link rel="apple-touch-icon" sizes="192x192" href="@Url.Content($"~/assets/img/touch-icon.png")">
+    }
+    else
+    {
+        <link rel="shortcut icon" type="image/png" href="@Url.Content($"~/{masterModel.SysWebSiteLang.WebSiteID}/assets/img/favicon.ico")">
+        <link rel="apple-touch-icon" sizes="192x192" href="@Url.Content($"~/{masterModel.SysWebSiteLang.WebSiteID}/assets/img/touch-icon.png")">
+    }
+    <!-- (google font)connect to domain of font files -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- (google font)optionally increase loading priority -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+
+    <!-- 套件css -->
+    <link rel="stylesheet" href="@Url.Content("~/vendor/css/allVendor.min.css")" asp-append-version="true" media="all" />
+    <!-- 主要css -->
+    @switch (masterModel.SysWebSiteLang.WebSiteID)
+    {
+        case "MODA":
+            <link rel="stylesheet" href="@Url.Content("~/assets/css/layout.css")" asp-append-version="true" media="all" />
+            break;
+        default:
+            <link rel="stylesheet" href="@Url.Content($"~/{masterModel.SysWebSiteLang.WebSiteID}/assets/css/layout.css")" asp-append-version="true" media="all" />
+            break;
+    }
+
+    <!-- (google font)async CSS -->
+    <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+    <!-- (google font)no-JS fallback -->
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap">
+    </noscript>
+
+    @RenderSection("gacode", required: false)
+</head>
+<body class="d-flex flex-column min-vh-100  @(masterModel.SysWebSiteLang.WebSiteID== mainWebSiteId ?"":masterModel.SysWebSiteLang.WebSiteID) ">
+    <noscript>
+        @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-48")?.Value
+    </noscript>
+    <script>
+        //default theme&fontSize
+        var theme = localStorage['theme'];
+        var fontSize = localStorage['fontSize'];
+        if (theme == undefined) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches) {
+                document.documentElement.className += ' dark';
+            }
+        }else{
+            switch(theme) {
+                case 'light':
+                    document.documentElement.className += ' light';
+                    break;
+                case 'dark':
+                    document.documentElement.className += ' dark';
+                    break;
+            }
+        }
+        switch(fontSize) {
+            case '1':
+                document.body.className += ' fontSizeL';
+                break;
+            case '2':
+                document.body.className += ' fontSizeM';
+                break;
+            case '3':
+                document.body.className += ' fontSizeS';
+                break;
+            default:
+                document.body.className += ' fontSizeM';
+                break;
+        }
+    </script>
+
+    <div class="loading" id="loading"><span class="loadingLogo"></span></div>
+
+    <a href="#AC" id="startBrick" class="visually-hidden-focusable" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-49")?.Value">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-49")?.Value</a>
+
+    <div class="themeNav">
+        <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-76")?.Value</span>
+        <a href="javascript:;" class="themeSwitch themeSwitchJs" data-darktitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-77")?.Value" data-lighttitle="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-78")?.Value" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-77")?.Value"><i class="ci ci-theme"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-77")?.Value</span></a>
+    </div>
+
+    <header class="header">
+        <!-- header -->
+        <div class="wrap1 mx-auto px-3 px-md-4 px-lg-5 position-relative"><div class="a11yBrickBar1 position-relative"><a href="#AU" id="AU" accesskey="U" class="a11yBrick position-absolute top-0 start-0" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-23")?.Value">:::</a></div></div>
+
+        <div class="baseNav">
+            <div class="wrap1 mx-auto px-4 px-lg-5">
+                <div class="d-flex justify-content-end align-items-top">
+                    <!-- Top bar right -->
+                    <div class="d-flex align-items-top">
+                        <!-- 社群鈕 -->
+                        @if (masterModel.SocialMediaArea?.Count > 0)
+                        {
+                            var shareBarCount = masterModel.SocialMediaArea.Where(x => x.Img2 != null).ToList();
+                            if (shareBarCount?.Count() > 0)
+                            {
+                                <ul class="nav navSocial position-relative">
+                                    @foreach (var item in masterModel.SocialMediaArea.Where(x => x.Img2?.FilePath != ""))
+                                    {
+                                        var tagModel2 = CommFun.taggetattr(item.BasicData.target, item.BasicData.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                        <li class="nav-item">
+                                            <a class="navI nav-link text-white" href="@item.BasicData.URL" @Html.Raw(CommFun.getattr(item.BasicData.target, item.BasicData.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                                <span class="ci ci-hdBaseNavIcon lazy" data-bg="@item.Img2.FilePath"></span>
+                                                <span class="visually-hidden">@item.BasicData.Title</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        }
+                        <ul class="nav d-none d-xxl-flex">
+                            @if (masterModel.Master.WebSiteID != mainWebSiteId)
+                            {
+                                var lang = masterModel.Lang == "zh-tw" ? "" : "/" + masterModel.Lang;
+                                var tagModel2 = CommFun.taggetattr("_blank", LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-68")?.Value, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                                <li class="nav-item">
+                                    <a class="nav-link px-3 text-white" href="@Url.Content(@$"{lang}/")" @Html.Raw(CommFun.getattr("_blank", LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-68")?.Value, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                        <i class="ci ci-moda"></i>
+                                        <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-68")?.Value</span>
+                                    </a>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link px-3 text-white" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{masterModel.Lang}/Home/sitemap")" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-65")?.Value">
+                                    <i class="ci ci-sitemap"></i>
+                                    <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-65")?.Value</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link px-3 text-white" href="@Url.Content(@$"/{masterModel.Master.WebSiteID}/{otherLanger}/index")" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-14")?.Value">
+                                    <i class="ci @otherLangerClass"></i>
+                                    <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-14")?.Value</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- 切換字體大小 -->
+                        <div class="dropdown fontSizeDd fontSizeDdJs d-none d-xxl-flex">
+                            <button class="fontSizeDdNow btn-dropdownNow dropdown-toggle text-white" type="button" id="fontSizeDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-order="2" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-16")?.Value"><i class="ci ci-font2"></i><span class="visually-hidden">A</span></button>
+                            <ul class="dropdown-menu" aria-labelledby="fontSizeDropdown">
+                                <li><button class="dropdown-item" type="button" data-order="1" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-15")?.Value">A<sup>+</sup></button></li>
+                                <li><button class="dropdown-item" type="button" data-order="3" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-17")?.Value">A<sup>-</sup></button></li>
+                            </ul>
+                        </div>
+                        <!-- 搜尋鈕 -->
+                        <div class="nav-item navbar-icon-link d-none d-xxl-flex">
+                            <a href="javascript:;" id="S" accesskey="S" class="searchSwitchBtn searchSwitchBtnJs nav-link text-white px-3" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-24")?.Value">
+                                <i class="ci ci-scope"></i>
+                                <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-24")?.Value</span>
+                            </a>
+                        </div>
+                    </div>
+                    <script>
+                        //detect header social btn
+                        if(!document.getElementsByClassName('navSocial').length){
+                            document.body.className += ' noHdSocial';
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div id="divHeader">
+            <partial name="~/Views/Home/Header.cshtml" />
+        </div>
+    </header>
+    <!-- main -->
+    @RenderBody()
+
+    <!-- footer -->
+    <footer class="ft mt-auto footer">
+        <partial name="~/Views/Home/Footer.cshtml" />
+    </footer>
+    <a href="#toTop" class="topBtn border border-2 border-white text-center rounded-circle" id="topBtn" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-50")?.Value"><i class="ci ci-top"></i><span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-50")?.Value</span></a>
+    <!-- 所有頁面共用的js -->
+    <!-- plugin -->
+    <script src="@Url.Content("~/js/apiurl.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/jquery-3.6.0.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/jquery-ui.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/bootstrap.bundle.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/bootstrap-submenu.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/swiper-bundle.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/lazyload.min.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/aos.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/vendor/js/jquery.magnific-popup.min.js")" asp-append-version="true"></script>
+    
+    <!-- main -->
+    @switch (masterModel.SysWebSiteLang.WebSiteID)
+    {
+        case "MODA":
+            <script src="@Url.Content("~/assets/js/common.js")" asp-append-version="true"></script>
+            break;
+        default:
+            <script src="@Url.Content($"~/{masterModel.SysWebSiteLang.WebSiteID}/assets/js/common.js")" asp-append-version="true"></script>
+            break;
+    }
+    <script src="@Url.Content("~/js/site.js")" asp-append-version="true"></script>
+    <script>
+        webSiteLange('@masterModel.SysWebSiteLang.Lang' ,'@masterModel.SysWebSiteLang.WebSiteID'  );
+        
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

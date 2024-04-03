@@ -1,0 +1,18 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+}
+<div class="list1 row mb-5 g-3" id="ListTable">
+    @foreach (var item in md.list)
+    {
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 shadow-md">
+                <a href="@item.webUrl" class="card-body text-decoration-none" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+                    <b class="card-title title5">@(item.webNews.Title)</b>
+                    <p class="card-text">@(item.webNews.SubTitle)</p>
+                </a>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,63 @@
+﻿@model Management.Areas.WebManagement.Models.WebsiteManagement.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+
+<div class="row mx-0">
+    <div class="col text-right pb-3 px-0" style="display:none">
+        <input type="button" value="新增" class="ubtn-add new" onclick="EditFun('')">
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="colW1" scope="col" style="white-space:nowrap;">序號</th>
+            <th scope="col">網站編號</th>
+            @*<th scope="col">語言</th>*@
+            <th scope="col">網站名稱</th>
+            @*  <th class="colW4" scope="col">網域</th>*@
+            <th class="colW2" scope="col">資料狀態</th>
+            <th scope="col">最後維護人</th>
+            <th class="colW4" scope="col">維護時間</th>
+            <th class="colW4" scope="col">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model.sysWebSites)
+        {
+            <tr>
+                <td>@row</td>
+                <td>@data.WebSiteID</td>
+                @*   <td>@WebsiteManagementService.GetSysWebSiteLangByWebSiteID(data.WebSiteID).Title</td>*@
+                <td>@data.Title</td>
+                @*  <td>@data.DNS</td>*@
+                <td>@Utility.CommFun2.Status.GetIsEnableDesc(data.IsEnable).desc</td>
+                <td>@data.ProcessUserID</td>
+                <td>@data.ProcessDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @{
+                        var btns = new List<btnModel>() 
+                        {
+                            new btnModel(){ Btntype = btnModel.btntype.編修 , onclickFunction=@$"EditFun('{CommonUtility.GetUrlAesEncrypt(data.SysWebSiteSN.ToString())}','{data.WebSiteID.ToString()}')"  },
+                            new btnModel(){ Btntype = btnModel.btntype.重置靜態 , onclickFunction=@$"RestFun('{CommonUtility.GetUrlAesEncrypt(data.WebSiteID.ToString())}')"  },
+                        };
+                 <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                    }
+@*
+                    <input class="ubtn-edit" type="button" value="編修"
+                       onclick="EditFun('@CommonUtility.GetUrlAesEncrypt(data.SysWebSiteSN.ToString())','@(data.WebSiteID.ToString())')" />
+                    <input class="ubtn-delete" type="button" value="刪除"
+                       onclick="DeleteFun('@CommonUtility.GetUrlAesEncrypt(data.SysWebSiteSN.ToString())')" style="display:none" />*@
+                </td>
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+
+<script>
+</script>

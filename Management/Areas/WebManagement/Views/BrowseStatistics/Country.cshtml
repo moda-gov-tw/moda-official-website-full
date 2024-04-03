@@ -1,0 +1,15 @@
+﻿
+<canvas id="Country"></canvas>
+
+<script>
+    var ctx = document.getElementById('Country');
+
+   countryChart = new Chart(ctx, {
+   type: _ChratData.country.type,
+   data: _ChratData.country.data,
+   plugins: [ChartDataLabels], //增加這行
+   options: _ChratData.country.options
+});
+</script>
+
+

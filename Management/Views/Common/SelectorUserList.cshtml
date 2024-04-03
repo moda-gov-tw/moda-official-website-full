@@ -1,0 +1,39 @@
+﻿@model Management.Models.Common.SelectorUserListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table id="UsersSelecterList" class="table table-striped">
+    <thead>
+        <tr>
+            <th>動作<input class="align-middle mt-0" type="checkbox" id="UserSelectorSelectAll" />(全選)</th>
+            <th>項次</th>
+            <th>帳號</th>
+            <th>姓名</th>
+            <th>部門</th>
+            <th>連絡電話</th>
+            <th>職稱</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.sysUsers)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" data-id="@CommonUtility.GetUrlAesEncrypt(user.UserID)" class="Listchkbox" />
+                </td>
+                <td>@row</td>
+                <td>@user.UserID</td>
+                <td>@user.UserName</td>
+                <td>@user.DepartmentName</td>
+                <td>@user.Tel</td>
+                <td>@user.JobTitle</td>
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>
+<div id="UserSelectorpager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+<script>
+</script>

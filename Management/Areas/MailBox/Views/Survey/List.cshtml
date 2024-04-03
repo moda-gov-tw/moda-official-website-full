@@ -1,0 +1,204 @@
+﻿@model Management.Areas.MailBox.Models.Survey.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+
+    decimal sc = 0;
+    decimal ss = 0;
+    decimal sas = 0; decimal sbs = 0; decimal scs = 0; decimal sds = 0;
+    decimal das = 0; decimal dbs = 0; decimal dcs = 0; decimal dds = 0; decimal des = 0; decimal dfs = 0; decimal dgs = 0; decimal dhs = 0;
+
+    if (Model.statistics.CaseCount != 0)
+    {
+        sc = ((decimal)Model.statistics.SurveyCount / Model.statistics.CaseCount) * 100;
+        if (Model.statistics.SurveyCount != 0)
+        {
+            ss = (decimal)Model.statistics.SatisfyCount / Model.statistics.SurveyCount;
+            sas = (decimal)Model.statistics.SolvedCount_A / Model.statistics.SurveyCount * 100;
+            sbs = (decimal)Model.statistics.SolvedCount_B / Model.statistics.SurveyCount * 100;
+            scs = (decimal)Model.statistics.SolvedCount_C / Model.statistics.SurveyCount * 100;
+            sds = (decimal)Model.statistics.SolvedCount_D / Model.statistics.SurveyCount * 100;
+            das = (decimal)Model.statistics.DefectCount_A / Model.statistics.SurveyCount * 100;
+            dbs = (decimal)Model.statistics.DefectCount_B / Model.statistics.SurveyCount * 100;
+            dcs = (decimal)Model.statistics.DefectCount_C / Model.statistics.SurveyCount * 100;
+            dds = (decimal)Model.statistics.DefectCount_D / Model.statistics.SurveyCount * 100;
+            des = (decimal)Model.statistics.DefectCount_E / Model.statistics.SurveyCount * 100;
+            dfs = (decimal)Model.statistics.DefectCount_F / Model.statistics.SurveyCount * 100;
+            dgs = (decimal)Model.statistics.DefectCount_G / Model.statistics.SurveyCount * 100;
+            dhs = (decimal)Model.statistics.DefectCount_H / Model.statistics.SurveyCount * 100;
+        }
+    }
+}
+<div class="row rowCon2">
+    <div class="col-4">
+        <table class="table table-striped">
+            <tbody>
+                <tr class="titleTR">
+                    <td>查詢日期區間</td>
+                <tr/>
+                <tr>
+                    <td>@Model.DateRange</td>
+                </tr>
+            </tbody>
+        </table>       
+    </div>
+    <div class="col-4">
+        <table class="table table-striped">
+            <tbody>
+                <tr class="titleTR">
+                    <td>已結案數量</td>
+                <tr />
+                <tr>
+                    <td>@(Model.statistics.SurveyCount.ToString())筆</td>
+                </tr>
+            </tbody>
+        </table>  
+    </div>
+    <div class="col-4">
+        <table class="table table-striped">
+            <tbody>
+                <tr class="titleTR">
+                    <td>回收問卷數量（問卷總數/已結案案件總數）</td>
+                <tr />
+                <tr>
+                    <td>@(Model.statistics.SurveyCount.ToString() + "/" + Model.statistics.CaseCount.ToString())（@(decimal.Round(sc, 2)) %）</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row rowCon2">
+    <div class="col-lg-6">
+        <table class="table table-striped text-right">
+            <tbody>
+                <tr class="titleTR">
+                    <th colspan="3">對「機關答覆內容」的滿意度</th>
+                </tr>
+                <tr>
+                    <td align="left">滿意度平均</td>
+                    <td>@(decimal.Round(ss, 2).ToString("N2")) %</td>
+                    <td>@(Model.statistics.SatisfyCount.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                </tr>
+                <tr class="titleTR">
+                    <th colspan="3">對「問題解決」的回應</th>
+                </tr>
+                <tr>
+                    <td align="left">完全解決比率</td>
+                    <td>@(Model.statistics.SolvedCount_A.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(sas, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">部份解決比率</td>
+                    <td>@(Model.statistics.SolvedCount_B.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(sbs, 2).ToString("N2")) %</td>
+
+                </tr>
+                <tr>
+                    <td align="left">沒有解決比率</td>
+                    <td>@(Model.statistics.SolvedCount_C.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(scs, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">提出建議比率</td>
+                    <td>@(Model.statistics.SolvedCount_D.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(sds, 2).ToString("N2")) %</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <table class="table table-striped text-right">
+            <tbody>
+                <tr class="titleTR">
+                    <th colspan="3">對「不滿意之處」的回應</th>
+                </tr>
+                <tr>
+                    <td align="left" width="33.33%">無</td>
+                    <td width="33.33%">@(Model.statistics.DefectCount_A.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td width="33.33%">@(decimal.Round(das, 2).ToString("N2")) %</td>       
+                </tr>
+                <tr>
+                    <td align="left">問題未解決</td>
+                    <td>@(Model.statistics.DefectCount_B.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dbs, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">處理態度不佳</td>
+                    <td>@(Model.statistics.DefectCount_C.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dcs, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">處理時間太慢</td>
+                    <td>@(Model.statistics.DefectCount_D.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dds, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">內容係例稿，欠缺誠意</td>
+                    <td>@(Model.statistics.DefectCount_E.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(des, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">曲解法令或引用錯誤</td>     
+                    <td>@(Model.statistics.DefectCount_F.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dfs, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">機關推諉責任</td>
+                    <td>@(Model.statistics.DefectCount_G.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dgs, 2).ToString("N2")) %</td>
+                </tr>
+                <tr>
+                    <td align="left">答覆內容與實際情形不符</td>
+                    <td>@(Model.statistics.DefectCount_H.ToString() + "/" + Model.statistics.SurveyCount.ToString())</td>
+                    <td>@(decimal.Round(dhs, 2).ToString("N2")) %</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="uTable3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+                <th class="colW3" scope="col">案件編號</th>
+                <th class="colW3" scope="col">答覆內容滿意度</th>
+                <th class="colW3" scope="col">問題是否解決</th>
+                <th class="colW5" scope="col">不滿意之項目</th>
+                <th scope="col">其他建議事項</th>
+                <th class="colW3" scope="col" class="colW4">填表時間</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.surveys?.Count > 0)
+            {
+                @foreach (var data in Model?.surveys)
+                {
+
+                    <tr>
+                        <td>@row</td>
+                        <td>@data.CaseNo</td>
+                        <td>@data.CaseSatisfy</td>
+                        <td>@data.CaseSolved</td>
+                        <td class="text-start">@data.CaseDefect</td>
+                        <td class="text-break text-start">@data.CaseProposal</td>
+                        <td>@data.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    </tr>
+                    row++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7">@Utility.SysConstTable.ListNotFound.TW</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@* 頁碼功能- id =pager   *@
+@if (Model?.surveys.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

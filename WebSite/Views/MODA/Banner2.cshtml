@@ -1,0 +1,35 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@if(Model!= null){
+<section class="idxFocus" data-aos="fade-up">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <div class="titleBar1 text-center pb-3">
+            <h2 class="title1 mb-3 mb-md-4">@Html.Raw(Model?.LevelView.BasicLevel.Title)</h2>
+            <p class="summary1 mb-0 mb-md-3">@Html.Raw(Model?.LevelView.BasicLevel.ContentHeader)</p>
+        </div>
+        <div class="idxFocusT row">
+            @if(Model?.NewsViews != null)
+            {
+                int[] vs = { 1, 6, 7}; int i = 1;
+                foreach(var item in Model.NewsViews)
+                {
+                    <div class="@(vs.Contains(i) ? "col-12 col-md-6 idxFocusTI2" : "col-6 col-md-3 idxFocusTI1")">
+                        <a href="@item.BasicNews.URL" class="lazy" data-bg="@item.MainImg?.FilePath" @Html.Raw(CommFun.getattr(item.BasicNews.target, item.BasicNews.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                            <div class="txt">
+                                <div class="txtWrap">
+                                    <span class="idxFocusIcon lazy" data-bg="@item.SubImg?.FilePath"></span>
+                                    <span class="idxFocusTxt">@Html.Raw(item.BasicNews.Title)</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    i++;
+                }              
+            }
+        </div>
+    </div>
+</section>
+}

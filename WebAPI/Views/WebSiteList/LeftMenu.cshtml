@@ -1,0 +1,41 @@
+﻿@model WebAPI.Models.LeftMenuModel
+@using Utility
+@{
+    var Model1 = Model;
+    var leftMenu = Model1.leftMenus;
+}
+@if (Model1 != null)
+{
+    <aside class="leftMenu">
+        <div class="a11yBrickBar1">
+            <a href="#AL" id="AL" accesskey="L" class="a11yBrick position-absolute" title="@Model1.sysCategories.FirstOrDefault(x=>x.SysCategoryKey == Model1.sysWebSiteId+ "-7-61")?.Value">:::</a>
+        </div>
+        <b class="title6 d-block pt-1 lh-sm">@Html.Raw(Model1.leftMenuBigTitle)</b>
+        <ul class="sidebar list-unstyled sidebarJs">
+            @foreach (var item in leftMenu.Where(x => x.ParentSN == Model1.BaseSN?.ParentSN).OrderBy(x => x.SortOrder))
+            {
+                <li class="@(Model.webSiteBreadcrumbModels.Exists(x => x.mainSN == item.MainSN && x.lang == item.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+                    @{
+                        var ChildData = leftMenu.Where(x => x.ParentSN == item.MainSN);
+                        if (ChildData?.Count() > 0)
+                        {
+                            <a class="menuI" href="javascript:;" @Html.Raw(CommFun.getattr(item.target, item.Title, Model1.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model1.sysWebSiteId +"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(item.Title)</span></a>
+                            <ul class="menuSub list-unstyled">
+                                @foreach (var Child in ChildData.OrderBy(x => x.SortOrder))
+                                {
+                                    <li class="@(Model.webSiteBreadcrumbModels.Exists(x => x.mainSN == Child.MainSN && x.lang == Child.Lang && x.SourseTable == "weblevel") ? "on" : "")">
+                                        <a href="@Url.Content(Child.DynamicURL)" @Html.Raw(CommFun.getattr(Child.target, Child.Title, Model1.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model1.sysWebSiteId +"-7-33")?.Value))>@Html.Raw(Child.Title)</a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <a class="menuI" href="@Url.Content(item.DynamicURL)" @Html.Raw(CommFun.getattr(item.target, item.Title, Model1.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model1.sysWebSiteId+"-7-33")?.Value))><span class="menuIFirst">@Html.Raw(item.Title)</span></a>
+                        }
+                    }
+                </li>
+            }
+        </ul>
+    </aside>
+}

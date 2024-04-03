@@ -1,0 +1,43 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+
+}
+@if (Model != null)
+{
+    if (Model?.NewsViews != null && Model?.NewsViews.Count() > 0)
+    {
+        <section class="hintBar" data-aos="fade-up">
+            <div class="wrap1 mx-auto px-3 px-md-4 px-lg-5">
+                <div class="hintBarWrap">
+                    <div class="hintTxt">
+                        <ul class="hintTxtWrap hintJs">
+                            @foreach (var item in Model.NewsViews)
+                            {
+                                <li>
+                                    @if (!string.IsNullOrEmpty(item.BasicNews.URL))
+                                    {
+                                        <a href="@item.BasicNews.URL" @Html.Raw(CommFun.getattr("_blank", item.BasicNews.Title, LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                            @item.BasicNews.Title
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        @item.BasicNews.Title
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <a href="javascript:;" class="closeHintBtn closeHintJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-67")?.Value">
+                        <i class="ci ci-close"></i>
+                        <span class="visually-hidden">@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-67")?.Value</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+

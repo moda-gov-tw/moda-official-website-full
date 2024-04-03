@@ -1,0 +1,91 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section meta
+{
+    <link rel="stylesheet" href="/assets/css/custom.css" media="all" asp-append-version="true" />
+
+}
+<div class="breadcrumb1">
+    <partial name="~/Views/common/AltC.cshtml" />
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item breadHome"><a href="@Url.Content("/")">首頁</a></li>
+                <li class="breadcrumb-item active" aria-current="page">重寄確認信</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-lg-5 py-4 pb-5 bg-white rounded-4 mb-5">
+    <!-- 內容主標 -->
+    <div class="row wrap5">
+
+        <div class="">
+            <p style="text-indent: -1.9em;padding-left: 2em;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path></svg>請輸入您的「電子信箱」，系統將會寄送您最近一筆案件的「送出申請確認信」至您的電子信箱</p>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_email" class="form-label">
+                        電子信箱<span class="text-danger fs16">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="input_email" placeholder="XXX@OOO.com.tw">
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="mb-3">
+                    <label for="input_name" class="form-label">驗證</label>
+                    <div class="row g-3 flex-nowrap">
+                        <div class="col">
+                            <div id="myWidget"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <input type="button" id="btnSearch" class="write_btn_bg d-inline-flex fs-6  px-4 py-2  rounded-3" role="button" value="查詢" />
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=_turnstileCb" async defer></script>
+<script>
+    var timeoutID = setInterval(_reSetTurnstileCb, 90000);
+    $("#btnSearch").click(function(){
+        var obj = {
+            email: $("#input_email").val(),
+            cftoken: cftoken
+        };
+        var chkemai = IsEmail($("#input_email").val());
+        if(chkemai== false)
+        {
+             FECommon.basicLoadingOff();
+             $("#input_email").focus();
+             SetMsgShowAlert(2,"","請輸入正確的Email格式");
+        }else{
+            $.ajax({
+            url: "/resendconfirm",
+            type: 'post',
+            data: obj,
+            dataType: "json",
+            success: function(data) {
+                FECommon.basicLoadingOff();
+                if (data.statusCode == 200) {
+                    SetMsgShowAlertRedirect(0,"",data.content,"/");
+                }else{
+                    $('#input_email').val("");
+                    SetMsgShowAlert(2,"",data.content);
+                    turnstile.reset("#myWidget");
+                }
+            }
+         });
+        }
+    });
+    var cftoken;
+    sitekey = "@(AppSettingHelper.GetAppsetting("CloudFlareTurnstileSitekey"))";
+    _turnstileCb();
+</script>
+
+}

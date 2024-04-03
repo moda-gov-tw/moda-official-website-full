@@ -1,0 +1,39 @@
+﻿@model List<CaseApplyPage>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" width="33.5%">頁面名稱</th>
+            <th scope="col">頁面標題</th>
+            <th scope="col" class="colW5">修改日期</th>
+            <th scope="col" class="colW4">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Count > 0)
+        {
+            @foreach (var data in Model)
+            {
+                <tr>
+                    <td class="text-break">@data.PageName</td>
+                    <td>@data.PageTitle</td>
+                    <td>@data.ProcessDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>
+                        @{
+                            var btns0 = new List<btnModel>()
+                            {
+                                new btnModel(){ Btntype = btnModel.btntype.編修 , onclickFunction="Detail(" + data.CaseApplyPageSn + ")"}
+                            };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns0" />
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>

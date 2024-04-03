@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row bg-gray1">
+    <div class="uCol4-1-l">
+        <div class="treeWrap">
+            <div id="" class="simpleTree-mainContainer staticTree">
+                <partial name="~/Areas/SystemManageMent/Views/UpdateCssJs/Folder.cshtml" model="Model" />
+            </div>
+        </div>
+    </div>
+    <div class="uCol4-1-r">
+        <input type="hidden" id="ParentLevel" />
+        <div class="white-box" id="fox_box">
+        </div>
+    </div>
+</div>
+@section scripts{
+<script>
+    var form   = new FormData();
+    
+    $(document).on("change",".cjifile",function(e){
+       form   = new FormData();
+       form.append("file", e.target.files[0]);
+    });
+     $(".simpleTree-toggle").click(function() {
+        if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+            $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+        } else {
+            $(this).parents(".simpleTree-nodeContainer").addClass("on");
+        }
+    });
+    $(".folder0").click(function(){
+      var folter= getObjAtr($(this), "data-folder");
+          href = '@Url.Action("List", "UpdateCssJs", new { area = "SystemManageMent" })?str=' + folter;
+          reloadDataTable(href);
+    });
+        function reloadDataTable(href) {
+          $("#fox_box").html("");
+          $("#fox_box").load(href, function () {
+              $('.preloader').hide();
+          });
+      }
+    function UpdateJC(path , oldFileName)
+    {
+         Swal.fire({
+          title: '確定要更新?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '更新',
+            denyButtonText: '不要更新',
+            }).then((result) => {
+             if (result.isConfirmed) {
+                 form.append(path, path);
+                 form.append(oldFileName, oldFileName);
+                    $.ajax({
+                    url: '@Url.Action("UplodFile", "UpdateCssJs", new { area = "SystemManageMent" })',
+                    type: 'POST',
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功，請靜待排程更新"
+                            }).then(result => {
+                                location.reload();
+                            });
+                        }else{
+                        Swal.fire({
+                            icon: "warning",
+                            title: "請在檢查檔案，需與原本檔案相同名稱"
+                            });
+                        }
+                    }
+                });
+             
+            }
+         });
+         
+    }
+</script>
+
+}

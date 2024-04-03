@@ -1,0 +1,107 @@
+﻿@using Management.Models.Common
+@model LoadUploadModel
+<script>
+    function imgerror(e) {
+    var filePath = "/images/error/file.png";
+    e[0].src = filePath;
+}
+    $(function(){
+      SetCookie("needCopy", @Model.needCopy.ToString().ToLower());   
+      $("#filesTable@(Model.file_trNumber)").sortable(); 
+    });
+</script>
+<label class="col-sm-2 col-form-label text-sm-right">
+    @if(Model.Required == 1)
+    {
+        <span style="color:red">*</span>
+    }
+    @Model.title</label>
+<div class="col-sm-10">
+    <input type="button" value="請選擇" class="ubtn-choose test_btn"
+           data-popup-url="@Url.Action("Upload", "Common"  , new  { area="" })"
+           data-upload="@Url.Action("UploadFile","Common", new {area="", fth = Model.fth  , gid = Model.fileGroup , lan =Model.lan, maxFilecount = (Model.FileCountState == 1 ? 1:0)})"
+           data-maxfilesize = "@Model.maxFileSize"
+           data-allowedfileextensions="@Model.GetFileType(Model.FileType)"
+           onclick="_AutoUpload($(this))" />
+    <div class="pt-3">
+        @if (Model.fileGroup == "NWMII" && Model.FileType == "0")
+        {
+            <span class="text-danger">（需複製連結並置入編輯器，方會顯示在前台）</span>
+            <br />
+            <span class="text-danger">@($"圖片請以{Model.GetFileType("1").ToLower().Replace(",","、")}格式上傳")</span>
+            <br />
+            <span class="text-danger">@($"檔案請以{Model.GetFileType("2").ToLower().Replace(",","、")}格式上傳")</span>
+        }
+        else if (Model.fileGroup == "NWMF" && Model.FileType == "2")
+        {
+            <span class="text-danger">@($"可直接編輯檔案請以{Model.GetFileType(Model.FileType).Substring(4,15).ToLower().Replace(",","、")}等文件格式上傳")</span>
+            <br />
+            <span class="text-danger">不可直接編輯檔案請以pdf格式上傳</span>
+            <br />
+            <span class="text-danger">壓縮檔案請以 zip 格式上傳</span>
+        }
+        else if (Model.FileType == "3")
+        {
+            <span class="text-danger">請上傳深、淺色共兩張圖檔並讓淺色版Logo在上方</span>
+            <br />
+            <span class="text-danger">@($"檔案格式請以{Model.GetFileType(Model.FileType).ToLower().Replace(",","、")}格式上傳")</span>
+        }
+        else
+        {
+            <span class="text-danger">@($"檔案格式請以{Model.GetFileType(Model.FileType).ToLower().Replace(",","、")}格式上傳")</span>
+            if(Model.FileType == "4")
+            {
+                 <br />
+                 <span class="text-danger">(單檔容量上限是 80MB)</span>
+            }
+        }
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <br />
+            <span class="text-danger">@Model.Description</span>
+        }
+    </div>
+    <div>
+        <table class="table table-striped mt-3 mb-0">
+            <thead>
+                <tr>
+                    <th class="colW4"></th>
+                    <th class="colW8">名稱/位置</th>
+                    <th class="colW7">alt標籤</th>
+                    <th class="colW5">刪除</th>
+                </tr>
+            </thead>
+            <tbody id="@($"filesTable{Model.file_trNumber}")" data-noneeddownloadtype="@Model.GetFileType("1").ToLower()">
+                @if (Model.commonFileModels != null)
+                {
+                    foreach (var file in Model.commonFileModels.Where(x => x.GroupID == Model.fileGroup).OrderBy(x => x.FileSort))
+                    {
+                        <tr class="@($"file_tr{Model.file_trNumber}  file_tr{Model.lan}")" data-gid="@file.GroupID">
+                            <td><img height="50" src="@file.filePath" onerror="imgerror($(this))" /></td>
+                            <td class="text-breakall text-start">
+                                <div class="py-1">@file.fileOriginName</div>
+                                <div class="py-1">
+                                    @file.filePath
+                                    <div class="pt-1">
+                                        <input type="button" value="複製" onclick="txtCopy('','@file.filePath')" class="ubtn-copy ms-0" >
+                                        @if (Model.GetFileType("1").ToLower().IndexOf(file.fileExt.ToLower().Replace(".", "")) < 0)
+                                        {
+                                            <input type="button" value="下載"   onclick="mandatory('@file.webFileID')" class="ubtn-download">
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td> <input type="text" data-name="@file.fileNewName" value="@file.fileTitle" class="form-control filetitle" /> </td>
+                            <td><input type="button" class="ubtn-delete delbtn" value="刪除" data-name="@file.fileNewName" onclick="deleteSessionFile($(this))" /></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="4">@Utility.SysConstTable.ListNotFound.TW</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

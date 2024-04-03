@@ -1,0 +1,188 @@
+﻿@model Management.Areas.SystemManageMent.Models.CodeManagement.EditModel
+
+@{
+    var EncParentKey = CommonUtility.GetUrlAesEncrypt(Model.ParentKey);
+    var EncWebSiteID = CommonUtility.GetUrlAesEncrypt(Model.WebSiteID);
+    var data = Services.SystemManageMent.CodeManagementService.GetCategory((Model.SysCategory != null && Model.ParentKey != null) ? Model.SysCategory.MainSN : 99999);
+}
+<div class="bootstrap-table">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2 class="font-weight-bold my-0">@(Model.SysCategory == null ?"建立":"修改")</h2>
+        </div>
+    </div>
+    @if (Model.SysCategory != null)
+    {
+        <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+            @foreach (var lan in data)
+            {
+                <li class="nav-item">
+                    <a href="#@lan.Lang" class="nav-link @(lan.Lang == "zh-tw" ? "active" : "") " id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false" onclick="    linkclicked(this); return false;">@(lan.Lang == "zh-tw" ? "中文":"英文")</a>
+                </li>
+            }
+        </ul>
+        <div class="tab-content">
+            @foreach (var lan in data)
+            {
+                <div class="tab-pane fade @(lan.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@lan.Lang" role="tabpanel" aria-labelledby="@($"{lan.Lang}-tab")">
+                    <div class="form-horizontal" style="display:none;">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right">編號</label>
+                            <div class="col-sm-10">
+                                <input name="@($"SysCategorySN{lan.Lang}")" type="text" value="@lan.SysCategorySN" id="@($"SysCategorySN{lan.Lang}")" class="form-control" placeholder="編號">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal" style="display:none;">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>代號</label>
+                            <div class="col-sm-10">
+                                <input name="@($"SysCategoryKey{lan.Lang}")" type="text" value="@lan.SysCategoryKey" id="@($"SysCategoryKey{lan.Lang}")" class="form-control" placeholder="代號">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>[@(lan.Lang == "zh-tw" ? "中文":"英文")]參數值</label>
+                            <div class="col-sm-10">
+                                <input name="@($"Value{lan.Lang}")" type="text" value="@lan.Value" id="@($"Value{lan.Lang}")" class="form-control" placeholder="[@(lan.Lang == "zh-tw" ? "中文":"英文")]參數值">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>[@(lan.Lang == "zh-tw"?"中文":"英文")]名稱</label>
+                            <div class="col-sm-10">
+                                <input name="@($"Description{lan.Lang}")" type="text" value="@lan.Description" id="@($"Description{lan.Lang}")" class="form-control" placeholder="[@(lan.Lang == "zh-tw"?"中文":"英文")]名稱">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center uBtnList">
+                        <div class="col-lg-offset-1">
+                            @{
+                                var btns = new List<btnModel>()
+                    {
+                    new btnModel(){  IdName="saveBtn1",  Btntype = btnModel.btntype.儲存, onclickFunction=$"saveFun('1','{lan.Lang}')", jsUseClassName="e" },
+                    new btnModel(){   Btntype = btnModel.btntype.取消, onclickFunction=$"ListFun('{EncParentKey}','{EncWebSiteID}')",  }
+                    };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="form-horizontal" style="display:none;">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>代號</label>
+                <div class="col-sm-10">
+                    <input name="SysCategoryKey" @(Model.SysCategory == null ? "" : "readonly" ) type="text" value="@Model.SysCategory?.SysCategoryKey" id="SysCategoryKey" class="form-control" placeholder="代號">
+                </div>
+            </div>
+        </div>
+        <div class="form-horizontal">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>[中文]參數值</label>
+                <div class="col-sm-10">
+                    <input name="Value" type="text" value="@Model.SysCategory?.Value" id="Value" class="form-control" placeholder="[中文]參數值">
+                </div>
+            </div>
+        </div>
+        <div class="form-horizontal">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label text-sm-right"><span style="color:red">*</span>[中文]名稱</label>
+                <div class="col-sm-10">
+                    <input name="Description" type="text" value="@Model.SysCategory?.Description" id="Description" class="form-control" placeholder="[中文]名稱">
+                </div>
+            </div>
+        </div>
+        <div class="form-group text-center uBtnList">
+            <div class="col-lg-offset-1">
+                @{
+                    var btns = new List<btnModel>()
+            {
+            new btnModel(){  IdName="saveBtn1",  Btntype = btnModel.btntype.發布, onclickFunction=$"saveFun(1,'')", jsUseClassName="e" },
+            new btnModel(){   Btntype = btnModel.btntype.取消, onclickFunction=$"ListFun('{EncParentKey}','{EncWebSiteID}')",  }
+            };
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                }
+            </div>
+        </div>
+    }
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function saveFun(IsEnable, lan) {
+        Swal.fire({
+            title: '確定要發布?',
+            icon: 'warning',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: '確定',
+            denyButtonText: '取消',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('.preloader').show();
+                var saveHref = '@Url.Action("Save", "CodeManagement", new { area = "SystemManageMent" })';
+                $.ajax({
+                    url: saveHref,
+                    type: 'post',
+                    data: {
+                        isUpdate: '@(Model.SysCategory == null? 0:1)',
+                        SysCategorySN: '@(Model.SysCategory)' == null ? 0 : MODAhtmlEncode($("#SysCategorySN" + lan), "val"),
+                        SysCategoryKey: MODAhtmlEncode($("#SysCategoryKey" + lan), "val"),
+                        ParentKey: '@Model.ParentKey',
+                        WebSiteID: '@Model.WebSiteID',
+                        Description: MODAhtmlEncode($("#Description" + lan), "val"),
+                        Lang: lan,
+                        Value: MODAhtmlEncode($("#Value" + lan), "val"),
+                        IsEnable: IsEnable
+                    },
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        $('.preloader').hide();
+                        if (data.statusCode == 200) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "更新成功"
+                            }).then(result => {
+                                ListFun('@EncParentKey', '@EncWebSiteID');
+                            });
+
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    }
+                });
+            } else if (result.isDenied) {
+                Swal.fire('已取消!', '', 'info')
+            }
+        })
+    }
+
+    if (_lan == "en") {
+        $('.nav-link').each(function() {
+            if ($(this).attr('href').replace('#', '') == _lan) {
+                $(this).addClass('active');
+                $('#en').addClass('active show');
+            }
+            else {
+                $(this).removeClass('active');
+                $('#zh-tw').removeClass('active show');
+            }
+        });
+    }
+
+</script>

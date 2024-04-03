@@ -1,0 +1,42 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var item = Model?.NewsViews.FirstOrDefault();
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="deptList">
+    <div class="wrap2 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden">
+        <h3 class="title3 position-relative text-center py-3 mb-4 mb-md-5">@Model?.LevelView.BasicLevel.Title</h3>
+
+        <div class="list8 row imgCover g-3" id="ListTable">
+            @if (item != null)
+            {
+                foreach (var news in item.TabNewsView.Take(9))
+                {
+                    var newItem = news;
+                    var c33 = LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value;
+                    var _Fun = CommFun.getattr(newItem.TabNews.target, newItem.TabNews.Title, c33);
+                    <div class="col-12 col-sm-6 col-md-4 position-relative">
+                        <a href="@news.DynamicURL" class="card h-100 d-block rounded-4 border-0" @Html.Raw(_Fun)>
+                            <div class="pic position-relative overflow-hidden rounded-4">
+                                <img src="@newItem.Logo?.FilePath" alt="@newItem.Logo?.FileTitle">
+                            </div>
+                            <div class="card-body">
+                                <b class="card-title">@newItem.TabNews.Title</b>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+        @if (item?.TabNewsView.Count() > 9)
+        {
+            <div class="btnBar1 text-center pt-3 pt-md-4 pb-3">
+                <a href="@item.DynamicURL" class="btn btn1 rounded-4" title="@($"{LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value}({Model?.LevelView.BasicLevel.Title})")">
+                    @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-57")?.Value
+                    <span class="visually-hidden"> @("(" + item.BasicNews.Title + ")")</span>
+                </a>
+            </div>
+        }
+    </div>
+</section>

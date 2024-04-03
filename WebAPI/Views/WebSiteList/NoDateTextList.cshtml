@@ -1,0 +1,36 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+    
+}
+<ul class="list4-2 list-group divider mb-5" id="ListTable">
+    @foreach (var item in md.list)
+    {
+
+        <li class="list-group-item d-block bg-transparent px-0">
+            <a href="@item.webUrl" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+                <div class="col mb-0 listIcon1">
+                    <b class="title5 fw-normal">
+                        @if (item.webNews.IsTop != null)
+                        {
+                            <i class="ci ci-pushpin"></i>
+                        }
+                        @(@item.webNews.Title)
+                        @if (item.webFile?.FileType != null)
+                        {
+                            <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+                        }
+                        else
+                        {
+                            if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+                            {
+                                <i class="bi bi-box-arrow-up-right"></i>
+                            }
+                        }
+                    </b>
+                </div>
+            </a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,236 @@
+﻿@model Management.Areas.WebManagement.Models.WebsiteManagement.ModeModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+
+            <div class="bootstrap-table">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2 class="font-weight-bold my-0">@((Model.sysWebSiteLangs.Count > 1) ?"建立":"修改" )</h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-right pb-3">
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-tabs customtab" id="myTab" role="tablist">
+                    @foreach (var lan in Model.sysWebSiteLangs)
+                    {
+                        <li class="nav-item">
+                            <a href="#@lan.Lang" class="nav-link @(lan.Lang=="zh-tw" ?" active":"") " id="authority-tab" data-bs-toggle="tab" data-bs-target="#@lan.Lang" role="tab" aria-controls="@lan.Lang" aria-selected="false">@(lan.Lang == "zh-tw" ? "中文":"英文")</a>
+                        </li>
+                    }
+                </ul>
+                <div class="form-horizontal tab-content">
+                    @foreach (var lan in Model.sysWebSiteLangs)
+                    {
+                        <div class="tab-pane fade @(lan.Lang == "zh-tw" ? " show active bootstrap-table":"")" id="@lan.Lang" role="tabpanel" aria-labelledby="@($"{lan.Lang}-tab")">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">網站編號</label>
+                                <div class="col-sm-10">
+                                    <input name="@($"WebSiteID{lan.Lang}")" type="text" value="@lan.WebSiteID" id="@($"WebSiteID{lan.Lang}")" class="form-control" placeholder="網站編號" @(Model.sysWebSiteLangs.Count > 1 ? "disabled":"")>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">語言</label>
+                                <div class="col-sm-10">
+                                    <select id="@($"Lang{lan.Lang}")" @(Model.sysWebSiteLangs.Count > 1 ? "disabled":"") class="form-control">
+                                        <option value="" selected="@(Model.sysWebSiteLangs ==null)">--請選擇--</option>
+                                        <option value="zh-tw" selected="@(lan.Lang =="zh-tw")">中文</option>
+                                        <option value="EN" selected="@(lan.Lang =="en")">英文</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">網站名稱</label>
+                                <div class="col-sm-10">
+                                    <input name="@($"Title{lan.Lang}")" type="text" value="@lan.Title" id="@($"Title{lan.Lang}")" class="form-control" placeholder="網站名稱">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">站台說明</label>
+                                <div class="col-sm-10">
+                                    <textarea name="@($"Description{lan.Lang}")" id="@($"Description{lan.Lang}")" class="form-control" placeholder="og:description">@lan.Description</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">Google搜尋</label>
+                                <div class="col-sm-10">
+                                    <textarea name="@($"GoogleSearch{lan.Lang}")" id="@($"GoogleSearch{lan.Lang}")" class="form-control">@lan.GoogleSearchKey</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">GA Code</label>
+                                <div class="col-sm-10">
+                                    @*<textarea name="GACode" id="editor1" class="form-control">@Model.wEBNews?.ContentText</textarea>*@
+                                    <textarea name="@($"GACode{lan.Lang.Replace("-","")}")" id="@($"GACode{lan.Lang.Replace("-","")}")" class="form-control">@lan.GACode</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row" style="display:none">
+                                @{
+                                    var f1 = new Management.Models.Common.LoadUploadModel()
+                {
+                    commonFileModels = Model.commonFileModels,
+                    fileGroup = Utility.WebFileGroupID.SysWebSite.Img,
+                    file_trNumber = $"{Utility.WebFileGroupID.SysWebSite.Img}{lan.Lang}",
+                    title = "無障礙圖檔",
+                    FileType = "1",
+                    fth = "News",
+                    lan = lan.Lang
+                };
+                                    <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+                                }
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label text-sm-right">
+                                    排序
+                                </label>
+                                <div class="col-sm-10">
+                                    <input name="@($"SortOrder{lan.Lang}")" type="text" value="@lan.SortOrder" id="@($"SortOrder{lan.Lang}")" class="form-control" placeholder="排序">
+                                </div>
+                            </div>
+                            @*                            <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-sm-right">導覽列</label>
+                        <div class="col-sm-10">
+                        <div>
+                        <table class="table table-striped mt-3">
+                        <thead>
+                        <tr>
+                        <th>標題</th>
+                        <th>URL</th>
+                        <th>是否啟用</th>
+                        </tr>
+                        </thead>
+                        <tbody id="@($"ExtendTable{lan.Lang}")">
+                        @if (Model.webSiteExtends != null)
+                        {
+                        @foreach (var item in Model.webSiteExtends.OrderBy(x => x.Sort))
+                        {
+                        <tr class="extend_tr">
+                        <td><input type="text" name="Title" value="@item.Title" class="form-control" /></td>
+                        <td><input type="text" name="Url" value="@item.Url" class="form-control" /></td>
+                        <td>
+                        <input type="radio" value="1" @(item.IsEnable == "1" ? "checked='checked'" : "") class="form-control" />啟用
+                        <input type="radio" value="0" @(item.IsEnable == "0" ? "checked='checked'" : "") class="form-control" />不啟用
+                        <input type="hidden" name="ExtendSN" value="@item.WebSiteExtendSN" />
+                        </td>
+                        </tr>
+                        }
+                        }
+                        </tbody>
+                        </table>
+                        </div>
+                        </div>
+                        </div>*@
+                            <div class="form-group text-center uBtnList">
+                                <input type="button" value="不公開" class="btn" id="saveBtn0" onclick="saveFun(0)" style="display:none">
+                                <input type="button" value="發布" class="ubtn-publish" id="saveBtn1" onclick="saveFun(1,'@(lan.SysWebSiteLangSN)','@(lan.Lang)')">
+                                <input type="reset" value="取消" class="ubtn-cancel" onclick="CancelFun()">
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        CKEDITOR.replace("@($"GACode{Model.sysWebSiteLangs[0].Lang.Replace("-","")}")", {
+            customConfig: '/ckeditor/CMS1_config.js',   
+
+        });
+        CKEDITOR.replace("GACodeen", {
+            customConfig: '/ckeditor/CMS1_config.js',  
+        });
+        function CancelFun() {
+            location.href = '@Url.Action("Index", "WebsiteManagement", new { area = "WebManagement" })';
+        }
+
+
+        function saveFun(IsEnable, sn, lan) {
+            var saveHref = '@Url.Action("Save", "WebsiteManagement", new { area = "WebManagement" })';
+            var iSort = 0;
+            var val = MODAhtmlEncode($("#SortOrder" + lan), "val");
+            if (val == "") {
+                iSort = 0;
+            } else {
+                var ival = parseInt(val);
+                if (!isNaN(ival)) {
+                    iSort = ival;
+                } else {
+                    iSort = 0;
+                }
+            }
+            switch (lan) {
+                case "zh-tw":
+                    contenttext = CKEDITOR.instances.GACodezhtw.getData();
+                    break;
+                case "en":
+                    contenttext = CKEDITOR.instances.GACodeen.getData();
+                    break;
+            }
+            Swal.fire({
+                title: '確定要發布?',
+                icon: 'warning',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('.preloader').show();
+                    $.ajax({
+                        url: saveHref,
+                        type: 'post',
+                        data: {
+                            SysWebSiteLangSN: '@(Model.sysWebSiteLangs.Count)' == 0 ? 0 : sn,
+                            WebSiteID: MODAhtmlEncode($('#WebSiteID' + lan), "val"),
+                            Lang: MODAhtmlEncode($("#Lang" + lan), "val"),
+                            Title: MODAhtmlEncode($("#Title" + lan), "val"),
+                            Description: MODAhtmlEncode($("#Description" + lan), "val"),
+                            GoogleSearchKey: MODAhtmlEncode($("#GoogleSearch" + lan), "val"),
+                            GACode: contenttext,
+                            IsEnable: IsEnable,
+                            SortOrder: iSort,
+                            fileinfo: fileinfo(lan)
+                        },
+                        headers:
+                        {
+                            "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            $('.preloader').hide();
+                            if (data.statusCode == 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "更新成功"
+                                }).then(result => {
+                                    CancelFun();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: data.content
+                                });
+                            }
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('已取消!', '', 'info')
+                }
+            })
+        }
+
+
+        $("#ExtendTable").sortable();
+    </script>
+}

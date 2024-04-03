@@ -1,0 +1,94 @@
+﻿@model NewCommonModel
+<div class="tab-pane fade @(Model?.webNews.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model?.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model?.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" class="form-control" placeholder="標題">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">內容</label>
+        <div class="col-sm-10">
+            @*<div style="margin: 0 auto; width: 100%">
+                <textarea name="editor" id="editor" class="form-control">@Model.wEBNews?.ContentText</textarea>
+                </div>*@
+            <textarea name="@($"editor{Model.webNews.Lang}")" id="editor" rows="5" class="form-control" placeholder="內容">@Model.webNews?.ContentText</textarea>
+        </div>
+    </div>
+    <!--str上傳-->
+    <div class="form-group row ">
+        @{
+            var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.ImgText.Img,
+                file_trNumber = $"{Utility.WebFileGroupID.ImgText.Img}{Model.webNews.Lang}",
+                title = "圖片",
+                FileType = "1",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+            <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+        }
+    </div>
+    <!--end上傳-->
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">資料狀態</label>
+        <div class="col-sm-10">
+            <select class="form-control" id="IsEnable" disabled>
+                @*<option selected>發布</option>
+                    <option>不公開</option>*@
+                @if (Model.webNews == null)
+                {
+                    <option value="1" selected>@Utility.SysConstTable.CntStatus.Publish</option>
+                    <option value="0">@Utility.SysConstTable.CntStatus.NoPublish</option>
+                }
+                else
+                {
+                    @if (@Model.webNews.IsEnable == "1")
+                    {
+                        <option value="1" selected>@Utility.SysConstTable.CntStatus.Publish</option>
+                        <option value="0">@Utility.SysConstTable.CntStatus.NoPublish</option>
+                    }
+                    else
+                    {
+                        <option value="1">@Utility.SysConstTable.CntStatus.Publish</option>
+                        <option value="0" selected>@Utility.SysConstTable.CntStatus.NoPublish</option>
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1"  class="radio radio-inline " @( Model.webNews.IsEnable == "1" ? "checked" : "" ) /> 發布
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0"  class="radio radio-inline " @( Model.webNews.IsEnable == null ? "checked" : (Model.webNews.IsEnable == "0" ? "checked" : "") ) />不公開
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">發布日期</label>
+        <div class="col-sm-10">
+            <input name="@($"StartDate{Model.webNews.Lang}")" step="1" type="datetime-local" value="@( Model.webNews == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+        <div class="col-sm-10">
+            <input name="@($"EndDate{Model.webNews.Lang}")" step="1" type="datetime-local" value="@( Model.webNews == null?"":Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" class="form-control" placeholder="">
+        </div>
+    </div>
+
+
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>() {
+                
+                new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save(1,'{Model.webNews.Lang}')" },
+                new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction=$"backward(0)" },
+            };
+            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+</div>

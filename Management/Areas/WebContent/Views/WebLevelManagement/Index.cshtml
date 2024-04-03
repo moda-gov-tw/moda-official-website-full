@@ -1,0 +1,165 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.IndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row bg-gray1">
+    <div class="uCol4-1-l">
+        <div class="treeWrap">
+            <div id="divWebLevelTree" class="simpleTree-mainContainer staticTree">
+                <partial name="~/Areas/WebContent/Views/WebLevelManagement/WebLevelTree.cshtml" model="Model" />
+            </div>
+        </div>
+    </div>
+    <div class="uCol4-1-r">
+        <div class="white-box" id="fox_box">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        var ArticleID = "", ArticleCP = 1;
+        $(document).off("click", ".simpleTree-toggle").on("click", ".simpleTree-toggle", function () {
+            if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+                $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+            } else {
+                $(this).parents(".simpleTree-nodeContainer").addClass("on");
+            }
+        });
+        $(document).off("click", ".btnOp").on("click", ".btnOp", function () {
+            var data_id = getObjAtr($(this), "data-id");
+            var type = getObjAtr($(this), "data-type");
+            var websiteid = MODAhtmlEncode($("#drlWebSite"), "val");
+            $("#fox_box").html("");
+            if (data_id == "" && type != "CP") {
+                Swal.fire({
+                    icon: "warning",
+                    title: "沒有權限!"
+                });
+            } else {
+                switch (type) {
+                    case "Module":
+                        ModuleFun(data_id, "", websiteid);
+                        break;
+                    case "Auth":
+                        AuthFun(data_id, "");
+                        break;
+                    case "Article":
+                        var ModuleType = getObjAtr($(this).parents(".editBar1"), "data-ModuleType");
+                        if (ModuleType == "PAGELIST") {
+                            data_id = getObjAtr($(this), "data-ChildNode");
+                            ChildNodeFun(data_id);
+                        }
+                        else if (!$(this).hasClass("CP")) {
+                            ArticleFun(data_id, "");
+                        } else {
+                            var key = getObjAtr($(this), "data-id");
+                            var key2 = getObjAtr($(this), "data-newId");
+                            CPFun(key, key2)
+                        }
+                        break;
+                    case "ChildNode":
+                        ChildNodeFun(data_id);
+                        break;
+                }
+            }
+
+        });
+        //$(".simpleTree-toggle").click(function() {
+        //    if ($(this).parents(".simpleTree-nodeContainer").hasClass("on")) {
+        //        $(this).parents(".simpleTree-nodeContainer").removeClass("on");
+        //    } else {
+        //        $(this).parents(".simpleTree-nodeContainer").addClass("on");
+        //    }
+        //});
+        //$(".btnOp").click(function() {
+        //    var data_id = getObjAtr($(this), "data-id");
+        //    var type = getObjAtr($(this), "data-type");
+        //    var websiteid =  MODAhtmlEncode($("#drlWebSite"),"val");
+        //    $("#fox_box").html("");
+        //    if (data_id == "" && type != "CP") {
+        //        Swal.fire({
+        //            icon: "warning",
+        //            title: "沒有權限!"
+        //        });
+        //    } else {
+        //        switch (type) {
+        //            case "Module":
+        //                ModuleFun(data_id, "", websiteid);
+        //                break;
+        //            case "Auth":
+        //                AuthFun(data_id, "");
+        //                break;
+        //            case "Article":
+        //                var ModuleType = getObjAtr($(this).parents(".editBar1"), "data-ModuleType");
+        //                if (ModuleType == "PAGELIST") {
+        //                    data_id = getObjAtr($(this), "data-ChildNode");
+        //                    ChildNodeFun(data_id);
+        //                }
+        //                else if (!$(this).hasClass("CP")) {
+        //                    ArticleFun(data_id, "");
+        //                } else {
+        //                    var key = getObjAtr($(this), "data-id");
+        //                    var key2 = getObjAtr($(this), "data-newId");
+        //                    CPFun(key, key2)
+        //                }
+        //                break;
+        //            case "ChildNode":
+        //                ChildNodeFun(data_id);
+        //                break;
+        //        }
+        //    }
+        //});
+        function ModuleFun(id, lan, websiteid) {
+            var href = "@Url.Action("Module", "WebLevelManagement", new { area = "WebContent" })?key=" + id + "&lang=" + lan + "&websiteid=" + websiteid;
+            $("#fox_box").load(href, function () { });
+        }
+        function AuthFun(id, lan) {
+            var href = "@Url.Action("Auth", "WebLevelManagement", new { area = "WebContent" })?key=" + id + "&lang=" + lan;
+            $("#fox_box").load(href, function () { });
+        }
+        function ArticleFun(id) {
+            if (ArticleID != id) {
+                ArticleID = id;
+                ArticleCP = 1;
+            }
+            var href = "@Url.Action("Article", "WebLevelManagement", new { area = "WebContent" })?key=" + id;
+            $("#fox_box").load(href, function () {
+                var sortobj = $("[name=sortType]");
+                $(".sortTh").each(function () {
+                    if ($(this).attr("data-title") == sortobj.attr("data-title")) {
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if (sortobj.attr("data-sort") != "asc") {
+                            sort = "sortDesc"
+                        }
+                        $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+            });
+        }
+        function CPFun(key, key2) {
+            var href = "@Url.Action("Index", "CP", new { area = "WebContent" })?key=" + key + "&key2=" + key2;
+            $("#fox_box").load(href, function () { });
+        }
+        function ChildNodeFun(key) {
+            var href = "@Url.Action("ChildNodeList", "WebLevelManagement", new { area = "WebContent" })?key=" + key;
+            $("#fox_box").load(href, function () {
+                var sortobj = $("[name=sortType]");
+                $(".sortTh").each(function () {
+                    if ($(this).attr("data-title") == sortobj.attr("data-title")) {
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if (sortobj.attr("data-sort") != "asc") {
+                            sort = "sortDesc"
+                        }
+                        $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+            });
+        }
+        function RefWebLevelTree(key) {
+            var url = encodeURI("@Url.Action("RefWebLevelTree", "WebLevelManagement", new { area = "WebContent" })?key=" + key);
+            $("#divWebLevelTree").load(url, function(){});
+        }
+    </script>
+}

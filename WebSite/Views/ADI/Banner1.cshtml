@@ -1,0 +1,43 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+<section class="kv position-relative" data-aos="fade">
+    <div class="swiper kv1SwiperJs">
+        <button type="button" class="swiper-button-prev kv1SwiperPrevBtn border-0 rounded-circle kv1SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-28")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-28")?.Value</span></button>
+        <div class="swiper-wrapper">
+            @if (Model?.NewsViews != null)
+            {
+                foreach (var item in Model.NewsViews)
+                {
+                    if (item.BasicNews.ArticleType == "1")
+                    {
+                        var tagModel = CommFun.taggetattr(item.BasicNews.target, item.BasicNews.Title, LangSysCategory.FirstOrDefault(x => x.SysCategoryKey == masterModel.Master.WebSiteID + "-7-33")?.Value);
+                        <div class="swiper-slide">
+                            <a class="position-relative d-block w-100 h-100" href="@item.BasicNews.URL" title="@tagModel.title" @(!string.IsNullOrWhiteSpace(tagModel.rel) ? $"rel={tagModel.rel}":"") target="@tagModel.target">
+                                <!-- 桌機版圖 -->
+                    <span class="bg-cover d-none d-xl-block lazy" data-bg="@item.MainImg?.FilePath"></span>
+                                <!-- 手機版圖 -->
+                    <span class="bg-cover d-block d-xl-none lazy" data-bg="@item.SubImg?.FilePath"></span>
+                                <div class="kvTxtWrap">
+                                    <span class="kvTxt visually-hidden">@Html.Raw(item.BasicNews.Title)</span>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    else if (item.BasicNews.ArticleType == "3")
+                    {
+                        <div class="swiper-slide">
+                            <div class="ytWrap">
+                                <div class="ytPlayer" data-id="@item.BasicNews.URL" data-title="@Html.Raw(item.BasicNews.Title)"></div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+        <button type="button" class="swiper-button-next kv1SwiperNextBtn border-0 rounded-circle kv1SwiperNextBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-29")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-29")?.Value</span></button>
+        <div class="kv1SwiperNav swiper-pagination kv1SwiperPageJs d-none d-md-block"></div>
+    </div>
+</section>

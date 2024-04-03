@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="bootstrap-table">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>群組名稱
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="" id="GroupName" class="form-control" placeholder="群組名稱">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>群組描述
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="" id="GroupDescription" class="form-control" placeholder="群組描述">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>狀態
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    @{
+                                        var IsEnableModel = new definitionModel() { IdName = "IsEnable", NeedNull = false, HtmlType = definitionModel.htmlType.radion };
+                                        <partial name="~/Views/Common/Selector/SelectorIsEnable.cshtml" model="IsEnableModel" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center uBtnList">
+                        @{
+                            var btn = new List<btnModel>()
+                        {
+                        new btnModel() { Btntype = btnModel.btntype.儲存, onclickFunction="checkedFun()" },
+                        new btnModel() { Btntype = btnModel.btntype.取消, onclickFunction="back()" },
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        function checkedFun() {
+            var error = "";
+            var GroupName = $("#GroupName").val();
+            var GroupDescription = $("#GroupDescription").val();
+            if (strIsNull(GroupName)) error += "群組名稱空白 \n";
+            if (strIsNull(GroupDescription)) error += "群組描述空白 \n";
+            if (error != "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: error
+                });
+            } else {
+                var model = {
+                    GroupName: GroupName,
+                    Description: GroupDescription,
+                    IsEnable: $("input:checked[name=IsEnable]").val()
+                };
+                Swal.fire({
+                    title: '確定要儲存?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        saveFun(model);
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        function saveFun(obj) {
+            $('.preloader').show();
+            $.ajax({
+                url: "@Url.Action("Create", "GroupManagement", new { area = "Authorization" } )",
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType: "json",
+                success: function(data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "新增成功"
+                        }).then(result => {
+                            location.href = '@Url.Action("Index", "GroupManagement", new { area = "Authorization" })';
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function back(obj) {
+            location.href = '@Url.Action("Index", "GroupManagement", new { area = "Authorization" })'
+        }
+    </script>
+}

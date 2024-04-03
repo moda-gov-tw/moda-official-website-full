@@ -1,0 +1,49 @@
+﻿@model Management.Areas.MailBox.Models.SpeedLog.ListModel
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW4">案件編號</th>
+            <th scope="col" class="colW4">API請求</th>
+            <th scope="col" class="colW4">請求狀態</th>
+            <th scope="col" class="colW4">API回應狀態</th>
+            <th scope="col" class="colW4">請求時間</th>
+            <th scope="col">使用者</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.SpeedLogs?.Count > 0)
+        {
+            @foreach (var data in Model?.SpeedLogs)
+            {
+
+                <tr>
+                    <td>@row</td>
+                    <td>@data.CaseNo</td>
+                    <td>@data.Action</td>
+                    <td>@data.Success</td>
+                    <td>@data.ApiStatus</td>
+                    <td>@data.CreateDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@data.CreateUser</td>          
+                </tr>
+                row++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7">@Utility.SysConstTable.ListNotFound.TW</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+@if (Model?.SpeedLogs.Count > 0)
+{
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+}

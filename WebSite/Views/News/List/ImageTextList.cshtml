@@ -1,0 +1,20 @@
+﻿@model Services.Models.WebSite.NewsListModel
+<div class="list8-2 row imgCover mb-5 g-3" id="ListTable">
+    @{
+        foreach (var item in Model.list)
+        {
+            <div class="col-12 col-sm-6 col-md-4 position-relative">
+                <a href="@("https://youtu.be/" + item.webVideo?.Column_1)" class="card h-100 d-block rounded-4 border-0" target="_blank" rel="noreferrer noopener" title="@(item.webNews.Title + Model.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-33")?.Value)">
+                    <div class="pic position-relative overflow-hidden rounded-4">
+                        <img src="@("https://i.ytimg.com/vi/" + item.webVideo?.Column_1 + "/hqdefault.jpg")" alt="">
+                        <div class="play"></div>
+                    </div>
+                    <div class="card-body">
+                        <b class="card-title fw-normal">@item.webNews.Title</b>
+                    </div>
+                </a>
+            </div>
+        }
+    }
+
+</div>

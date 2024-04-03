@@ -1,0 +1,279 @@
+﻿@model Management.Areas.MailBox.Models.CaseApply.ReSetDetailModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var md = Model;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab">
+                <li class="nav-item"><a class="nav-link active" href="javascript:;" onclick="changeTab($(this))" data-type="tab1">案件內容</a></li>
+            </ul>
+            <div class="bootstrap-table">
+                <div class="form-horizontal tabDiv" id="tab1_div">
+                    <div class="h2 text-black mb-3">民眾申請內容</div>
+                    <div class="rowCon1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件編號
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.CaseNo
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>姓名
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.ApplyUser
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>電子信箱
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.ContactEmail
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>聯絡電話
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.TelAreacode} {md.caseApply.Tel} {md.caseApply.TelExtension}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>行動電話
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@md.caseApply.Mobile
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>機關信箱
+                                    </label>
+                                    <div class="col-md-8 col-form text-md-left">
+                                        <select id="CaseApplyClassSN0" name="CaseApplyClassSN0" class="form-control" onchange="chW()">
+                                            <option value="">--請選擇--</option>
+                                            @foreach (var item in md.casesModels.GroupBy(x => new { x.WebSiteID, x.WebSiteName }))
+                                            {
+                                                <option value="@item.Key.WebSiteID" selected=@(item.Key.WebSiteID.Trim()== md.caseApply.WebSiteId.Trim())>@item.Key.WebSiteName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>意見分類
+                                    </label>
+                                    <div class="col-md-8 col-form text-md-left">
+                                        <select id="CaseApplyClassSN" name="CaseApplyClassSN" class="form-control">
+                                            <option value="">--請選擇--</option>
+                                            @foreach (var item in md.casesModels.OrderBy(x => x.CaseNo))
+                                            {
+                                                var IsEnable = item.IsEnable == "1" ? "" : "(已關閉)";
+                                                <option class="@item.WebSiteID classitems" value="@item.CaseApplyClassSN" style=@(item.WebSiteID == md.caseApply.WebSiteId.Trim() ? "": "display:none") selected=@(item.CaseApplyClassSN== md.caseApply.CaseApplyClassSN)>@($"({item.CaseNo}){item.CaseName}{IsEnable}")</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>主旨
+                                    </label>
+                                    <label class="col-md-10 col-form-label text-md-left">
+                                        <span style="color:red"></span>@($"{md.caseApply.Subject}")
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>內文
+                                    </label>
+                                    <label class="col-md-10 col-form-label text-md-left">
+                                        @Html.Raw(md.caseApply.CaseContent)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件成立時間
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(@$"{md.caseApply.AcceptDate}")
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label text-md-right">
+                                        <span style="color:red"></span>案件狀態
+                                    </label>
+                                    <label class="col-md-8 col-form-label text-md-left">
+                                        <span style="color:red"></span>@(Utility.EnumTpye.GetEnumDescription(Utility.MailBox.EnumCassApplyStatus.step11))
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label text-md-right">
+                                        <span style="color:red"></span>附件
+                                    </label>
+                                    <div class="col-md-10 col-form-label text-md-left">
+                                        <ul class="list-unstyled mb-0 uList2">
+                                            @foreach (var item in md?.wEBFiles)
+                                            {
+                                                <li><a href="@item.FilePath" target="_blank">@item.OriginalFileName</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="h2 text-black mb-3">公文銷號紀錄</div>
+                    <table class="table table-striped uTableMobileOneCol1">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="16.6%">原處理機關</th>
+                                <th scope="col" width="16.6%">公文文號（已銷號）</th>
+                                <th scope="col">原因</th>
+                                <th scope="col" class="colW5">銷案時間</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in md.ReturnLog.OrderByDescending(x => x.speedApiLogSn))
+                            {
+                                <tr>
+                                    <td data-th="原處理機關">@item.DocDept</td>
+                                    <td data-th="公文文號（已銷號）">@item.returnCaseNo</td>
+                                    <td data-th="原因" class="text-start text-break">@item.returnMessage</td>
+                                    <td data-th="銷案時間">@item.closedat</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-group text-center pt-5 uBtnList">
+                        @{
+                            var btn1s = new List<btnModel>() {
+                        new  btnModel(){   Btntype = btnModel.btntype.儲存 , onclickFunction="edit()" },
+                        new  btnModel(){   Btntype = btnModel.btntype.回列表 , onclickFunction="back()" }
+                        };
+                            <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btn1s" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        function chW() {
+            var webSite = MODASelectVal("CaseApplyClassSN0");
+            $(".classitems").hide();
+            $("." + webSite).show();
+            $("[name=CaseApplyClassSN]").val("");
+        }
+        function edit() {
+            var obj = {
+                CaseNo: '@md.caseApply.CaseNo',
+                CaseApplyClassSN: MODASelectVal("CaseApplyClassSN")
+            }
+            if (obj == "") {
+                Swal.fire('請選取意見分類!', '', '')
+            } else {
+                Swal.fire({
+                    title: '確定要儲存?',
+                    icon: 'warning',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: '確定',
+                    denyButtonText: '取消',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Save(obj);
+                    } else if (result.isDenied) {
+                        Swal.fire('已取消!', '', 'info')
+                    }
+                })
+            }
+        }
+        function Save(obj) {
+            var saveHref = "@Url.Action("ReSetCaseApply","CaseApply",new { area ="MailBox" })";
+            $('.preloader').show();
+            $.ajax({
+                url: saveHref,
+                type: 'post',
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: data.content
+                        }).then(result => {
+                            back();
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+        function back() {
+            location.href = '@Url.Action("ReSet","CaseApply", new { area="MailBox"})';
+        }
+    </script>
+}

@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\website\ACS\**" />
+    <Compile Remove="wwwroot\website\ADI\**" />
+    <Compile Remove="wwwroot\website\assets\**" />
+    <Compile Remove="wwwroot\website\css\**" />
+    <Compile Remove="wwwroot\website\js\**" />
+    <Compile Remove="wwwroot\website\lib\**" />
+    <Compile Remove="wwwroot\website\vendor\**" />
+    <Compile Remove="wwwroot\website\_news\**" />
+    <EmbeddedResource Remove="wwwroot\website\ACS\**" />
+    <EmbeddedResource Remove="wwwroot\website\ADI\**" />
+    <EmbeddedResource Remove="wwwroot\website\assets\**" />
+    <EmbeddedResource Remove="wwwroot\website\css\**" />
+    <EmbeddedResource Remove="wwwroot\website\js\**" />
+    <EmbeddedResource Remove="wwwroot\website\lib\**" />
+    <EmbeddedResource Remove="wwwroot\website\vendor\**" />
+    <EmbeddedResource Remove="wwwroot\website\_news\**" />
+    <None Remove="wwwroot\website\ACS\**" />
+    <None Remove="wwwroot\website\ADI\**" />
+    <None Remove="wwwroot\website\assets\**" />
+    <None Remove="wwwroot\website\css\**" />
+    <None Remove="wwwroot\website\js\**" />
+    <None Remove="wwwroot\website\lib\**" />
+    <None Remove="wwwroot\website\vendor\**" />
+    <None Remove="wwwroot\website\_news\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\mail\A-9-3.html" />
+    <None Remove="wwwroot\mail\MailLayout.html" />
+    <None Remove="wwwroot\website\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\mail\A-9-3.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\mail\MailLayout.html">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBModel\DBModel.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

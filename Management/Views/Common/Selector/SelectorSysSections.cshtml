@@ -1,0 +1,15 @@
+﻿@model definitionModel
+@{
+    var list = Services.CommonService.GetSysSections();
+}
+<select id="@Model.IdName" name="@Model.IdName" class="form-control">
+    <option value="">--請選擇--</option>
+    @foreach (var sys in list.Where(x => x.ParentSN == null).OrderBy(x => x.SortOrder))
+    {
+        <option value="@sys.SysSectionSN" disabled="disabled">@sys.Title</option>
+        @foreach (var sys2 in list.Where(x => x.ParentSN == sys.SysSectionSN).OrderBy(x => x.SortOrder))
+        {
+            <option value="@sys2.SysSectionSN" selected="@(Model.selectIds.Any(x=>x == sys2.SysSectionSN.ToString()))">@(" └ "+sys2.Title)</option>
+        }
+    }
+</select>

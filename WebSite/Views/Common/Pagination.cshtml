@@ -1,0 +1,152 @@
+﻿@model Utility.DefaultPager
+@using System.Web;
+@{
+    int pendingcount = (Model.PageButtonCount - 1) / 2;
+    int start = 0;
+    int end = 0;
+    start = Model.PageIndex - pendingcount < 0 ? 0 : Model.PageIndex - pendingcount;
+    end = Model.PageIndex + pendingcount > Model.PageCount - 1 ? Model.PageCount - 1 : Model.PageIndex + pendingcount;
+    if (Model.PageIndex + pendingcount > Model.PageCount - 1)
+    {
+        start -= (Model.PageIndex + pendingcount) - (Model.PageCount - 1);
+        start = start < 0 ? 0 : start;
+    }
+    if (Model.PageIndex - pendingcount < 0)
+    {
+        end += 0 - (Model.PageIndex - pendingcount);
+        end = end > Model.PageCount - 1 ? Model.PageCount - 1 : end;
+    }
+    var pageShow = HttpUtility.HtmlDecode(WebSite.WebSiteUtility.CommonUtility.PageDisplayCount(int.Parse(HttpUtility.HtmlEncode(Model.DisplayCount.ToString()))));
+    ///牽涉文字排版問題，故多語系用switch case處理
+}
+<div class="pageBar mb-5 ">
+    <div class="pageSet mb-4">
+        @switch (Model.Lang)
+        {
+            case "en":
+                {
+                    if (Model.TotalCount > 15)
+                    {
+                        <div class="mRow">page<span class="pageNum">@Model.p</span>of<span class="totalPage">@Model.PageCount</span>, total items<span class="totalData">@Model.TotalCount</span>, </div>
+                        <div class="mRow">
+                            <select class="sel2 rounded-4" id="perPageShow" title="items per page">
+                                @Html.Raw(pageShow);
+                            </select>
+                            <label for="perPageShow">items per page</label>
+                        </div>
+                        <div class="mRow">
+                            <a href="javascript:;" class="btn btn3 rounded-4" onclick="SearchJsonData(1)" role="button">GO</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mRow">total items<span class="totalData">@Model.TotalCount</span>.</div>
+                    }
+                }
+                break;
+            default:
+                {
+                    if (Model.TotalCount > 15)
+                    {  
+                        <div class="mRow">共<span class="totalData">@Model.TotalCount</span>筆資料，第<span class="pageNum">@Model.p</span>/<span class="totalPage">@Model.PageCount</span>頁，</div>
+                        <div class="mRow">
+                            <label for="perPageShow">每頁顯示</label>
+                            <select class="sel2 rounded-4" id="perPageShow" title="每頁顯示筆數">
+                                @Html.Raw(pageShow);
+                            </select>筆
+                        </div>
+                        <div class="mRow">
+                            <a href="javascript:;" class="btn btn3 rounded-4" onclick="SearchJsonData(1)" role="button">確定</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mRow">共<span class="totalData">@Model.TotalCount</span>筆資料</div>
+                    }
+                }
+                break;
+        }
+    </div>
+    @if (Model.TotalCount > 15)
+    {
+        <div class="pageNav">
+            @{
+                //PrePage
+                if (Model.PageIndex == 0) { }
+                else
+                {
+                    switch (Model.Lang)
+                    {
+                        case "en":
+                            <a class="page_a firstP" onclick="SearchJsonData(1)" href="javascript:;" data-page="1">First</a>
+                            break;
+                        default:
+                            <a class="page_a firstP" onclick="SearchJsonData(1)" href="javascript:;" data-page="1">第一頁</a>
+                            break;
+                    }
+                }
+                var strCont = (start + 1);
+                var endCont = (end + 1);
+                //FirstPage
+                if (Model.PageIndex <= Math.Ceiling((double)Model.PageButtonCount / 2))
+                {
+                }
+                else
+                {
+                    if (strCont != 1)
+                    {
+                        <a class="page_a" onclick="SearchJsonData(1)" href="javascript:;" data-page="1">1</a>
+                        <span>..</span>
+                    }
+
+                }
+                //Pages
+                for (int i = start; i <= end; i++)
+                {
+                    if (Model.PageIndex == i)
+                    {
+                        <a class="page_a on" onclick="SearchJsonData(@(i + 1))" href="javascript:;" data-page="@(i + 1)">@(i + 1)</a>
+                    }
+                    else
+                    {
+                        <a class="page_a" onclick="SearchJsonData(@(i + 1))" href="javascript:;" data-page="@(i + 1)">@(i + 1)</a>
+                    }
+                }
+                //LastPage
+                if (Model.PageIndex >= Model.PageCount - 1 - Math.Ceiling((double)Model.PageButtonCount / 2))
+                {
+                }
+                else
+                {
+                    if (endCont != Model.PageCount)
+                    {
+                        <span>..</span>
+                        <a class="page_a" onclick="SearchJsonData('@Model.PageCount')" href="javascript:;" data-page="@(Model.PageCount)">
+                            @Model.PageCount
+                        </a>
+                    }
+
+                }
+                //NextPage
+                if (Model.PageIndex >= Model.PageCount - 1)
+                {
+                    @*<li class="disabled">
+                        <a  class="page_a" href="javascript:;" data-page="@(Model.PageIndex + 1 + 1)" ><span class="icon12 minia-icon-arrow-right-3"></span></a>
+                        </li>*@
+                }
+                else
+                {
+                    switch (Model.Lang)
+                    {
+                        case "en":
+                            <a class="page_a lastP" onclick="SearchJsonData('@Model.PageCount')" href="javascript:;" data-page="@(Model.PageCount)">Last</a>
+                            break;
+                        default:
+                            <a class="page_a lastP" onclick="SearchJsonData('@Model.PageCount')" href="javascript:;" data-page="@(Model.PageCount)">最後一頁</a>
+                            break;
+                    }
+                }
+            }
+        </div>         
+    }  
+</div>

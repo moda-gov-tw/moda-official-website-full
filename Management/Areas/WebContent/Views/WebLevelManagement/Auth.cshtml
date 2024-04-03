@@ -1,0 +1,109 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.AuthModel;
+<partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.LevelBreadcrumb />
+
+@if (Model.sysGroups != null)
+{
+    <div class="row searchBar1">
+        <div class="col">
+            <label class="col-form-label">
+                群組名稱：
+            </label>
+            <div class="row">
+                <div class="col">
+                    <input type="text" id="q" class="form-control" placeholder="群組名稱">
+                </div>
+                <div class="col col-btn">
+                    <input type="button" value="查詢" class="ubtn-search search" onclick="searchFunction(1)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tableList">
+    </div>
+    @Html.AntiForgeryToken()
+    ;
+    <script>
+        searchFunction(1);
+
+        $(document).off('click', '.page_a');
+        $(document).on("click", ".page_a", function () {
+            var p = getObjAtr($(this), "data-page");
+            searchFunction(p);
+        });
+        function searchFunction(p) {
+            var href = "@Url.Action("AuthList", "WebLevelManagement", new { area = "WebContent" })";
+            var q = MODAhtmlEncode($("#q"), "val");
+            var DisplayCount = MODAhtmlEncode($('#perPageShow'), "val");
+            var diCount = diCountFunction(30, DisplayCount, 0);
+            var key = "@CommonUtility.GetUrlAesEncrypt(Model.webLevelSN)";
+            if (q == "undefined") { q = ""; }
+            var selectobj = {
+                "displayCount": diCount,
+                "p": p,
+                "q": q
+            };
+            SetCookie("NewsObj", selectobj);
+            SetCookie("back", 1);
+            var getUrl = "?key=" + key + "&q=" + selectobj.q + "&DisplayCount=" + selectobj.displayCount + "&p=" + selectobj.p;
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl);
+        }
+        function reloadDataTable(href) {
+            $("#tableList").html("");
+            $("#tableList").load(href, function () { });
+        }
+        function changePower(e) {
+            var chk = e.prop("checked");
+            var authtype = e.attr("data-type");
+            var obj = {
+                authtype: authtype,
+                weblevelsn: '@Model.webLevelSN',
+                sysgroupsn: e.attr("data-gid"),
+                lang: '@Model.lang'
+            };
+
+            SaveAccessForGroup(chk, obj);
+
+        }
+
+        function ChangeAuth(e) {
+            var href = "@Url.Action("Auth", "WebLevelManagement", new { area = "WebContent" })?key=" + e.attr("data-id") + "&lang=" + e.val();
+            $("#fox_box").load(href, function () { });
+        }
+        function SaveAccessForGroup(chk, obj) {
+            $('.preloader').show();
+            $.ajax({
+                url: "@Url.Action("EditAuth", "WebLevelManagement", new { area = "WebContent" } )",
+                data: { data: obj, chk: chk },
+                type: 'post',
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        if (chk) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "新增成功"
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: "success",
+                                title: "刪除成功"
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+}

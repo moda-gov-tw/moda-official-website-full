@@ -1,0 +1,74 @@
+﻿@model sitemapModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Category = Model.langCategory;
+}
+@section meta{
+<title>@Model.ogData.title</title>
+<meta property="og:title" content="@Model.ogData.title" />
+<meta property="og:image" content="@Model.ogData.image" />
+<meta property="og:image:type" content="@Model.ogData.image_type">
+<meta property="og:image:width" content="@Model.ogData.image_width">
+<meta property="og:image:height" content="@Model.ogData.image_height">
+<meta property="og:description" content="@Model.ogData.description" />
+<meta name="keywords" content="@Model.ogData.keyword" />
+<meta name="description" content="@Model.ogData.description" />
+}
+@section gacode{
+	 @if (!string.IsNullOrWhiteSpace(Model.SysWebSiteLang.GACode))
+    {
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.SysWebSiteLang.GACode))
+    }
+}
+@{
+    var Tree = "";
+    void _TreeFun(List<Services.Models.WebSite.WebLevelModel> webLevelModels, int ParentSN, int ParentCount = 1, int Level = 0, string LevelTilte = "")
+    {
+        var LocalSort = 0;
+        var liclass = Level == 0 ? "treeMain col-12 col-sm-6 col-lg-4" : "treeSubI";
+        foreach (var item in webLevelModels.Where(x => x.ParentSN == ParentSN).OrderBy(x => x.SortOrder))
+        {
+            LocalSort++;
+            var  _LevelTilte = Level == 0 ? LocalSort.ToString() : $@"{LevelTilte}-{LocalSort}";
+            var _LocalSort = Level == 0 ? "" : $@"-{LocalSort.ToString()}";
+            Tree += $@"<li class='{liclass} '>";
+            Tree += $@"     <a href='{Url.Content(item.DynamicURL)}'><span class='tabConTh'>{_LevelTilte}</span><div class='tabConTd'>{item.Title}</div></a>";
+            var itemBs = Model.webLevels.Where(x => x.ParentSN == item.MainSN).ToList();
+            if (itemBs.Count() > 0)
+            {
+                Tree += "<ul class='treeSub list-unstyled'>";
+                _TreeFun(itemBs, item.MainSN.Value, ParentCount++, 1, _LevelTilte);
+                Tree += " </ul>";
+            }
+            Tree += "</li>";
+        }
+    }
+    _TreeFun(Model.webLevels, Model.webLevels.Where(x => x.ParentSN != 0).Min(x => x.ParentSN));
+}
+
+<main class="main">
+    <!-- 0.麵包屑 -->
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=Model.webSiteBreadcrumbs />
+    <!-- 單欄內容 -->
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden noLeftMenu">
+        <div class="rightMain">
+
+            <div class="a11yBrickBar1">
+                <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute"	title="@Category.FirstOrDefault(x=>x.SysCategoryKey == Model.SysWebSiteLang.WebSiteID +"-7-30" )?.Value">:::</a>
+            </div>
+
+            <!-- 標題 -->
+            <partial name="~/Views/Home/titleBar.cshtml" model=Model.titleBarMdel />
+            <!-- 文字編輯區 -->
+            <div class="article1">
+                @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.localLevel.ContentHeader))
+            </div>
+            <!-- 網站地圖 -->
+            <div class="siteTree">
+                <ul class="list-unstyled row">
+                    @Html.Raw(Tree)
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>

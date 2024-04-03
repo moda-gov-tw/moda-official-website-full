@@ -1,0 +1,724 @@
+﻿@model Services.Models.WebSite.NewsListModel
+@using Utility
+@{
+    var md = Model;
+    var noNeedDateListType = new List<string>() { "BilingualList" };
+    var NeedDateList = noNeedDateListType.FirstOrDefault(x => x == Model.WebLevel.ListType) == null ? true : false;
+}
+@{
+    <div class="a11yBrickBar1">
+        <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID +"-7-30")?.Value">:::</a>
+    </div>
+    <!--標題-->
+    @Html.Partial("~/Views/WebSiteList/titleBar.cshtml",  md)
+    <!--搜尋功能-->
+    <div class="conSearchBar1 mb-4 conSearchBarJs off">
+        <div class="conSearchBarWrap">
+            @switch (Model.WebLevel.Module)
+            {
+                case "Bilingual":
+                    <div class="searchIw2 flex-fill">
+                        <div class="searchI">
+                            <div class="searchI-C">
+                                <label for="QryKeyword" class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-7")?.Value</label>
+                                <input type="text" name="" id="QryKeyword" placeholder="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-1")?.Value" value="@Model.txt" class="searchI-C ipt1 rounded-4 searchField" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-25")?.Value">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="searchIw7">
+                        <div class="searchI align-items-center gap-4">
+                            <div class="searchI-C gap-2 d-flex align-items-center">
+                                <b>@(Model.WebLevel.Lang.ToUpper() == "EN" ? "Filter" : "進階篩選") </b>
+                                <div class="chx1I">
+                                    <input type="checkbox" name="Regulations" id="Regulations" class="visually-hidden" value="1">
+                                    <label for="Regulations" class="d-flex align-items-center gap-2">
+                                        <i class="ci ci-law"></i>
+                                        <span class="chx1Txt">@(Model.WebLevel.Lang.ToUpper() == "EN" ? " Legal Glossary" : "法規詞彙")</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="searchI-R">
+                                <input type="button" class="btn btn2 rounded-4 searchSubmit" value="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-2")?.Value" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-10")?.Value" onclick="Search(1)">
+                            </div>
+                        </div>
+                    </div>
+                    break;
+                default:
+                    <!-- 結尾有日曆的 -->
+                    <div class="searchIw3" @(NeedDateList ? "" : $@" style=display:none; ")>
+                        <div class="searchI">
+                            <div class="searchI-C">
+                                <label for="QryDateS" class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-6")?.Value</label>
+                                <input name="QryDateS" type="text" id="QryDateS" title="yyyy-mm-dd" class="ipt1 rounded-4 datepicker1" placeholder="yyyy-mm-dd" maxlength="10" autocomplete="off" value="@md.str_Date">
+                            </div>
+                            <div class="searchI-R">
+                                <a href="javascript:;" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-7")?.Value" class="calendarBtn1"><span class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-7")?.Value</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 開頭有~結尾有日曆的 -->
+                    <div class="searchIw4" @(NeedDateList ? "" : $@" style=display:none; ")>
+                        <div class="searchI">
+                            <div class="searchI-L">~</div>
+                            <div class="searchI-C">
+                                <label for="QryDateE" class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-8")?.Value</label>
+                                <input name="QryDateE" type="text" id="QryDateE" title="yyyy-mm-dd" class="ipt1 rounded-4 datepicker1" placeholder="yyyy-mm-dd" maxlength="10" autocomplete="off" value="@md.end_Date">
+                            </div>
+                            <div class="searchI-R">
+                                <a href="javascript:;" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-9")?.Value" class="calendarBtn1"><span class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-9")?.Value</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var condition in md.Conditions)
+                    {
+                        var i = condition.Split('-')?[1] ?? "";
+                        if (i == "8")
+                        {
+                            <div class="searchIw1">
+                                <div class="searchI">
+                                    <div class="searchI-L">
+                                        <label for="CustomizeTags">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-8")?.Value：</label>
+                                    </div>
+                                    <div class="searchI-C">
+                                        <select id="CustomizeTags" class="sel1 rounded-4">
+                                            <option value="">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                            @foreach (var Tag in md.CustomizeTags)
+                                            {
+                                                <option value="@Tag.WebLevelCustomizeTagSn">@Tag.TagName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="searchIw1">
+                                <div class="searchI">
+                                    <div class="searchI-L">
+                                        <label for="Condition@(i)">@(md.langCategory.FirstOrDefault(x => x.SysCategoryKey == condition)?.Value)：</label>
+                                    </div>
+                                    <div class="searchI-C">
+                                        <select id="Condition@(i)" class="sel1 rounded-4">
+                                            <option value="">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                            @foreach (var cate in md.langCategory.Where(x => x.ParentKey == condition).OrderBy(x => x.SortOrder).ToList())
+                                            {
+                                                <option value="@cate.SysCategoryKey">@cate.Value</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (md.WebLevel.Module == "Schedule")
+                    {
+                        <div class="searchIw1">
+                            <div class="searchI">
+                                <div class="searchI-L">
+                                    <label for="Chief">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-13")?.Value：</label>
+                                </div>
+                                <div class="searchI-C">
+                                    <select id="Chief" class="sel1 rounded-4">
+                                        <option value="">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                        @foreach (var chief in md.langCategory.Where(x => x.IsEnable == "1" && x.ParentKey == Model.SysWebSiteLang.WebSiteID + "-13").OrderBy(x => x.SortOrder))
+                                        {
+                                            <option value="@chief.SysCategoryKey">@($@"{chief.Value}{chief.Description}")</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="searchIw1">
+                            <div class="searchI">
+                                <div class="searchI-L">
+                                    <label for="SysZipCode">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-75")?.Value：</label>
+                                </div>
+                                <div class="searchI-C">
+                                    <select id="SysZipCode" class="sel1 rounded-4">
+                                        <option value="">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-64")?.Value</option>
+                                        @foreach (var zipCode in md.sysZipCodes)
+                                        {
+                                            <option value="@zipCode.ZipCodeSn">@zipCode.Title</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!-- 結尾有按鈕 -->
+                    <div class="searchIw5">
+                        <div class="searchI">
+                            <div class="searchI-C">
+                                <label for="QryKeyword" class="visually-hidden">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-1-7")?.Value</label>
+                                <input type="text" name="QryKeyword" id="QryKeyword" placeholder="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-1")?.Value" value="@md.txt" class="searchI-C ipt1 rounded-4 searchField" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-25")?.Value">
+                            </div>
+                            <div class="searchI-R">
+                                <input type="button" class="btn btn2 rounded-4 searchSubmit" value="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-2")?.Value" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-7-10")?.Value" onclick="Search(1)">
+                            </div>
+                        </div>
+                    </div>
+                    break;
+            }
+
+        </div>
+    </div>
+    <!--Header-->
+    <div id="ContentHeader">
+        @if (!string.IsNullOrEmpty(md.WebLevel.ContentHeader))
+        {
+            <div class="article1 mb-4">
+                @Html.Raw(md.WebLevel.ContentHeader)
+            </div>
+        }
+    </div>
+
+    <!--列表-->
+    if (md.list.Count() > 0)
+    {
+        if (md.WebLevel.Module == "Schedule")
+        {
+            var listpath = $@"~/Views/WebSiteList/{md.WebLevel.Module}.cshtml";
+            @Html.Partial(listpath,  md)
+            //<div class="scheduleWrap" id="ListTable">
+            //    <div class="dayList">
+            //        @{
+
+            //            var dataList = md.list.GroupBy(x => x.schedule.scheduledate).Select(g => new { g.Key  });
+            //            foreach (var date in dataList.OrderByDescending(x=>  DateTime.Parse( x.Key)))
+            //            {
+            //                var userData = Model.list.Where(x => x.schedule.scheduledate == date.Key.ToString()).GroupBy(x => x.scheduletTitle).Select(g => new { key = g.Key, data = g }).ToList();
+            //                <div class="dayI">
+            //                    <div class="date">
+            //                        <b>@date.Key.ToString()</b>
+            //                    </div>
+            //                    <div class="timeList">
+            //                        @foreach (var sn in userData.OrderBy(x => x.data.First().scheduletChiefSort))
+            //                        {
+            //                            <div class="timeI">
+            //                                <div class="name"><b>@sn.key</b></div>
+            //                                <div class="con overflow-hidden">
+            //                                    <div class="v2TimeI">
+            //                                        @foreach (var detail in sn.data.OrderBy(x => x.scheduletChiefSort).ThenBy(x => x.schedule.scheduletime))
+            //                                        {
+            //                                            <div class="title"><b><span class="v2TimePoint">@detail.schedule.scheduletime</span> @detail.webNews.Title</b></div>
+            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.SubTitle))
+            //                                            {
+            //                                                <div class="site">@($"{md.langCategory.FirstOrDefault(x => x.SysCategoryKey == Model.SysWebSiteLang.WebSiteID + "-7-74")?.Value}{detail.webNews.SubTitle}")</div>
+            //                                            }
+            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.ContentText))
+            //                                            {
+            //                                                <div class="site">@($"{md.langCategory.FirstOrDefault(x => x.SysCategoryKey == Model.SysWebSiteLang.WebSiteID + "-7-79")?.Value}{detail.webNews.ContentText}")</div>
+            //                                            }
+            //                                            if (!string.IsNullOrWhiteSpace(detail.webNews.Description))
+            //                                            {
+            //                                                <div class="note">@detail.webNews.Description</div>
+            //                                            }
+            //                                            if (detail.schedule.schedulelinkdisplay != "none" || detail.schedule.schedulefiledisplay != "none")
+            //                                            {
+            //                                                <div>
+            //                                                    <ul class="list4-3 list-group">
+            //                                                        @if (detail.schedule.schedulefiledisplay != "none")
+            //                                                        {
+            //                                                            foreach (var file in detail.schedule.schedulefile)
+            //                                                            {
+            //                                                                <li class="list-group-item d-block bg-transparent">
+            //                                                                    <a href="@file.url" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" rel="noreferrer noopener" title="@($"{file.title}{md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID +"-7-33")?.Value}")">
+            //                                                                        <div class="col mb-0 listIcon1">
+            //                                                                            <b class="title5 fw-normal">@file.filename<span class="fileTypeI">@file.filetype</span></b>
+            //                                                                        </div>
+            //                                                                    </a>
+            //                                                                </li>
+            //                                                            }
+            //                                                        }
+            //                                                        @if (detail.schedule.schedulelinkdisplay != "none")
+            //                                                        {
+            //                                                            foreach (var link in detail.schedule.schedulelink)
+            //                                                            {
+            //                                                                <li class="list-group-item d-block bg-transparent">
+            //                                                                    <a href="@link.column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="@($"{link.column_2}{md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID +"-7-33")?.Value}")">
+            //                                                                        <div class="col mb-0 listIcon1">
+            //                                                                            <b class="title5 fw-normal">
+            //                                                                                @link.column_2
+            //                                                                                @if (link.isLocal)
+            //                                                                                {
+            //                                                                                    <i class="bi bi-link-45deg"></i>
+            //                                                                                }
+            //                                                                                else
+            //                                                                                {
+            //                                                                                    <i class="bi bi-box-arrow-up-right"></i>
+            //                                                                                }
+            //                                                                            </b>
+            //                                                                        </div>
+            //                                                                    </a>
+            //                                                                </li>
+            //                                                            }
+            //                                                        }
+            //                                                    </ul>
+            //                                                </div>
+            //                                                <div class="eventI row">
+            //                                                    @if (detail.schedule.schedulenewsdisplay != "none")
+            //                                                    {
+            //                                                        foreach (var news in detail.schedule.schedulenews)
+            //                                                        {
+            //                                                            <div class="eventTxt col-12">
+            //                                                                <a href="@news.newsurl">
+            //                                                                    <div class="eventTitle">@news.newstitle</div>
+            //                                                                    <div class="eventIntro">
+            //                                                                        @news.newscontext<span class="fileTypeI">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-73")?.Value</span>
+            //                                                                    </div>
+            //                                                                </a>
+            //                                                            </div>
+            //                                                            if (news.imagedisplay != "none" || news.videodisplay != "none")
+            //                                                            {
+            //                                                                <div class="col-12">
+            //                                                                    <div class="row">
+            //                                                                        @if (news.imagedisplay != "none")
+            //                                                                        {
+            //                                                                            <div class="eventPic col-md-6">
+            //                                                                                <div class="imgCover picZoomJs" data-mctxtclose="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-69")?.Value"
+            //                                                                                     data-mctxtprev="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-70")?.Value" data-mctxtnext="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-71")?.Value"
+            //                                                                                     data-mctxtnum="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-72")?.Value">
+            //                                                                                    <div class="position-relative">
+            //                                                                                        @{
+            //                                                                                            bool first = true;
+            //                                                                                            foreach (var img in news.newsimage)
+            //                                                                                            {
+            //                                                                                                <a class="card @(first ? "d-block" : "d-none") border-0" href="@img.url">
+            //                                                                                                    <div class="pic position-relative overflow-hidden">
+            //                                                                                                        <img src="@img.url" alt="">
+            //                                                                                                    </div>
+            //                                                                                                    <div class="card-body px-0 py-2 d-none">
+            //                                                                                                        <b class="card-title">@img.title</b>
+            //                                                                                                    </div>
+            //                                                                                                </a>
+            //                                                                                                first = false;
+            //                                                                                            }
+            //                                                                                        }
+
+            //                                                                                    </div>
+            //                                                                                </div>
+            //                                                                            </div>
+            //                                                                        }
+            //                                                                        @if (news.videodisplay != "none")
+            //                                                                        {
+            //                                                                            foreach (var video in news.newsvideo)
+            //                                                                            {
+            //                                                                                <div class="eventVideo col-md-6">
+            //                                                                                    <div class="imgCover">
+            //                                                                                        <a href="@($"https://youtu.be/{video.column_1}")" class="card h-100 d-block border-0" target="_blank" rel="noreferrer noopener" title="@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID +"-7-33")?.Value">
+            //                                                                                            <div class="pic position-relative overflow-hidden">
+            //                                                                                                <img src="@($"https://i.ytimg.com/vi/{video.column_1}/hqdefault.jpg")" alt="">
+            //                                                                                                <div class="play"></div>
+            //                                                                                            </div>
+            //                                                                                            <div class="card-body px-0 py-2 d-none">
+            //                                                                                                <b class="card-title">@video.column_2</b>
+            //                                                                                            </div>
+            //                                                                                        </a>
+            //                                                                                    </div>
+            //                                                                                </div>
+            //                                                                            }
+            //                                                                        }
+            //                                                                    </div>
+            //                                                                </div>
+            //                                                            }
+            //                                                        }
+            //                                                    }
+            //                                                </div>
+            //                                            }
+            //                                        }
+            //                                    </div>
+            //                                </div>
+            //                            </div>
+            //                        }
+            //                    </div>
+            //                </div>
+            //            }
+            //        }
+            //    </div>
+            //</div>
+        }
+        else
+        {
+            var listpath = $@"~/Views/WebSiteList/{md.WebLevel.ListType}.cshtml";
+            @Html.Partial($@"~/Views/WebSiteList/{md.WebLevel.ListType}.cshtml",  md)
+            // @Html.Partial(listpath,  md)
+            //switch (md.WebLevel.ListType)
+            //{
+            //    case "OneTextList":
+            //        <ul class="list4-2 list-group divider mb-5" id="ListTable">
+            //            @foreach (var item in md.list)
+            //            {
+
+            //                <li class="list-group-item d-block bg-transparent px-0">
+            //                    <a href="@item.webUrl" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                        <div class="listDate ms-md-3 order-md-2">@item.webNews.StartDate.Value.ToString("yyyy-MM-dd")</div>
+            //                        <div class="col mb-0">
+            //                            <b class="title5 fw-normal">
+            //                                @if (item.webNews.IsTop != null)
+            //                                {
+            //                                    <i class="ci ci-pushpin"></i>
+            //                                }
+            //                                @(item.webNews.Title)
+            //                                @if (item.webFile?.FileType != null)
+            //                                {
+            //                                    <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+            //                                }
+            //                                else
+            //                                {
+            //                                    if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+            //                                    {
+            //                                        <i class="bi bi-box-arrow-up-right"></i>
+            //                                    }
+            //                                }
+            //                            </b>
+            //                        </div>
+            //                    </a>
+            //                    @if (item.sysCategories != null && item.sysCategories.Count() > 0)
+            //                    {
+            //                        <div class="listTag2">
+            //                            @foreach (var item2 in item.sysCategories)
+            //                            {
+            //                                <a class="btn" href="javascript:;" role="button">@item2.Value</a>
+            //                            }
+            //                        </div>
+            //                    }
+            //                </li>
+            //            }
+            //        </ul>
+            //        break;
+            //    case "TwoTextList":
+            //        <div class="list3-2 row gy-3 gx-sm-5 mb-5" id="ListTable">
+            //            @foreach (var item in md.list)
+            //            {
+
+            //                <div class="col-12 col-sm-6 position-relative">
+            //                    <div class="card h-100 rounded-0">
+            //                        <div class="card-body ps-0 pb-0 pe-4">
+            //                            <div class="d-flex flex-wrap">
+            //                                <a href="@item.webUrl" class="cardT col-12" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                                    <b class="card-title title5 fw-normal">
+            //                                        @if (item.webNews.IsTop != null)
+            //                                        {
+            //                                            <i class="ci ci-pushpin"></i>
+            //                                        }
+            //                                        @(item.webNews.Title)
+            //                                        @if (item.webFile?.FileType != null)
+            //                                        {
+            //                                            <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+            //                                        }
+            //                                        else
+            //                                        {
+            //                                            if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+            //                                            {
+            //                                                <i class="bi bi-box-arrow-up-right"></i>
+            //                                            }
+            //                                        }
+            //                                    </b>
+            //                                    @if (!string.IsNullOrWhiteSpace(item.webNews.SubTitle))
+            //                                    {
+            //                                        <p class="card-text">@(item.webNews.SubTitle)</p>
+            //                                    }
+            //                                </a>
+            //                                <div class="listDate me-auto pt-2"><span class="pe-2">@item.webNews.StartDate.Value.ToString("yyyy-MM-dd")</span></div>
+            //                                @if (item.sysCategories != null && item.sysCategories.Count() > 0)
+            //                                {
+            //                                    <div class="listTag2 flex-fill pt-2">
+            //                                        @foreach (var item2 in item.sysCategories)
+            //                                        {
+            //                                            <a class="btn" href="javascript:;" role="button">@item2.Value</a>
+            //                                        }
+            //                                    </div>
+            //                                }
+            //                            </div>
+            //                        </div>
+            //                    </div>
+            //                </div>
+            //            }
+            //        </div>
+            //        break;
+            //    case "NoDateTextList":
+            //        <!-- 列表樣式三 -->
+            //        <ul class="list4-2 list-group divider mb-5" id="ListTable">
+            //            @foreach (var item in md.list)
+            //            {
+
+            //                <li class="list-group-item d-block bg-transparent px-0">
+            //                    <a href="@item.webUrl" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                        <div class="col mb-0 listIcon1">
+            //                            <b class="title5 fw-normal">
+            //                                @if (item.webNews.IsTop != null)
+            //                                {
+            //                                    <i class="ci ci-pushpin"></i>
+            //                                }
+            //                                @(@item.webNews.Title)
+            //                                @if (item.webFile?.FileType != null)
+            //                                {
+            //                                    <span class="fileTypeI">@item.webFile.FileType.ToUpper().Split('.')[1]</span>
+            //                                }
+            //                                else
+            //                                {
+            //                                    if (!Services.CommonService.CheckLocalUrl(item.webUrl))
+            //                                    {
+            //                                        <i class="bi bi-box-arrow-up-right"></i>
+            //                                    }
+            //                                }
+            //                            </b>
+            //                        </div>
+            //                    </a>
+            //                </li>
+            //            }
+            //        </ul>
+            //        break;
+            //    case "LabelList":
+            //        <!-- 列表樣式七 -->
+            //        <div class="list1 row mb-5 g-3" id="ListTable">
+            //            @foreach (var item in md.list)
+            //            {
+            //                <div class="col-12 col-sm-6 col-md-4">
+            //                    <div class="card h-100 shadow-md">
+            //                        <a href="@item.webUrl" class="card-body text-decoration-none" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                            <b class="card-title title5">@(item.webNews.Title)</b>
+            //                            <p class="card-text">@(item.webNews.SubTitle)</p>
+            //                        </a>
+            //                    </div>
+            //                </div>
+            //            }
+            //        </div>
+            //        break;
+            //    case "IcoList":
+            //        <!-- 列表樣式八 -->
+            //        <div class="list2 row text-center px-lg-5 mb-5" id="ListTable">
+            //            @foreach (var item in md.list)
+            //            {
+            //                <div class="col-6 col-sm-4 pt-2 pb-2 pb-lg-4">
+            //                    <a href="@item.webUrl" class="d-block" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                        <div class="listPic">
+            //                            <div class="bg-full"></div>
+            //                            <span class="listIcon lazy" data-bg="@(item.webLogo == null ? "~/assets/img/icon_dept4-2-1.svg" : item.webLogo.FilePath)"></span>
+            //                        </div>
+            //                        <b class="title5">@(item.webNews.Title)</b>
+            //                    </a>
+            //                </div>
+            //            }
+            //        </div>
+            //        break;
+            //    case "FileList": break;
+            //    case "ImageTextList":
+            //        <div class="list8-2 row imgCover mb-5 g-3" id="ListTable">
+            //            @{
+            //                foreach (var item in md.list)
+            //                {
+            //                    <div class="col-12 col-sm-6 col-md-4 position-relative">
+            //                        <a href="@("https://youtu.be/" + item.webVideo?.Column_1)" class="card h-100 d-block rounded-4 border-0" target="_blank" rel="noreferrer noopener" title="@(item.webNews.Title + md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.WebLevel.WebSiteID+"-7-33")?.Value)">
+            //                            <div class="pic position-relative overflow-hidden rounded-4">
+            //                                <img src="@("https://i.ytimg.com/vi/" + item.webVideo?.Column_1 + "/hqdefault.jpg")" alt="">
+            //                                <div class="play"></div>
+            //                            </div>
+            //                            <div class="card-body">
+            //                                <b class="card-title fw-normal">@item.webNews.Title</b>
+            //                            </div>
+            //                        </a>
+            //                    </div>
+            //                }
+            //            }
+
+            //        </div>
+            //        break;
+            //    case "ImageTextList2":
+            //        <div class="list8 row imgCover mb-5 g-3" id="ListTable">
+            //            @{
+            //                foreach (var item in md.list)
+            //                {
+            //                    <div class="col-12 col-sm-6 col-md-4 position-relative">
+            //                        <a href="@item.webUrl" class="card h-100 d-block rounded-4 border-0" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                            <div class="pic position-relative overflow-hidden rounded-4">
+            //                                <img src="@item.webLogo?.FilePath" alt="@item.webLogo?.FileTitle">
+            //                            </div>
+            //                            <div class="card-body">
+            //                                <b class="card-title fw-normal">@item.webNews.Title</b>
+            //                            </div>
+            //                        </a>
+            //                    </div>
+            //                }
+            //            }
+            //        </div>
+            //        break;
+            //    case "ColorBlockList":
+            //        <div class="list5-2 row mb-5 g-3" id="ListTable">
+            //            @{
+            //                foreach (var item in md.list)
+            //                {
+            //                    <div class="col-12 col-sm-6 col-md-4">
+            //                        <a href="@item.webUrl" class="d-block px-5 py-4 text-center d-flex justify-content-center align-items-center" title="@item.tagModel.title" @(!string.IsNullOrWhiteSpace(item.tagModel.rel) ? $"rel={item.tagModel.rel}" : "") target="@item.tagModel.target">
+            //                            <b class="mb-0 fw-normal">@item.webNews.Title</b>
+            //                        </a>
+            //                    </div>
+            //                }
+            //            }
+            //        </div>
+            //        break;
+            //    case "AccordionList":
+            //        <div class="qa" id="ListTable">
+            //            <div class="row d-flex justify-content-center">
+            //                <div class="col">
+            //                    <div class="accordion mb-5" id="qa1">
+            //                        @foreach (var item in md.list)
+            //                        {
+            //                            <div class="accordion-item">
+            //                                <!-- 每項題目需套不同的id-->
+            //                                <div class="accordion-header" id="@($"qaH{item.webNews.MainSN}")">
+            //                                    <!--需套跟內容對應的data-bs-target、aria-controls -->
+            //                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="@($"#qaCon{item.webNews.MainSN}")" aria-controls="@($"qaCon{item.webNews.MainSN}")">
+            //                                        <span>@item.webNews.Title</span>
+            //                                    </button>
+            //                                </div>
+            //                                <!-- 每項內容需套不同的id，且要有加與題目id對應的aria-labelledby，要上與外框id對應的data-bs-parent-->
+            //                                <div id="@($"qaCon{item.webNews.MainSN}")" class="accordion-collapse collapse" aria-labelledby="@($"qaH{item.webNews.MainSN}")" data-bs-parent="#qa1">
+            //                                    <div class="accordion-body">
+            //                                        @if (!string.IsNullOrWhiteSpace(item.webNews.ContentText))
+            //                                        {
+            //                                            <div class="article1">
+            //                                                @(Html.Raw(item.webNews.ContentText))
+            //                                            </div>
+            //                                        }
+            //                                        <div class="articleOther">
+            //                                            @if (item.relatedFile?.Count() > 0) //相關檔案
+            //                                            {
+            //                                                <div class="otherI pb-4">
+            //                                                    <div class="title7">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-5")?.Value</div>
+            //                                                    <ul class="list4-3 list-group">
+            //                                                        @foreach (var file in item.relatedFile)
+            //                                                        {
+            //                                                            <li class="list-group-item d-block bg-transparent">
+            //                                                                <a href="@file.url" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" rel="noreferrer noopener" title="@file.title.Split('.')[0]">
+            //                                                                    <div class="col mb-0 listIcon1">
+            //                                                                        <b class="title5 fw-normal">@file.title.Split('.')[0]<span class="fileTypeI">@file.filetype.ToUpper().Replace(".","")</span></b>
+            //                                                                    </div>
+            //                                                                </a>
+            //                                                            </li>
+            //                                                        }
+            //                                                    </ul>
+            //                                                </div>
+            //                                            }
+            //                                            @if (item.relatedlink?.Count() > 0) //相關連結
+            //                                            {
+            //                                                <div class="otherI pb-4">
+
+            //                                                    <div class="title7">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-1")?.Value</div>
+            //                                                    <ul class="list4-3 list-group">
+            //                                                        @foreach (var link in item.relatedlink)
+            //                                                        {
+            //                                                            <li class="list-group-item d-block bg-transparent">
+            //                                                                <a href="@link.column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="@link.column_2">
+            //                                                                    <div class="col mb-0 listIcon1">
+            //                                                                        <!-- 外部連結需加上<i class="bi bi-box-arrow-up-right"></i> -->
+            //                                                                        <!-- 內部連結需加上<i class="bi bi-link-45deg"></i> -->
+            //                                                                        <b class="title5 fw-normal">@link.column_2<i class="bi bi-box-arrow-up-right"></i></b>
+            //                                                                    </div>
+            //                                                                </a>
+            //                                                            </li>
+            //                                                        }
+            //                                                    </ul>
+            //                                                </div>
+            //                                            }
+            //                                            @if (item.relatedmoj?.Count() > 0) //相關法規
+            //                                            {
+            //                                                <div class="otherI pb-4">
+            //                                                    <div class="title7">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-3")?.Value</div>
+            //                                                    <ul class="list4-3 list-group">
+            //                                                        @foreach (var link in item.relatedmoj)
+            //                                                        {
+            //                                                            <li class="list-group-item d-block bg-transparent">
+            //                                                                <a href="@link.column_1" class="listCon d-flex w-100 justify-content-md-between align-items-top flex-wrap" target="_blank" rel="noreferrer noopener" title="@link.column_2">
+            //                                                                    <div class="col mb-0 listIcon1">
+            //                                                                        <!-- 外部連結需加上<i class="bi bi-box-arrow-up-right"></i> -->
+            //                                                                        <!-- 內部連結需加上<i class="bi bi-link-45deg"></i> -->
+            //                                                                        <b class="title5 fw-normal">@link.column_2<i class="bi bi-box-arrow-up-right"></i></b>
+            //                                                                    </div>
+            //                                                                </a>
+            //                                                            </li>
+            //                                                        }
+            //                                                    </ul>
+            //                                                </div>
+            //                                            }
+            //                                            @if (item.relatedImg?.Count() > 0) //相關圖片
+            //                                            {
+            //                                                <div class="otherI pb-4">
+            //                                                    <div class="title7">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID+"-1-6")?.Value</div>
+            //                                                    <div class="list8-2 overflow-hidden">
+            //                                                        <div class="row gx-4 gx-xl-5 gy-2 gy-md-3 imgCover picZoomJs" data-mctxtclose="@item.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-69")?.Value" data-mctxtprev="@item.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-70")?.Value" data-mctxtnext="@item.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-71")?.Value" data-mctxtnum="@item.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-7-72")?.Value">
+            //                                                            @foreach (var img in item.relatedImg)
+            //                                                            {
+            //                                                                <div class="col-12 col-sm-6 col-md-4 position-relative">
+            //                                                                    <!-- href帶的圖為click會顯示的大圖 -->
+            //                                                                    <a href="@img.url" class="card h-100 d-block border-0">
+            //                                                                        <div class="pic position-relative overflow-hidden">
+            //                                                                            <img src="@img.url" alt="">
+            //                                                                        </div>
+            //                                                                        <div class="card-body">
+            //                                                                            <b class="card-title fw-normal">@img.title.Replace(img.filetype, "")</b>
+            //                                                                        </div>
+            //                                                                    </a>
+            //                                                                </div>
+            //                                                            }
+            //                                                        </div>
+            //                                                    </div>
+            //                                                </div>
+            //                                            }
+            //                                            @if (item.relatedvideo?.Count() > 0) //相關影片
+            //                                            {
+            //                                                <div class="otherI pb-4">
+            //                                                    <div class="title7">@md.langCategory.FirstOrDefault(x=>x.SysCategoryKey==Model.SysWebSiteLang.WebSiteID+"-1-2")?.Value</div>
+            //                                                    <div class="list8-2 overflow-hidden">
+            //                                                        <div class="row gx-4 gx-xl-5 gy-2 gy-md-3 imgCover">
+            //                                                            @foreach (var video in item.relatedvideo)
+            //                                                            {
+            //                                                                <div class="col-12 col-sm-6 col-md-4 position-relative">
+            //                                                                    <a href="https://youtu.be/@video.column_1" class="card h-100 d-block border-0" @Html.Raw(CommFun.getattr("_blank", video.column_2, item.sysCategories.FirstOrDefault(x=>x.SysCategoryKey==md.SysWebSiteLang.WebSiteID +"-7-33")?.Value))>
+            //                                                                        <div class="pic position-relative overflow-hidden">
+            //                                                                            <img src="https://i.ytimg.com/vi/@video.column_1/hqdefault.jpg" alt="">
+            //                                                                            <div class="play"></div>
+            //                                                                        </div>
+            //                                                                        <div class="card-body">
+            //                                                                            <b class="card-title fw-normal">@video.column_2</b>
+            //                                                                        </div>
+            //                                                                    </a>
+            //                                                                </div>
+            //                                                            }
+            //                                                        </div>
+            //                                                    </div>
+            //                                                </div>
+            //                                            }
+            //                                        </div>
+            //                                        <div class="linkBar">
+            //                                            <a class="copyLinkBtn copyLinkBtnJs" href='@($"#qaH{item.webNews.MainSN}")'>
+            //                                                <i class="bi bi-link"></i>@(item.webNews.Lang == "en" ? "Copy link" : "複製連結")<b class="copyMsg">@(item.webNews.Lang == "en" ? "Link copied" : "已複製連結")</b>
+            //                                            </a>
+            //                                        </div>
+            //                                    </div>
+            //                                </div>
+            //                            </div>
+            //                        }
+            //                    </div>
+            //                </div>
+            //            </div>
+            //        </div>
+            //        break;
+            //}
+        }
+        @Html.Partial("~/Views/WebSiteList/Pagination.cshtml",  md.pager)
+
+    }
+    else
+    {
+        <div id="ListTable" class="text-center txt1 py-5">@(md.langCategory.FirstOrDefault(x => x.SysCategoryKey == $"{md.WebLevel.WebSiteID}-7-11")?.Value) </div>
+    }
+    <!--Footer-->
+    <div class="article1 mb-4">
+        @(md.WebLevel.ContentFooter)
+    </div>
+    <input type="hidden" id="JsonData" value="@md.StrBigjsonData" />
+}
+
+

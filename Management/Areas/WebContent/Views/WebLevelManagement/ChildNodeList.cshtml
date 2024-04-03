@@ -1,0 +1,285 @@
+﻿@model Management.Areas.WebContent.Models.WebLevelManagement.ChildNodeListModel;
+@{
+    var md = Model;
+    var IsLook = false;
+    var IsLooksWebLevels = new List<int>() { 334, };
+    IsLook = IsLooksWebLevels.Any(x => x == md.ParentLevel.WebLevelSN);
+    var WeblevelType = md.ParentLevel.WeblevelType;
+   
+}
+
+<div class="row">
+    <partial name="~/Views/Common/Breadcrumb.cshtml" model=md.LevelBreadcrumb />
+    <div class="col-sm-12">
+        <div class="pb-3 text-right">
+            @{
+                var btns0 = new List<btnModel>();
+                if (md.CheckYoutubeApiKey)
+                {
+                    btns0.Add(new btnModel() { Btntype = btnModel.btntype.取API, IdName = "btnapiSearch", onclickFunction = "SearchYoutube()" });
+                }
+                if (!IsLook)
+                {
+                    btns0.Add(new btnModel() { Btntype = btnModel.btntype.新增, IdName = "btnNews", jsUseClassName = "btnCreate" });
+                }
+                if (btns0.Count() > 0)
+                {
+                    <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model=@btns0 />
+                }
+            }
+
+            <input type="hidden" id="ParentLevel" data-id="@CommonUtility.GetUrlAesEncrypt(md.ParentLevel.WebLevelSN.ToString())" />
+        </div>
+    </div>
+    <hr />
+</div>
+<input type="hidden" name="sortType" data-title="@md.sorttitle" data-sort="@md.sorttype" />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @if (WeblevelType == "1")
+            {
+                <th scope="col" class="sortTh" data-title="WebLevelKey" onclick="sortTh(1,$(this))">節點代號<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            <th scope="col" class="colW3">語系</th>
+            <th scope="col">標題</th>
+            <th scope="col">是否啟用</th>
+            <th scope="col">維護時間</th>
+            @if (!IsLook)
+            {
+                <th scope="col" class="colW3 sortTh" data-title="SortOrder" onclick="sortTh(1,$(this))">排序<button type="button" class="sortIcon sortNo "></button></th>
+            }
+            <th scope="col" class="colW4">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in md.webLevels.Where(X => X.Lang == "zh-tw"))
+        {
+            var moreLangData = md.webLevels.Where(x => x.MainSN == data.MainSN).OrderByDescending(x => x.Lang);
+            var MainSN = @CommonUtility.GetUrlAesEncrypt(data.MainSN.ToString());
+            <tr>
+                @if (WeblevelType == "1")
+                {
+                    <td style="text-align: left">@moreLangData.FirstOrDefault()?.WebLevelKey</td>
+                }
+                <td>
+                    @Html.Raw(string.Join("<br/>", moreLangData.Select(x=>(x.Lang )) ))
+                </td>
+                <td style="text-align: left">
+                    @Html.Raw(string.Join("<br/>", moreLangData.Select(x=>( x.Title)) ))
+                </td>
+                <td>
+                    @Html.Raw(string.Join("<br/>", moreLangData.Select(x=>x.IsEnable =="1" ? "是" : x.IsEnable =="0"?"否":"" ) ))
+                </td>
+                <td>
+                    <a href="javascript:;" onclick="Logpup('@moreLangData.Where(x => x.Lang == "zh-tw").FirstOrDefault().WebLevelSN','WEBLevel')">@moreLangData.Where(x => x.Lang == "zh-tw").FirstOrDefault()?.ProcessDate?.ToString("yyyy-MM-dd HH:mm")</a>
+                    <br />
+                    <a href="javascript:;" onclick="Logpup('@moreLangData.Where(x => x.Lang == "en").FirstOrDefault().WebLevelSN','WEBLevel')">@moreLangData.Where(x => x.Lang == "en").FirstOrDefault()?.ProcessDate?.ToString("yyyy-MM-dd HH:mm")</a>
+                </td>
+                @if (!IsLook)
+                {
+                    <td>
+                        <select onchange="ReArrange($(this))" data-id="@CommonUtility.GetUrlAesEncrypt(data.MainSN.ToString())">
+                            @{
+                                int i = 1;
+                            }
+                            @foreach (var sort in md.SortList.Where(x => x.Lang == "zh-tw").OrderBy(x => x.SortOrder))
+                            {
+                                <option selected="@(sort.SortOrder == data.SortOrder)" value="@(sort.SortOrder)">@(i)</option>
+                                i++;
+                            }
+                        </select>
+                    </td>
+                }
+                <td>
+                    @{
+                        var btns = new List<btnModel>()
+                {
+                new btnModel(){ jsUseClassName="NodeEdit" ,  attr_data_id=MainSN , Btntype= btnModel.btntype.編修  }
+                };
+                        if (!IsLook)
+                        {
+                            btns.Add(new btnModel() { jsUseClassName = "NodeDelete", attr_data_id = MainSN, Btntype = btnModel.btntype.刪除 });
+                        }
+                        <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@md.defaultPager" />
+</div>
+@Html.AntiForgeryToken()
+<script>
+    $(document).off('click', '.page_a');
+    $(document).on("click", ".page_a", function(e) {
+        var p = getObjAtr($(this), "data-page");
+        searchFunction(p);
+    });
+    function searchFunction(p) {
+        var key = $("#ParentLevel").data("id");
+        var sorttitle=$("[name=sortType]").attr("data-title");
+        var sorttype=$("[name=sortType]").attr("data-sort");
+        var href = "@Url.Action("ChildNodeList", "WebLevelManagement", new { area = "WebContent" })?sorttitle="+sorttitle+"&sorttype="+sorttype+"&key=" + key + "&p=" + p;
+        $("#fox_box").load(href, function() {
+                 var sortobj =  $("[name=sortType]");
+                $(".sortTh").each(function(){
+                    if($(this).attr("data-title")==sortobj.attr("data-title")){
+                        $(this).find('.sortIcon').removeClass("sortAsc sortDesc sortNo");
+                        var sort = "sortAsc"
+                        if(sortobj.attr("data-sort")!="asc"){
+                            sort = "sortDesc"
+                        }
+                         $(this).find('.sortIcon').addClass(sort);
+                    }
+                });
+        });
+    }
+    function SearchYoutube()
+    {
+            Swal.fire({
+            showCancelButton: true,
+            icon: "warning",
+            title: "",
+            text: "確定接收YoutubeApi資料?",
+            confirmButtonText: '確定',
+            cancelButtonText: '取消',
+        }).then((result) => {
+            $('.preloader').show();
+            if (result.isConfirmed) {
+                var Url = "@Url.Action("GetYouTubeApiData", "WebLevelManagement", new { area = "WebContent" })";
+                $.ajax({
+                    url: Url,
+                    type: 'post',
+                    dataType: "json",
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    success: function(data) {
+                        if (data.statusCode == 200) {
+                             Swal.fire({
+                                icon: "success",
+                                title: data.content,
+                                width:600,
+                            });
+                             searchFunction(1);
+                            $('.preloader').hide();
+                        } else {
+                            $('.preloader').hide();
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+    $(".NodeEdit").click(function() {
+        var data_id = $(this).data("id");
+        var href = "@Url.Action("Module", "WebLevelManagement", new { area = "WebContent" })?key=" + data_id + "&lang=" + "";
+        $("#fox_box").load(href, function() { });
+    });
+    $(".NodeDelete").click(function() {
+
+        Swal.fire({
+            showCancelButton: true,
+            icon: "warning",
+            title: "確定刪除?",
+            text: "刪除後將無法復原",
+            confirmButtonText: '刪除',
+            cancelButtonText: '取消',
+        }).then((result) => {
+            $('.preloader').show();
+            if (result.isConfirmed) {
+                var data_id = $(this).data("id");
+                var Url = "@Url.Action("DeleteAericle", "WebLevelManagement", new { area = "WebContent" })";
+                $.ajax({
+                    url: Url,
+                    data: {
+                        key: data_id,
+                    },
+                    headers:
+                    {
+                        "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                    },
+                    type: 'post',
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.statusCode == 200) {
+                            var p = $("ul.pagination > li.active > a")[0].innerHTML;
+                            searchFunction(p);
+                            Swal.fire({
+                                icon: "success",
+                                title: "刪除成功"
+                            });
+                            RefWebLevelTree('@CommonUtility.GetUrlAesEncrypt(md.ParentLevel.MainSN.ToString())');
+                        } else {
+                            Swal.fire({
+                                icon: "warning",
+                                title: data.content
+                            });
+                        }
+                    },
+                    complete: function(data) {
+                        $('.preloader').hide();
+                    }
+                });
+            }
+            $('.preloader').hide();
+        });
+    });
+    $(".btnCreate").click(function() {
+        var data_id = $("#ParentLevel").data("id");
+        var href = "@Url.Action("CreateArticle", "WebLevelManagement", new { area = "WebContent" })?key=" + data_id;
+        $("#fox_box").load(href, function() { });
+    });
+    function ReArrange(e) {
+        var data_id = e.attr("data-id");
+        var sort = e.find(':selected').val();
+        var Url = "@Url.Action("ReArrange", "WebLevelManagement", new { area = "WebContent" })";
+        $.ajax({
+            url: Url,
+            data: {
+                key: data_id,
+                sort: sort
+            },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            dataType: "json",
+            success: function(data) {
+                if (data.statusCode == 200) {
+                    var data_id = $("#ParentLevel").attr("data-id");
+                    var href = "@Url.Action("ChildNodeList", "WebLevelManagement", new { area = "WebContent" })?key=" + data_id;
+                    $("#fox_box").load(href, function() {
+                        Swal.fire({
+                            icon: "success",
+                            title: "更新成功"
+                        });
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "warning",
+                        title: data.content
+                    });
+                }
+            }
+        });
+    }
+
+    function Logpup(sn,module) {
+        var websiteid =  MODAhtmlEncode($("#drlWebSite"),"val");
+        var obj = {
+            popUrl: "@Url.Action("CommonLogAction", "Common",new  {area =""})?module="+module+"&SourceSN=" + sn + "&websiteid=" + websiteid
+        };
+        pop(obj);
+    }
+</script>

@@ -1,0 +1,85 @@
+﻿@model NewCommonModel
+<div class="tab-pane fade @(Model.webNews.Lang=="zh-tw" ?" show active bootstrap-table":"") " id="@Model.webNews.Lang" role="tabpanel" aria-labelledby="@($"{Model.webNews.Lang}-tab")">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">類型</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="1" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @( Model.webNews.ArticleType == null ? "checked" : (Model.webNews.ArticleType == "1" ? "checked" : "") ) />圖檔
+            <input type="radio" name="@($"ArticleType{Model.webNews.Lang}")" value="3" onclick="changeArticleType('@(Model.webNews.Lang)')" class="radio radio-inline " @( Model.webNews == null ? "" : (Model.webNews.ArticleType == "3" ? "checked" : "") ) /> 影音
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">標題</label>
+        <div class="col-sm-10">
+            <input name="@($"Title{Model.webNews.Lang}")" type="text" value="@Model.webNews?.Title" id="@($"Title{Model.webNews.Lang}")" class="form-control" placeholder="標題">
+        </div>
+    </div>
+    <div id="@($"ArticleType_1{Model.webNews.Lang}")">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">連結</label>
+            <div class="col-sm-10">
+                <input name="@($"URL{Model.webNews.Lang}")" type="text" value="@Model.webNews?.URL" id=@($"URL{Model.webNews.Lang}") class="form-control" placeholder="連結">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">另開視窗</label>
+            <div class="col-sm-10 pt-3">
+                <input type="radio" name="@($"target{Model.webNews.Lang}")" value="_blank" class="radio radio-inline " @( Model.webNews == null ? "checked" : (Model.webNews.target == "_blank" ? "checked" : "") ) /> 是
+                <input type="radio" name="@($"target{Model.webNews.Lang}")" value="_self" class="radio radio-inline " @( Model.webNews == null ? "" : (Model.webNews.target != "_blank" ? "checked" : "") ) /> 否
+            </div>
+        </div>
+        <!--str上傳-->
+        <div class="form-group row">
+            @{
+                var f1 = new Management.Models.Common.LoadUploadModel()
+            {
+                commonFileModels = Model.commonFileModels,
+                fileGroup = Utility.WebFileGroupID.Media.Img,
+                file_trNumber = $"{Utility.WebFileGroupID.Media.Img}{Model.webNews.Lang}",
+                title = "相關圖片",
+                FileType = "1",
+                fth = "News",
+                lan = Model.webNews.Lang
+            };
+                <partial name="~/Views/Common/LoadUpload.cshtml" model="f1" />
+            }
+        </div>
+        <!--end上傳-->
+    </div>
+    <div id="@($"ArticleType_3{Model.webNews.Lang}")">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label text-sm-right">iframe連結</label>
+            <div class="col-sm-10">
+                <input name="@($"iURL{Model.webNews.Lang}")" type="text" value="@Model.webNews?.URL" id="@($"iURL{Model.webNews.Lang}")" class="form-control" placeholder="iframe連結">
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">狀態</label>
+        <div class="col-sm-10 pt-3">
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="1"  class="radio radio-inline " @( Model.webNews.IsEnable == "1" ? "checked" : "" ) /> 發布
+            <input type="radio" name="@($"IsEnable{Model.webNews.Lang}")" value="0"  class="radio radio-inline " @( Model.webNews.IsEnable == null ? "checked" : (Model.webNews.IsEnable == "0" ? "checked" : "") ) />不公開
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">發布日期</label>
+        <div class="col-sm-10">
+            <input name="StartDate" type="datetime-local" step="1" value="@( Model.webNews == null?DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T'): Model.webNews.StartDate == null ? DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') : Model.webNews.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"StartDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label text-sm-right">下架日期</label>
+        <div class="col-sm-10">
+            <input name="EndDate" type="datetime-local" step="1" value="@( Model.webNews == null?"":Model.webNews.EndDate == null ? "" : Model.webNews.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss").Replace(' ', 'T') )" id="@($"EndDate{Model.webNews.Lang}")" class="form-control" placeholder="">
+        </div>
+    </div>
+    <div class="form-group text-center uBtnList">
+        @{
+            var btns = new List<btnModel>() {
+        
+        new btnModel(){ Btntype = btnModel.btntype.儲存 ,  onclickFunction=$"Save(1,'{Model.webNews.Lang}')" },
+        new btnModel(){ Btntype = btnModel.btntype.取消 ,  onclickFunction="backward(0)" },
+        };
+         <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+        }
+    </div>
+</div>

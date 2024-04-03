@@ -1,0 +1,359 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Authorization\Data\**" />
+    <Compile Remove="Areas\LogManagement\Data\**" />
+    <Compile Remove="Areas\SystemManageMent\Views\UpdateCssJs\**" />
+    <Compile Remove="Areas\WebContent\Data\**" />
+    <Compile Remove="Uploads\**" />
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="Areas\Authorization\Data\**" />
+    <Content Remove="Areas\LogManagement\Data\**" />
+    <Content Remove="Areas\SystemManageMent\Views\UpdateCssJs\**" />
+    <Content Remove="Areas\WebContent\Data\**" />
+    <Content Remove="Uploads\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="Areas\Authorization\Data\**" />
+    <EmbeddedResource Remove="Areas\LogManagement\Data\**" />
+    <EmbeddedResource Remove="Areas\SystemManageMent\Views\UpdateCssJs\**" />
+    <EmbeddedResource Remove="Areas\WebContent\Data\**" />
+    <EmbeddedResource Remove="Uploads\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="Areas\Authorization\Data\**" />
+    <None Remove="Areas\LogManagement\Data\**" />
+    <None Remove="Areas\SystemManageMent\Views\UpdateCssJs\**" />
+    <None Remove="Areas\WebContent\Data\**" />
+    <None Remove="Uploads\**" />
+    <None Remove="wwwroot\lib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Common\OpenDataModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Common\Selector\SelectorTableName.cshtml" />
+    <Content Remove="Views\Common\Selector\SelectorWEBLevel.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\plugins\bower_components\bootstrap-datepicker\bootstrap-datepicker.min.css" />
+    <Content Include="wwwroot\plugins\bower_components\bootstrap-extension\css\bootstrap-extension.css" />
+    <Content Include="wwwroot\plugins\bower_components\bootstrap-fileinput\css\fileinput.css" />
+    <Content Include="wwwroot\plugins\bower_components\sidebar-nav\dist\metisMenu.min.css" />
+    <Content Include="wwwroot\plugins\bower_components\sidebar-nav\dist\sidebar-nav.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Analytics.Data.V1Beta" Version="2.0.0-beta02" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.19" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="3.0.0" />
+    <PackageReference Include="NuGet.Protocol" Version="6.6.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.DirectoryServices" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="files\web\copyright\ADI\" />
+    <Folder Include="files\web\copyright\ACS\" />
+    <Folder Include="Areas\Authorization\Models\AccessManagment\" />
+    <Folder Include="files\web\copyright\MODA\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\demo\ACS\assets\img\bg_list5Icon.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\bg_sidebarTop.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw1-L.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw1-R.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw3-L.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw3-R.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_arw3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_calendar1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_close1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept4-2-1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept4-2-2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept4-2-3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept5-2-1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept5-2-2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept5-2-3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept5-2-4.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_dept5-2-5.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_en-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_en.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_envelope-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_envelope.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_firstP.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_font1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_font2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_font3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_home.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_idxBusiness1-1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_idxBusiness1-2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_idxBusiness1-3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_idxBusiness1-4.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_idxBusiness1-5.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_lastP.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1-1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1-2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1-3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1-4.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1-hv.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_link1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_moda-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_moda.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_modaMascot.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_navClose.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_navSwitch.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_nextP.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_open1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_otherLink1.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_otherLink2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_otherLink3.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_otherLink4.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_prevP.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_print.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_scope-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_scope.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_share.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_sitemap-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_sitemap.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_title1-L.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_title1-R.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_topArw.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_tw-black.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\icon_tw.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\logo_acs-2.svg" />
+    <None Include="wwwroot\demo\ACS\assets\img\logo_acs.svg" />
+    <None Include="wwwroot\demo\ACS\assets\js\common.js" />
+    <None Include="wwwroot\demo\ACS\assets\js\sw.js" />
+    <None Include="wwwroot\demo\ADI\assets\img\bg_list5Icon.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\bg_sidebarTop.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw1-L.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw1-R.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw3-L.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw3-R.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw3.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_arw4.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_calendar1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_close1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept4-2-1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept4-2-2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept4-2-3.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept5-2-1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept5-2-2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept5-2-3.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept5-2-4.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_dept5-2-5.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_en-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_en.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_envelope-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_envelope.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_firstP.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font1-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font2-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font3-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_font3.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_home.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_lastP.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_link1-hv.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_link1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_moda-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_modaMascot.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_navClose.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_navSwitch.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_nextP.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_open1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_otherLink1.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_otherLink2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_otherLink3.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_otherLink4.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_prevP.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_print.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_scope-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_scope.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_share.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_sitemap-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_sitemap.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_topArw.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\icon_tw-black.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\logo_adi-2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\logo_adi.svg" />
+    <None Include="wwwroot\demo\ADI\assets\img\logo_adi2.svg" />
+    <None Include="wwwroot\demo\ADI\assets\js\common.js" />
+    <None Include="wwwroot\demo\ADI\assets\js\sw.js" />
+    <None Include="wwwroot\demo\assets\img\bg_dept1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_dept2-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_dept3-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_dept4-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_dept5-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_dept6-1.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_list5Icon.svg" />
+    <None Include="wwwroot\demo\assets\img\bg_sidebarTop.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw1-L.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw1-R.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw3-L.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw3-R.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_arw4.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_calendar1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_close1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept1-4.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept2-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept3-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept4-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept4-2-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept4-2-2.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept4-2-3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-2-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-2-2.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-2-3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-2-4.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept5-2-5.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_dept6-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_en-black.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_en.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_envelope-black.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_envelope.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_firstP.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_font1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_font2.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_font3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_home.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-0.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-2.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-4.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-5.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-6.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-7.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxFocus1-8.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxStory1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxStory1-2.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxStory1-3.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_idxStory1-4.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_lastP.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_link1-hv.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_link1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_modaMascot.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_navClose.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_navSwitch.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_nextP.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_open1.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_prevP.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_print.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_scope-black.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_scope.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_share.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_sitemap-black.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_sitemap.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_topArw.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_tw-black.svg" />
+    <None Include="wwwroot\demo\assets\img\icon_tw.svg" />
+    <None Include="wwwroot\demo\assets\img\logo_moda-2.svg" />
+    <None Include="wwwroot\demo\assets\img\logo_moda.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-1_hv.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-2.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-2_hv.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-3.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-3_hv.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-4.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-4_hv.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-5.svg" />
+    <None Include="wwwroot\demo\assets\img\pic_idxPartner1-5_hv.svg" />
+    <None Include="wwwroot\demo\assets\img\txt_kv1-1.svg" />
+    <None Include="wwwroot\demo\assets\img\txt_kv1-2.svg" />
+    <None Include="wwwroot\demo\assets\js\common.js" />
+    <None Include="wwwroot\demo\js\site.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-grid.rtl.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-reboot.rtl.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-reboot.rtl.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-utilities.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-utilities.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap.rtl.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\css\bootstrap.rtl.min.css.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.esm.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.esm.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.esm.min.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.esm.min.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\demo\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\demo\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\demo\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\demo\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\demo\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\demo\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\demo\lib\jquery\dist\jquery.min.map" />
+    <None Include="wwwroot\demo\vendor\js\aos.js" />
+    <None Include="wwwroot\demo\vendor\js\bootstrap-submenu.js" />
+    <None Include="wwwroot\demo\vendor\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\demo\vendor\js\jquery-3.6.0.min.js" />
+    <None Include="wwwroot\demo\vendor\js\jquery-ui.min.js" />
+    <None Include="wwwroot\demo\vendor\js\jquery.magnific-popup.min.js" />
+    <None Include="wwwroot\demo\vendor\js\swiper-bundle.min.js" />
+    <None Include="wwwroot\demo\vendor\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\demo\vendor\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\plugins\bower_components\bootstrap-datepicker\bootstrap-datepicker.min.js" />
+    <None Include="wwwroot\plugins\bower_components\bootstrap-datepicker\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <None Include="wwwroot\plugins\bower_components\bootstrap-extension\js\bootstrap-extension.min.js" />
+    <None Include="wwwroot\plugins\bower_components\jqueryui\jquery-ui.min.js" />
+    <None Include="wwwroot\plugins\bower_components\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\plugins\bower_components\sidebar-nav\dist\metismenu.js" />
+    <None Include="wwwroot\plugins\bower_components\sidebar-nav\dist\sidebar-nav.min.js" />
+    <None Include="wwwroot\plugins\bower_components\styleswitcher\jQuery.style.switcher.js" />
+    <None Include="wwwroot\plugins\jquery-ui\jquery-ui.min.js" />
+    <None Include="wwwroot\plugins\simpleTree\simpleTree.js%28DEL%29" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBModel\DBModel.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\Utility\Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Oauth\brave-attic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

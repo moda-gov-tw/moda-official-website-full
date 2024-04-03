@@ -1,0 +1,94 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+
+            <div class="row searchBar1">
+                <div class="col">
+                    <label class="col-form-label">
+                        月份：
+                    </label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="month" id="mon" class="form-control" placeholder="" value="@DateTime.Today.AddMonths(-1).ToString("yyyy-MM")">
+                        </div>
+                        <div class="col">
+                            @{
+                                var btns = new List<btnModel>()
+                            {
+                            new btnModel(){   Btntype = btnModel.btntype.查詢, onclickFunction="searchFunction(1)",jsUseClassName="search"  },
+                            new btnModel(){   Btntype = btnModel.btntype.匯出, onclickFunction="Export()", jsUseClassName="output"  }
+                            };
+                                <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="uTable3 bootstrap-table">
+                <div id="tableList">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    var href = "@Url.Action("List", "ErrorLog", new { area = "LogManagement" })";
+    function firstFunction() {
+        var getUrl = "?mon='@DateTime.UtcNow.AddHours(8).AddMonths(-1).ToString("yyyy-MM")'";
+        var pageUrl = href + getUrl;
+        reloadDataTable(pageUrl);
+    }
+    function searchFunction(p)
+    {
+        var mon = MODAhtmlEncode($("#mon"),"val");
+        if (mon != "") {
+            var getUrl = "?mon=" + mon + "&p=" + p;
+            var pageUrl = href + getUrl;
+            reloadDataTable(pageUrl);
+        }
+        else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+
+    function reloadDataTable(href) {
+        $("#tableList").html("");
+        $("#tableList").load(href, function () {
+            $(document).off('click', '.page_a');
+            $(document).on("click", ".page_a", function () {
+                var p = getObjAtr($(this), "data-page");
+                searchFunction(p);
+            });
+
+        });
+    }
+
+
+    function Export() {
+        var mon = MODAhtmlEncode($("#mon"),"val");
+        if (mon != "") {
+            location.href = '@Url.Action("Export", "ErrorLog", new {area= "LogManagement" })?mon=' + mon;
+        } else {
+            Swal.fire({
+                icon: "warning",
+                title: "請輸入月份"
+            });
+        }
+    }
+</script>
+

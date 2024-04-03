@@ -1,0 +1,41 @@
+﻿@model Services.Models.WebSite.WebSiteChildModel
+@{
+    var masterModel = ViewData["WebSiteMaster"] as Services.Models.WebSite.WebSiteMasterModel;
+    var LangSysCategory = masterModel.sysCategories;
+}
+@if (Model != null) { 
+	<section class="idxLinks" data-aos="fade-up">
+		<div class="wrap3 px-4 px-lg-5">
+			<!-- title -->
+			<!-- <div class="titleBar1 text-center">
+				<h2 class="title1 mb-4 mb-md-5"><span>相關連結</span></h2>
+			</div> -->
+			<!-- content -->
+			<div class="idxList6 position-relative imgCover">
+                <button type="button" class="swiper-button-prev idxList6SwiperPrevBtn border-0 rounded-circle start-0 idxList6SwiperPrevBtnJs" title="@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-31")?.Value"><span>@LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-31")?.Value</span></button>
+				<div class="swiper idxList6Swiper idxList6SwiperJs">
+					<div class="swiper-wrapper">
+                        @if (Model?.NewsViews != null)
+                        {
+                            foreach (var item in Model.NewsViews)
+                            {
+                                <div class="swiper-slide">
+                                    <a class="d-block position-relative" href="@item.BasicNews.URL" @Html.Raw(CommFun.getattr(item.BasicNews.target, item.BasicNews.Title, @LangSysCategory.FirstOrDefault(x=>x.SysCategoryKey==masterModel.Master.WebSiteID +"-7-33")?.Value))>
+                                        <div class="pic rounded-4">
+                                            <img loading="lazy" src="@item.MainImg?.FilePath" alt="@item.BasicNews.Title">
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+					</div>
+				</div>
+
+				<button type="button" class="swiper-button-next idxList6SwiperNextBtn border-0 rounded-circle end-0 idxList6SwiperNextBtnJs" title="下一組相關連結"><span>下一組相關連結</span></button>
+				<div class="idxList6SwiperNav swiper-pagination idxList6SwiperPageJs"></div>
+			</div>
+
+		</div>
+	</section>
+
+}

@@ -1,0 +1,72 @@
+﻿@model WebSite.Models.Home.SearchModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var langPath = (Model.SysWebSiteLang.Lang) + "/";
+    var WebSiteId = (Model.SysWebSiteLang.WebSiteID) + "/";
+    var HomeName = (Model.SysWebSiteLang.Lang) == "zh-tw" ? "首頁" : "Home";
+    var Category = Model.langCategory;
+}
+
+@section meta{
+<title>@Model.ogData.title</title>
+<meta property="og:title" content="@Model.ogData.title" />
+<meta property="og:image" content="@Model.ogData.image" />
+<meta property="og:image:type" content="@Model.ogData.image_type">
+<meta property="og:image:width" content="@Model.ogData.image_width">
+<meta property="og:image:height" content="@Model.ogData.image_height">
+<meta property="og:description" content="@Model.ogData.description" />
+<meta name="keywords" content="@Model.ogData.keyword" />
+<meta name="description" content="@Model.ogData.description" />
+}
+@section gacode{
+	 @if (!string.IsNullOrWhiteSpace(Model.SysWebSiteLang.GACode))
+    {
+        @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.SysWebSiteLang.GACode))
+;
+    }
+}
+
+<main class="main">
+    <!-- 0.麵包屑 -->
+    <div class="breadcrumb1">
+        <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item breadHome">
+                        <a href="@Url.Content($"~/{WebSiteId}{langPath}index")" )">@HomeName</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        @Category.FirstOrDefault(x=>x.SysCategoryKey == Model.SysWebSiteLang.WebSiteID +"-7-12" )?.Value
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="wrap4 mx-auto px-3 px-md-4 px-lg-5 py-4 py-md-5 overflow-hidden noLeftMenu">
+        <div class="rightMain">
+            <div class="a11yBrickBar1">
+                <a href="#AC" id="AC" accesskey="C" class="a11yBrick position-absolute" title="@Category.FirstOrDefault(x=>x.SysCategoryKey == Model.SysWebSiteLang.WebSiteID +"-7-30" )?.Value">:::</a>
+            </div>
+            
+            <!-- 標題 -->
+            <partial name="~/Views/Home/titleBar.cshtml" model=Model.titleBarMdel />
+            <div class="gSearchRs">
+                <gcse:search enablehistory="false"></gcse:search>
+            </div>
+        </div>
+        <!-- 右半主內容 end -->
+    </div>
+</main>
+@section Scripts{
+<script>
+      (function () {
+        var cx = '@Model.SysWebSiteLang.GoogleSearchKey';        
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+    })();
+</script>
+}

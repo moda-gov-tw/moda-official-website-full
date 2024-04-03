@@ -1,0 +1,274 @@
+﻿@model Management.Areas.Authorization.Models.UserManagement.EditModeModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="white-box">
+            <ul class="nav nav-tabs customtab">
+                <li class="nav-item"><a class="nav-link active" href="javascript:void();"> <span onclick="changeTab($(this))" data-type="tab1">帳號基本資料</span> </a></li>
+            </ul>
+            <!-- <span id="show_span">修改帳號資料</span>
+            <hr /> -->
+            <div class="bootstrap-table">
+                <div class="form-horizontal" id="tab1_div">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>帳號
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    <span></span>@Model.sysUser.UserID
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span style="color:red">*</span>使用者名稱
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser.UserName" id="UserName" class="form-control" placeholder="使用者名稱">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>英文名稱
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser.EngName" id="EngName" class="form-control" placeholder="英文名稱">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                 <div class="form-group row">
+                     <label class="col-md-4 col-form-label text-md-right">
+                         <span></span>暱稱
+                     </label>
+                     <div class="col-md-8">
+                         <input type="text" value="@Model.sysUser.NickName" id="NickName" class="form-control" placeholder="暱稱">
+                     </div>
+                 </div>
+             </div>
+         </div>
+        <div class="row">
+             <div class="col-md-6">
+                 <div class="form-group row">
+                     <label class="col-md-4 col-form-label text-md-right">
+                         <span></span>性別
+                     </label>
+                     <div class="col-md-8 pt-3">
+                         <span></span>@(Model.sysUser.Gender == "M" ? "男" : (Model.sysUser.Gender == "F" ? "女":""))
+                     </div>
+                 </div>
+             </div>
+         </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>連絡電話(Home)
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser.Tel" id="Tel" class="form-control" placeholder="連絡電話(Home)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>連絡電話(Mobile)
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" value="@Model.sysUser.Mobile" id="Mobile" class="form-control" placeholder="連絡電話(Mobile)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-md-2 col-form-label text-md-right">
+                                    <span style="color:red">*</span>聯絡信箱
+                                </label>
+                                <div class="col-md-10">
+                                    <input type="text" value="@Model.sysUser.Email" id="Email" class="form-control" placeholder="聯絡信箱">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>員工編號
+                    </label>
+                    <div class="col-md-8 pt-3">
+                        <span></span>@(Model.sysUser.EmpID)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>職稱
+                    </label>
+                    <div class="col-md-8 pt-3">
+                        <span></span>@(Model.sysUser.JobTitle)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>辦公室電話
+                    </label>
+                    <div class="col-md-8">
+                        <input type="text" value="@Model.sysUser.OfficePhone" id="OfficePhone" class="form-control" placeholder="辦公室電話">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">
+                        <span></span>部門編號
+                    </label>
+                    <div class="col-md-8 pt-3">
+                        <span></span>@(Model.sysUser.DepartmentID)
+                    </div>
+                </div>
+            </div>
+        </div>*@
+                    <!--這邊是修改才會有的資料 start-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>最後登入日期
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    <span></span>@(Model.sysUser.LastLoginDate.HasValue ? Model.sysUser.LastLoginDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : ""  )
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>最後修改密碼日期
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    <span></span>@(Model.sysUser.PwdLastUpdate.HasValue ? Model.sysUser.PwdLastUpdate.Value.ToString("yyyy-MM-dd HH:mm:ss") : ""  )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>處理人員
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    <span></span>@(Model.sysUser.ProcessUserID  )
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>處理時間
+                                </label>
+                                <div class="col-md-8 pt-3">
+                                    <span></span>@(Model.sysUser.ProcessDate.HasValue ? Model.sysUser.ProcessDate.Value.ToString("yyyy-MM-dd HH:mm:ss") : ""  )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label text-md-right">
+                                    <span></span>重設密碼
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="password" value="" id="p_w_d" class="form-control" placeholder="重設密碼">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--這邊是修改才會有的資料 end-->
+                    <div class="form-group text-center">
+                        <div class="col-lg-offset-1">
+                            <input type="button" value="儲存" onclick="checkedFun()" class="ubtn-save">
+                            <input type="reset" value="取消" class="ubtn-cancel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<input type="hidden" id="UserID" value="@CommonUtility.GetUrlAesEncrypt(Model.sysUser.UserID)" />
+@Html.AntiForgeryToken()
+@section scripts{
+    <script>
+        function checkedFun() {
+            var error = "";
+            var UserID = MODAhtmlEncode($("#UserID"),"val");
+            var UserName = MODAhtmlEncode($("#UserName"),"val");
+            var Email = MODAhtmlEncode($("#Email"),"val");
+            if (strIsNull(UserName)) error += "使用者名稱空白 \n";
+            if (strIsNull(Email)) error += "Email空白 \n";
+            if (error != "") {
+                Swal.fire({
+                    icon: "warning",
+                    title: error
+                });
+            } else {
+                var model = {
+                    userID :  UserID,
+                    userName: UserName,
+                    email: MODAhtmlEncode($("#Email"),"val"),
+                    p_w_d: MODAhtmlEncode($("#p_w_d"),"val")
+                };
+                saveFun(model);
+            }
+        }
+        function saveFun(obj) {
+             $('.preloader').show();
+            $.ajax({
+                url: "@Url.Action("EditMode", "UserManagement", new { area = "Authorization" } )",
+                data: obj,
+                headers:
+                {
+                    "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+                },
+                type: 'post',
+                dataType:"json",
+                success: function (data) {
+                    $('.preloader').hide();
+                    if (data.statusCode == 200) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "修改資料需要重新登入才會生效"
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "warning",
+                            title: data.content
+                        });
+                    }
+                }
+            });
+    }
+    </script>
+}

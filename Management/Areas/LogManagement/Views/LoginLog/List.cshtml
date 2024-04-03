@@ -1,0 +1,41 @@
+﻿@model Management.Areas.LogManagement.Models.LoginLog.ListModel
+
+@{
+    int row = ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) == 0 ? 1 : ((Model.defaultPager.p - 1) * Model.defaultPager.DisplayCount) + 1;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="white-space:nowrap;" class="colW1">序號</th>
+            <th scope="col" class="colW4">帳號</th>
+            <th scope="col" class="colW3">使用者</th>
+            <th scope="col" class="colW2">狀態</th>
+            <th scope="col">訊息</th>
+            <th scope="col" class="colW4">IP</th>
+            <th scope="col" class="colW4">時間</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model.sysUserLogins)
+        {
+            <tr>
+                <td>@row</td>
+                <td>@data.UserID</td>
+                <td>@Model.UserData.Where(x => x.UserID == data.UserID).FirstOrDefault()?.UserName</td>
+                <td>@(data.Status=="1"?"成功":"失敗")</td>
+                <td align="left">@data.Message</td>
+                <td>@data.ProcessIPAddress</td>
+                <td>@data.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+
+            </tr>
+            row++;
+        }
+    </tbody>
+</table>
+@* 頁碼功能- id =pager   *@
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+<script>
+</script>

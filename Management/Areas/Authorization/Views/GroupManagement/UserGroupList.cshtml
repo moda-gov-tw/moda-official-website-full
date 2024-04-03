@@ -1,0 +1,63 @@
+﻿@model Services.Models.Authorization.EditModel
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th width="22.5%">帳號</th>
+            <th width="22.5%">姓名</th>
+            <th width="22.5%">單位</th>
+            <th width="22.5%">職稱</th>
+            <th class="colW3">動作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.GroupUsers)
+        {
+            var RelSysGroupUserSN = CommonUtility.GetUrlAesEncrypt(item.RelSysGroupUserSN.ToString());
+            <tr>
+                <td>@item.UserID</td>
+                <td>@item.UserName</td>
+                <td>@item.DepartmentName</td>
+                <td>@item.JobTitle</td>
+                <td>
+                    @{
+                        var btns = new List<btnModel>()
+                        {
+                             new btnModel(){  attr_data_id = RelSysGroupUserSN , Btntype = btnModel.btntype.刪除, onclickFunction="GroupUserDelete(this)" , }
+                        };
+                       <partial name="~/Views/Common/Btn/BtnPublicVersion.cshtml" model="btns" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div id="pager">
+    <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+</div>
+@Html.AntiForgeryToken()
+<script>
+    $(".page_a").removeClass("page_a").addClass("page_b");
+    function GroupUserDelete(e) {
+        $.ajax({
+            url: "@Url.Action("DeleteGroupUser", "GroupManagement", new { area= "Authorization" } )",
+            data: { sn : $(e).data('id') },
+            headers:
+            {
+                "CUSTOMER-CSRF-HEADER": $("input[name='CustomerFieldName']").val() //注意header要修改
+            },
+            type: 'post',
+            success: function (data) {
+                GetUserGroupList(1);
+                Swal.fire({
+                    icon: "success",
+                    title: "刪除成功"
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        })
+    }
+</script>

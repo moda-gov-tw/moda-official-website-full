@@ -1,0 +1,23 @@
+﻿@model definitionModel
+@{
+    var start = EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.start);
+    var stop =  EnumTpye.GetEnumNumberToSting(Utility.Default.EnumDefaultIsEnable.stop);
+}
+@switch (Model.HtmlType)
+{
+    case definitionModel.htmlType.selector:
+        <select id="@Model.IdName" name="@Model.IdName" class="form-control">
+            @if (Model.NeedNull) {<option value="" selected=@(Model.selectIds.Any(x=>x == ""))>請選擇</option> }
+            <option value="@start" selected=@(Model.selectIds.Any(x=>x == start))>啟用</option>
+            <option value="@stop" selected=@(Model.selectIds.Any(x=>x == stop))>停用</option>
+        </select>
+        break;
+    case definitionModel.htmlType.radion:
+    @if (Model.NeedNull) {<input type="radio" name="@Model.IdName" value="" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == "")) /><span>請選擇</span> }
+        <input type="radio" name="@Model.IdName" value="@start" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == start)) /><span>啟用</span>
+        <input type="radio" name="@Model.IdName" value="@stop" class="radio radio-inline " checked=@(Model.selectIds.Any(x=>x == stop)) /><span>停用</span>
+        break;
+    case definitionModel.htmlType.checkbox:
+
+        break;
+}

@@ -1,0 +1,37 @@
+﻿@model Management.Areas.LogManagement.Models.ErrorLog.ListModel
+@if (Model.operationStatisticsModels != null)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="white-space:nowrap;" class="colW3">帳號</th>
+                <th scope="col" class="colW4">部門</th>
+                <th scope="col" class="colW3">IP</th>
+                <th scope="col" class="colW3">異動狀態</th>
+                <th scope="col" class="">路徑</th>
+                <th scope="col" class="colW3">資料編號</th>
+                <th scope="col" class="colW4">時間</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in Model.operationStatisticsModels)
+            {
+                <tr>
+                    <td>@data.UserID</td>
+                    <td>@data.DepartmentName</td>
+                    <td>@data.ProcessIPAddress</td>
+                    <td>@data.Action2</td>
+                    <td align="left">@data.WebPath</td>
+                    <td>@data.SourceSN</td>
+                    <td>@data.CreatedDate.ToString("yyyy-MM-dd hh:mm:ss")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @* 頁碼功能- id =pager   *@
+    <div id="pager">
+        <partial name="~/Views/Common/Pagination.cshtml" model="@Model.defaultPager" />
+    </div>
+    <script>
+    </script>
+}
