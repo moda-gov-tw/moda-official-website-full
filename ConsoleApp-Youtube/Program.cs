@@ -80,7 +80,7 @@ switch (start.ToLower())
         StaticHelper.Start(logFile , ref txtMsg); break;
     case "mailbox":
         #region SendApi
-        SendApi.SpeedAPIMore = config["mailbox:SpeedAPIMore"];
+        SendApi.SpeedAPIMore = config["mailbox:SpeedAPIMode"];
         SendApi.ManagementUrl = config["mailbox:ManagementUrl"];
         Utility.MailBox.Api.Url = config["mailbox:SpeedAPI"];
         Utility.MailBox.Api.MailBoxUrl = config["mailbox:MailBoxUrl"];
@@ -91,6 +91,7 @@ switch (start.ToLower())
         var ClientSecret = config["mailbox:ClientSecret"];
         Utility.MailBox.Api.toekenClass = new Utility.MailBox.Api.ToekenModel() { ClientId = ClientID, ClientSecret = ClientSecret };
         #endregion
+        speedAPIMore = SendApi.SpeedAPIMore;
         SendApi.MailBoxApi(logFile , ref txtMsg); break;
     case "youtube":
         string DemoDNS = config["youtube:DemoDNS"];

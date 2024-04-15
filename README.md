@@ -18,7 +18,7 @@
 - WebAPI        - API 動態後端
 - WebSite       - 動態前台（頁面預覽）
 
-![moda-web-compose](https://github.com/moda-gov-tw/moda-official-website-full/assets/912024/7edce8eb-9ac4-4dce-9cd2-b549d7e2ab20)
+![moda-web-compose](https://github.com/moda-gov-tw/moda-official-website-full/assets/912024/7a3e6bdf-de13-4dc5-941a-d72edb480607)
 
 ## 前置作業
 
@@ -43,7 +43,7 @@
     "DemoDNS": "${PRIVATE_WEBSITE_URL}"
   },
   "mailbox": {
-    "SpeedAPIMore": "create", 
+    "SpeedAPIMode": "create", 
     "ManagementUrl": "${PUBLIC_MANAGEMENT_URL}",
     "ClientID": "${CLIENTID}",
     "ClientSecret": "${CLIENTSECRET}",
@@ -245,29 +245,29 @@
 - 基本參數說明
 
 | 必填 | 參數名稱 | 範例 | 說明 |
-|-|-|-|-|
-| * | start | static | 啟動類型：<br />"static": 靜態化<br />"mailbox": 民意信箱介接<br />"youtube": 影片清單介接 |
+|:-:|-|-|-|
 | * | NeedEncryption | 0 | 內部參數是否需要 AESKey 加密：<br />"0": 否<br />"1": 是 |
+| * | start | static | 啟動類型：<br />"static": 靜態化<br />"mailbox": 民意信箱介接<br />"youtube": 影片清單介接 |
 | * | ResetHours | 4 | 每日於幾時進行全站靜態化排程（24 小時制） |
 | * | IsOfficial | 0 | 產生 sitemap 時是否將網址後綴 .html 去掉：<br />"0": 否<br />"1": 是 |
-| * | SpeedAPIMore | create | 民意信箱排程介接模式參數：<br />"create": 新增<br />"search": 查詢 |
+| * | SpeedAPIMode | create | 民意信箱排程介接模式參數：<br />"create": 新增<br />"search": 查詢 |
 | * | IsOfficialMail | true | 是否為正式寄信：<br />"true": 是<br />"false": 否 |
 | * | MainWebSiteID | MODA | 主站台代碼 |
 | * | DataProtectionKey.applicationName | | 民意信箱功能啟用的應用程式名稱 |
 | * | DataProtectionKey.confirmKey | | 民意信箱案件確認信時效的加密金鑰 |
 | * | DataProtectionKey.surveyKey | | 民意信箱滿意度調查時效的加密金鑰 |
 | * | Environment | linux | 作業環境：<br />"linux"<br />"windows" |
-| $ | antivirus | clamav | 啟用的防毒軟體名稱（`IsScan` 為 "1" 時必填） |
 | * | IsScan | 1 | 是否啟用掃毒軟體掃描毒上傳檔案：<br />"1": 啟用<br />"0": 關閉
-| * | MainLang | zh-tw | 主要語系 |
-| * | IsStatic | 1 | 不對外公開的動態前台（頁面預覽）的網站連結網址路徑置換功能：<br />"0": 測試模式（動態前台維持原本可互動連結網址）<br />"1": 正式模式（連結網址置換為 SSG 需要的靜態路徑） |
-| * | DemoDNS | | 例如：不對外公開的動態前台（頁面預覽）網址 |
-| * | WebSiteUrl | | 例如：公開的靜態路徑前台網址 |
+| $ | antivirus | clamav | 啟用的防毒軟體名稱（`IsScan` 為 "1" 時必填） |
 | | ClientID | | 民意信箱介接外部系統提供 ID |
 | | ClientSecret | | 民意信箱介接外部系統提供 Secret |
-|* | IsAccountPWD| true | 透過寄信服務寄信時是否需要密碼（"true" 則 `UserName` 及 `Password` 必填） :<br />"true": 是<br />"false": 否 |
-|$ | UserName | test | 寄信服務寄信使用的帳號 |
-|$ | Password | test | 寄信服務寄信使用的密碼 |
+| * | MainLang | zh-tw | 主要語系 |
+| * | IsStatic | 1 | 不對外公開的動態前台（頁面預覽）的網站連結網址路徑置換功能：<br />"0": 測試模式（動態前台維持原本可互動連結網址）<br />"1": 正式模式（連結網址置換為 SSG 需要的靜態路徑） |
+| * | DemoDNS | | 不對外公開的動態前台（頁面預覽）網址 |
+| * | WebSiteUrl | | 公開的靜態路徑前台網址 |
+|* | IsAccountPWD| true | 透過寄信服務寄信時是否需要密碼：<br />"true": 是<br />"false": 否 |
+|$ | UserName | test | 寄信服務寄信使用的帳號（`IsAccountPWD` 為 "true" 時必填） |
+|$ | Password | test | 寄信服務寄信使用的密碼（`IsAccountPWD` 為 "true" 時必填） |
 
 
 
@@ -279,21 +279,21 @@
 
 
 | 必填 | 變數名稱 | 範例 | 說明 |
-|:-:|-|:-:|:-:|
-| | AESKEY | | 系統加密金鑰，如需使用請自行調整程式 |
-| * | ALLOWORIGINS | http://localhost | 跨源資源存取政策（CORS）設定：<br />`*`（允許所有來源）<br />`https://*`（允許以 https:// 開頭的任何來源）<br />`http://*`（允許以 http:// 開頭的任何來源） |
+|:-:|-|-|-|
+| | AESKEY | | 系統加密金鑰（欲使用需自行調整程式） |
+| * | ALLOWORIGINS | http://localhost | 跨源資源存取政策（CORS）設定的範例：<br />`*`（允許所有來源）<br />`https://*`（允許以 https:// 開頭的任何來源）<br />`http://*`（允許以 http:// 開頭的任何來源） |
 | * | APPLICATIONNAME | MailBox | 民意信箱功能啟用的應用程式名稱 |
-| * | ASPNETCORE_ENVIRONMENT | Development | 民意信箱前台若需要遵守 CSP 建議改為 Production（預設是 Development 環境）：<br />`Development`（低安全）<br />`Staging`（中安全）<br />`Production`（高安全）<br />此變數設定 `Staging` 及`Production` 會增加如下的安全性設定：<br />1. Content-Security-Policy: ...<br />2. X-Frame-Options: SAMEORIGIN<br />3. X-Content-Type-Options : nosniff<br />4. Referrer-Policy: no-referrer |
+| * | ASPNETCORE_ENVIRONMENT | Development | 民意信箱前台若需遵守 CSP 請調整環境為 Production：<br />"Development": 低安全（預設值）<br />"Staging": 中安全<br />"Production": 高安全<br />（當環境變數設定為 "Staging" 或 "Production" 時會增加如下的安全性設定：<br />`Content-Security-Policy: ......` 、 `X-Frame-Options: SAMEORIGIN` 、 `X-Content-Type-Options : nosniff` 、 `Referrer-Policy: no-referrer`） |
 | | AZURE_CALLBACK_URL | | AzureAD 登入介接的回呼網址 |
 | | AZURE_CLIENTID | | AzureAD 登入介接的 ClientID 資訊 |
 | | AZURE_SECRET | | AzureAD 登入介接的 Secret 資訊 |
 | | AZURE_TANENTID | | AzureAD 登入介接的 TanentID 資訊 |
 | | CLIENTID | | 民意信箱介接外部系統提供 ID |
 | | CLIENTSECRET | | 民意信箱介接外部系統提供 Secret |
-| | CLOUDFLARETURNSTILESECRETKEY | 1x00000000000000000000AA | Cloudflare Turnstile 驗證 Secret（測試 Key） |
-| | CLOUDFLARETURNSTILESITEKEY | 1x0000000000000000000000000000000AA | Cloudflare Turnstile 驗證（測試 Key） |
+| | CLOUDFLARETURNSTILESECRETKEY | 1x00000000000000000000AA | Cloudflare Turnstile 驗證 Secret 的範例（測試 Key） |
+| | CLOUDFLARETURNSTILESITEKEY | 1x0000000000000000000000000000000AA | Cloudflare Turnstile 驗證 Site 的範例（測試 Key） |
 | | CONFIRMKEY | confirm | 民意信箱案件確認信時效的加密金鑰 |
-| * | CONTENT_SECURITY_POLICY | default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:; img-src 'self' blob: data: http://localhost ;frame-src *;script-src * 'unsafe-inline' 'unsafe-eval';style-src * 'unsafe-inline' 'unsafe-eval';frame-ancestors 'self';font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com ;worker-src blob:; child-src blob: gap:; | 站台 CSP 相關參數設定 |
+| * | CONTENT_SECURITY_POLICY | default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:; img-src 'self' blob: data: http://localhost ;frame-src *;script-src * 'unsafe-inline' 'unsafe-eval';style-src * 'unsafe-inline' 'unsafe-eval';frame-ancestors 'self';font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com ;worker-src blob:; child-src blob: gap:; | 站台 CSP 相關參數設定的範例 |
 | * | DB_DATABASE | DEMO_MODA | 資料庫名稱 |
 | * | DB_HOST | 127.0.0.1 | 資料庫管理系統主機資訊 |
 | * | DB_USERNAME | sa | 資料庫管理系統登入帳號 |
@@ -301,11 +301,12 @@
 | * | DB_PORT | 1433 | 資料庫管理系統主機連接埠資訊 |
 | * | EFFECTIVEDAYS | 3 | 民意信箱意見回饋有效時間（天） |
 | * | EFFECTIVEHOURS | 2 | 民意信箱驗證有效時間（小時） |
-| | ESETPATH | ecls.exe | ESET 執行檔位置 |
-| | GA4LANGUAGE | zh-tw | 站台語系（若 GA4CODE 有串必填）：<br />`zh-tw`: 中文<br />`en`: 英文 |
+| | ESETPATH | ecls.exe | ESET 執行檔路徑名稱 |
 | | GA4CODE | | GA4 代碼（請至 Google GA4 管理介面查詢） |
+| | GA4LANGUAGE | zh-tw | 站台語系（若 GA4CODE 有串必填）：<br />"zh-tw": 中文<br />"en": 英文 |
 | | GIT_REPO | | 遠端儲存庫 URI |
-| * | GIT_WORKDIR | /app/files/wwwroot | 靜態化排程的網頁儲存及待推送的儲存空間目錄 |
+| * | GIT_WORKDIR | /app/files/wwwroot | 靜態化排程的網頁儲存及待推送的儲存空間工作目錄 |
+| | GITHUB_KEY | | GitHub 使用的 Deploy Key 私鑰 |
 | | GOOGLE_AUTH_PROVIDER_X509_CERT_URL | | GA4 資訊介接（取自 Google API 金鑰裡面的 auth_provider_x509_cert_url） |
 | | GOOGLE_AUTH_URI | | GA4 資訊介接（取自 Google API 金鑰裡面的 auth_uri） |
 | | GOOGLE_CLIENT_EMAIL | | GA4 資訊介接（取自 Google API 金鑰裡面的 private_key） |
@@ -317,21 +318,21 @@
 | | GOOGLE_TOKEN_URI | | GA4 資訊介接（取自 Google API 金鑰裡面的 token_uri） |
 | * | ISSCAN | 0 | 是否啟用防毒軟體掃描上傳檔案：<br />"1": 啟動<br />"0": 關閉 |
 | * | LOGFILE | log | log 存放位置 |
-| | MAILBOX_FROM_ADDRESS | hello@example.com | 民意信箱寄信使用的寄信人信箱 |
-| | MAILBOX_FROM_NAME | 測試寄信者 | 民意信箱寄信使用的寄信人名稱 |
-| | MAILBOX_HOST | maildev | 民意信箱寄信使用的寄信服務主機資訊 |
-| | MAILBOX_PASSWORD | test | 民意信箱寄信使用的寄信服務密碼 |
-| | MAILBOX_PORT | 1025 | 民意信箱寄信使用的寄信服務連接埠資訊 |
-| | MAILBOX_USERNAME | test | 民意信箱寄信使用的寄信服務帳號 |
-| | MAILBOX_SSL | true | 民意信箱是否使用 TLS 的寄信服務：<br />"true": 是<br />"false": 否 |
 | * | MAIL_FROM_ADDRESS | hello@example.com | 寄信使用的寄信人信箱 |
 | * | MAIL_FROM_NAME | 測試寄信者 | 寄信使用的寄信人名稱 |
 | * | MAIL_HOST | maildev | 寄信使用的寄信服務主機資訊 |
 | * | MAIL_PASSWORD | test | 寄信使用的寄信服務密碼 |
 | * | MAIL_PORT | 1025 | 寄信使用的寄信服務連接埠資訊 |
 | * | MAIL_SSL | true | 是否使用 TLS 的寄信服務：<br />"true": 是<br />"false": 否 |
-| * | MAIL_USERNAME | test | 寄信使用的寄信服務帳號 |
 | | MAIL_SYSADMIN | hello@example.com | 系統預設管理員信箱 |
+| * | MAIL_USERNAME | test | 寄信使用的寄信服務帳號 |
+| | MAILBOX_FROM_ADDRESS | hello@example.com | 民意信箱寄信使用的寄信人信箱 |
+| | MAILBOX_FROM_NAME | 測試寄信者 | 民意信箱寄信使用的寄信人名稱 |
+| | MAILBOX_HOST | maildev | 民意信箱寄信使用的寄信服務主機資訊 |
+| | MAILBOX_PASSWORD | test | 民意信箱寄信使用的寄信服務密碼 |
+| | MAILBOX_PORT | 1025 | 民意信箱寄信使用的寄信服務連接埠資訊 |
+| | MAILBOX_SSL | true | 民意信箱是否使用 TLS 的寄信服務：<br />"true": 是<br />"false": 否 |
+| | MAILBOX_USERNAME | test | 民意信箱寄信使用的寄信服務帳號 |
 | * | OPENAZUREAD | 0 | 登入機制：<br />"0": 帳號密碼登入<br />"1": AzureAD 登入 |
 | * | PRIVATE_FILESERVICES_URL | http://fileservies | 不對外公開的檔案服務網址 |
 | * | PRIVATE_WEBSITE_URL | http://website | 不對外公開的動態前台（頁面預覽）網址 |
@@ -346,7 +347,6 @@
 | * | TEMPFILE | /tmp | 民意信箱上傳檔掃毒的暫存目錄 |
 | * | UPLOAD | files | 下載 / 上傳檔案基礎服務的儲存空間目錄 |
 | | VIRUSSCAN | /app/clamdtest.sh | 執行防毒掃描腳本的位置 |
-| | GITHUB_KEY | | GitHub 使用的 Deploy Key 私鑰 |
 
 
 `*` = required
@@ -377,7 +377,7 @@ Management 專案的登入機制可與 Azure AD 串單一登入，若想使用�
   ```
 - 確認管理後台在 appsettings.json 中的參數 `StaticPath` 所設定的路徑下要有 `copyright` 目錄，否則啟動 Management.dll 會報錯。
 - 沒有建置防毒服務的情況下，民意信箱在 appsettings.json 中關於檔案掃毒的參數 `IsScan` 請設為 `0`，否則會造成民意信箱上傳附件出錯。
-- 若未給予參數 `GIT_REPO` `GITHUB_KEY` `GITHUB_PUBKEY`，靜態化排程在執行 `push.sh` 時會出現錯誤訊息，雖不影響靜態化結果，但可以透過註解 ConsoleApp-Static/docker-entrypount.sh 內的 /app/push.sh 指令後重新建置 Image 解決。
+- 若未給予參數 `GIT_REPO` `GITHUB_KEY` `GITHUB_PUBKEY`，靜態化排程在執行 push<span />.sh 時會出現錯誤訊息，雖不影響靜態化結果，但可以透過註解 ConsoleApp-Static/docker-entrypount.sh 內的 /app/push.sh 指令後重新建置 Image 解決。
 
 ## Docker Compose
 
@@ -474,7 +474,7 @@ moda-website-website-1        moda-website-website                         "/doc
 - 端點：http://localhost:8003
 
 ### MailDev
-開發時期用於測試電子郵件功能的虛擬 SMTP 伺服器及網頁郵件服務，在專案的 appsettings.json 設定好對應的寄信設定後，當專案啟動進行寄信時，即可在 MailDev 的網頁介面收信。
+開發時期用於測試電子郵件功能的虛擬 SMTP 伺服器及網頁郵件服務，只要在專案的 appsettings.json 設定好對應的寄信屬性後，當專案啟動進行寄信時，即可在 MailDev 的網頁介面收信。
 - 端點：http://localhost:1080
 
 ### Adminer

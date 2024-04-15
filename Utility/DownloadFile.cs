@@ -80,7 +80,7 @@ namespace Utility
                         System.IO.File.Delete(filePath);
                         return true;
                     }
-                    return true;
+                    return false;
                 }
                 return false;
             }
